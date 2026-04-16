@@ -1,0 +1,34 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+diff_drive_controller:
+  ros__parameters:
+    left_wheel_names:
+      - wheel_lhs_front_joint
+      - wheel_lhs_mid_joint
+      - wheel_lhs_rear_joint
+    right_wheel_names:
+      - wheel_rhs_front_joint
+      - wheel_rhs_mid_joint
+      - wheel_rhs_rear_joint
+    
+    # You MUST measure these in your URDF and update them:
+    wheel_separation: 0.61  # Distance between left and right wheels (meters)
+    wheel_radius: 0.1       # Radius of your wheels (meters)
+    
+
+    use_stamped_vel: false  # Allows standard Twist messages instead of TwistStamped
+    
+    # Optional but recommended limits
+    linear.x.has_velocity_limits: true
+    linear.x.max_velocity: 1.0
+    angular.z.has_velocity_limits: true
+    angular.z.max_velocity: 2.0

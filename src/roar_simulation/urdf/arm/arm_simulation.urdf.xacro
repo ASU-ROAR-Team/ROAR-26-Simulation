@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="full_sampling_arm_sim">
+
+  <!--
+    ===================================================================================
+    THIS IS AN ARM-ONLY INTEGRATION FILE
+    ===================================================================================
+    Purpose: To generate a complete, stand-alone, simulatable model of the robotic arm,
+             including its Gazebo plugins.
+
+    This file is useful for:
+      - Testing arm-specific functionalities (motion planning, grasping) in Gazebo
+        without the complexity of the full rover.
+      - Visualizing just the arm in RViz.
+    
+    It works by including our modular Xacro files and calling their macros.
+    ===================================================================================
+  -->
+
+  <!-- =============================================================================== -->
+  <!-- 1. INCLUDE THE REQUIRED MODULES (The "Recipe Book")                             -->
+  <!-- =============================================================================== -->
+
+  <!-- The physical structure of the arm (links, joints, transmissions) -->
+  <xacro:include filename="$(find roar_simulation)/urdf/arm/arm.xacro" />
+
+  <!-- The simulation logic for the arm (self-collision properties and grasp plugin) -->
+  <xacro:include filename="$(find roar_simulation)/urdf/modules/arm_gazebo.xacro" />
+  
+  
+  <!-- =============================================================================== -->
+  <!-- 2. CREATE A STATIC BASE FOR THE ARM TO SIT ON                                   -->
+  <!-- =============================================================================== -->
+
+  <!-- In a stand-alone simulation, the arm needs a fixed base to attach to.
+       We create a simple 'world' link for this purpose. -->
+  <link name="world" />
+
+
+  <!-- =============================================================================== -->
+  <!-- 3. INSTANTIATE THE ARM AND ATTACH IT TO THE WORLD                               -->
+  <!-- =============================================================================== -->
+
+  <!-- First, build the physical arm. We use an empty prefix. -->
+  <xacro:robotic_arm prefix="" />
+
+  <!-- Second, "bolt" the arm's base to the static 'world' link we created. -->
+  <joint name="world_to_arm_base_joint" type="fixed">
+    <parent link="world" />
+    <child link="base_arm" /> <!-- 'base_arm' is the root link from arm.xacro -->
+    <origin xyz="0 0 0" rpy="0 0 0" /> <!-- Position the arm 0.5m above the ground -->
+  </joint>
+
+  <!-- Third, attach all the Gazebo simulation plugins for the arm.
+       We pass the same empty prefix to ensure the plugins reference the correct links. -->
+  <xacro:arm_gazebo prefix="" />
+  
+  
+  <!-- =============================================================================== -->
+  <!-- 4. ADD THE ROBOT-WIDE GAZEBO_ROS_CONTROL PLUGIN                                 -->
+  <!-- =============================================================================== -->
+  
+  <!-- Since this is a stand-alone simulation, it needs its own instance of the
+       gazebo_ros_control plugin to manage the arm's transmissions. -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+    </plugin>
+  </gazebo>
+
+</robot>

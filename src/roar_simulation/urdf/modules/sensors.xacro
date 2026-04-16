@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    This file defines the physical structure for sensors as reusable Xacro macros.
+    - It contains the links and joints needed to create the TF frames for a sensor.
+    - It does NOT contain any Gazebo plugin logic (which is in rover_gazebo.xacro).
+    - The macro is parameterized for name and mounting location for maximum flexibility.
+  -->
+
+  <xacro:macro name="depth_camera" params="name parent_link *origin">
+    <!--
+      Macro for a depth camera's physical structure.
+      Params:
+        - name: A unique name for this camera instance (e.g., 'front_camera').
+        - parent_link: The name of the link to attach this camera to (e.g., 'base_link').
+        - *origin: An <origin> block specifying the camera's xyz and rpy offset
+                   from the parent_link.
+    -->
+
+    <!-- This is the main link for the camera's body. The Gazebo plugin will attach here. -->
+    <link name="${name}_link">
+      <inertial>
+        <mass value="0.01"/>
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+      </inertial>
+      <!-- This link has no <visual> or <collision> tags, making it invisible. -->
+    </link>
+        
+    <!-- This joint attaches the camera's body to the specified parent link. -->
+    <joint name="${name}_joint" type="fixed">
+      <parent link="${parent_link}" />
+      <child link="${name}_link" />
+      <xacro:insert_block name="origin" /> <!-- Inserts the provided <origin> block -->
+    </joint>
+
+    <!-- This is the standard optical frame for ROS cameras (Z forward, X right, Y down).
+         The Gazebo plugin will publish data relative to this frame. -->
+    <link name="${name}_depth_optical_frame">
+      <inertial>
+        <mass value="0.001"/>
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+      </inertial>
+    </link>       
+    
+    <!-- This joint defines the standard transformation from the camera body to the optical frame. -->
+    <joint name="${name}_depth_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="-1.57079632679 0 -1.57079632679" />
+      <parent link="${name}_link" />
+      <child link="${name}_depth_optical_frame" />
+    </joint>
+
+  </xacro:macro>
+
+</robot>

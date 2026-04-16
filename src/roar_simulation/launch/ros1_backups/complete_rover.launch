@@ -1,0 +1,41 @@
+<launch>
+    <arg name="x" default="0.0" />
+    <arg name="y" default="0.0" />
+    <arg name="z" default="0.5" />
+    <arg name="yaw" default="-1.5708"/> <!-- -90 degrees -->
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch"/> 
+    
+    <!-- Process the MASTER Xacro file for the complete simulated robot -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find roar_simulation)/urdf/roar_complete_sim.urdf.xacro'" />
+
+    <!-- Spawn the complete robot model from the robot_description parameter into Gazebo -->
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
+          args="-urdf -model roar_complete -param robot_description 
+                -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw)" />
+
+    <!-- Load the new combined controller configuration YAML file -->
+    <rosparam file="$(find roar_simulation)/config/combined_controllers.yaml" command="load"/>
+    
+    <!-- Spawn ALL controllers: rover wheels AND arm/gripper controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen" args="joint_state_controller 
+                               wheel_lhs_front_velocity_controller 
+                               wheel_lhs_mid_velocity_controller 
+                               wheel_lhs_rear_velocity_controller 
+                               wheel_rhs_front_velocity_controller 
+                               wheel_rhs_mid_velocity_controller 
+                               wheel_rhs_rear_velocity_controller
+                               rover_arm_controller
+                               hand_ee_controller" />
+
+    <!-- Publishes TF transforms for the robot based on the robot_description and joint_states -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <!-- (Optional but good practice) Joint state publisher for manual control -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+    <!-- Start your teleoperation node to drive the rover -->
+    <node pkg="roar_simulation" type="teleop.py" name="teleop_node" output="screen" />
+
+</launch>

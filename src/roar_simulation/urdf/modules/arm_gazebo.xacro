@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <xacro:macro name="arm_gazebo" params="prefix">
+  
+    <!-- ROS2_CONTROL HARDWARE INTERFACE FOR ARM -->
+    <ros2_control name="GazeboSystemArm" type="system">
+      <hardware>
+        <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+      </hardware>
+      
+      <!-- Arm joints - position control -->
+      <joint name="${prefix}joint_1">
+        <command_interface name="position">
+          <param name="min">-3.14</param>
+          <param name="max">3.14</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <joint name="${prefix}joint_2">
+        <command_interface name="position">
+          <param name="min">-3.14</param>
+          <param name="max">3.14</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <joint name="${prefix}joint_3">
+        <command_interface name="position">
+          <param name="min">-3.14</param>
+          <param name="max">3.14</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <joint name="${prefix}joint_4">
+        <command_interface name="position">
+          <param name="min">-3.14</param>
+          <param name="max">3.14</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <joint name="${prefix}joint_5">
+        <command_interface name="position">
+          <param name="min">-3.14</param>
+          <param name="max">3.14</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <joint name="${prefix}joint_6">
+        <command_interface name="position">
+          <param name="min">-3.14</param>
+          <param name="max">3.14</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <!-- End effector joints -->
+      <joint name="${prefix}joint_lee">
+        <command_interface name="position">
+          <param name="min">0.0</param>
+          <param name="max">0.05</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+      <joint name="${prefix}joint_ree">
+        <command_interface name="position">
+          <param name="min">0.0</param>
+          <param name="max">0.05</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      
+    </ros2_control>
+    
+    <!-- SELF-COLLISION PROPERTIES -->
+    <gazebo reference="${prefix}base_arm">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}link_1">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}link_2">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}link_3">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}link_4">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}link_5">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}link_6">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}Right_ee">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    <gazebo reference="${prefix}Left_ee">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    
+  </xacro:macro>
+</robot>

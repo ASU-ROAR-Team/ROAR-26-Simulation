@@ -1,0 +1,373 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="roar_arm">
+
+  <!--
+    This file defines the updated robotic arm and gripper as a self-contained Xacro macro.
+    - All link and joint values have been updated from the new 'roar_arm_urdf' file.
+    - Mesh paths are updated to a consistent package structure.
+    - Transmission tags are retained to define the ros_control interface.
+  -->
+
+  <xacro:macro name="robotic_arm" params="prefix">
+
+    <!-- ============================================================================= -->
+    <!-- ARM LINKS AND JOINTS (Updated Values from new URDF) -->
+    <!-- ============================================================================= -->
+
+    <link name="${prefix}base_arm">
+      <inertial>
+        <origin xyz="5.2096E-17 -5.1794E-16 0.067119" rpy="0 0 0" />
+        <mass value="1.3975" />
+        <inertia ixx="0.0060529" ixy="-7.9663E-19" ixz="1.4318E-18" iyy="0.0060532" iyz="-3.072E-17" izz="0.0086379" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/base_arm.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.79216 0.81961 0.93333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/base_arm.STL" />
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="${prefix}link_1">
+      <inertial>
+        <origin xyz="-0.015423 0.00053292 0.076165" rpy="0 0 0" />
+        <mass value="0.69946" />
+        <inertia ixx="0.0012889" ixy="9.1195E-07" ixz="-0.00011148" iyy="0.0019852" iyz="-6.3597E-06" izz="0.0013797" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_1.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.89804 0.91765 0.92941 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_1.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${prefix}joint_1" type="revolute">
+      <origin xyz="0 0 0.133" rpy="0 0 0" />
+      <parent link="${prefix}base_arm" />
+      <child link="${prefix}link_1" />
+      <axis xyz="0 0 1" />
+      <limit lower="-3.14" upper="3.14" effort="100" velocity="2" />
+    </joint>
+
+    <link name="${prefix}link_2">
+      <inertial>
+        <origin xyz="-0.00045755 0.40328 0.043283" rpy="0 0 0" />
+        <mass value="0.4979" />
+        <inertia ixx="0.0016855" ixy="5.5179E-06" ixz="8.2239E-07" iyy="0.0004916" iyz="-3.1358E-05" izz="0.0016038" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_2.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.79216 0.81961 0.93333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_2.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${prefix}joint_2" type="revolute">
+      <origin xyz="0.035502 0 0.1489" rpy="1.6351 -1.0672 -0.073404" />
+      <parent link="${prefix}link_1" />
+      <child link="${prefix}link_2" />
+      <axis xyz="0.035393 0 0.99937" />
+      <limit lower="0" upper="4.71" effort="100" velocity="2" />
+    </joint>
+
+    <link name="${prefix}link_3">
+      <inertial>
+        <origin xyz="-0.000291 -0.019482 0.039042" rpy="0 0 0" />
+        <mass value="0.7923" />
+        <inertia ixx="0.0012569" ixy="-2.4571E-06" ixz="4.6665E-06" iyy="0.001197" iyz="2.0351E-05" izz="0.0014787" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_3.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.79216 0.81961 0.93333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_3.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${prefix}joint_3" type="revolute">
+      <origin xyz="0 0.5275 0.1315" rpy="0 0 -1.0686" />
+      <parent link="${prefix}link_2" />
+      <child link="${prefix}link_3" />
+      <axis xyz="0 0 -1" />
+      <limit lower="0" upper="6.28" effort="50" velocity="4" />
+    </joint>
+
+    <link name="${prefix}link_4">
+      <inertial>
+        <origin xyz="0.00071435 0.0082922 0.024799" rpy="0 0 0" />
+        <mass value="0.6384" />
+        <inertia ixx="0.0008605" ixy="-1.5754E-06" ixz="3.8008E-06" iyy="0.0008767" iyz="-1.4563E-05" izz="0.0010936" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_4.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.79216 0.81961 0.93333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_4.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${prefix}joint_4" type="revolute">
+      <origin xyz="6.8566E-05 -0.12961 0.10761" rpy="-0.50301 1.5354 -2.073" />
+      <parent link="${prefix}link_3" />
+      <child link="${prefix}link_4" />
+      <axis xyz="-0.031013 0 -0.99952" />
+      <limit lower="0" upper="6.28" effort="50" velocity="4" />
+    </joint>
+
+    <link name="${prefix}link_5">
+      <inertial>
+        <origin xyz="8.5395E-05 0.0195 0.015426" rpy="0 0 0" />
+        <mass value="0.072706" />
+        <inertia ixx="9.5574E-05" ixy="-2.287E-08" ixz="2.2014E-09" iyy="8.2533E-05" iyz="-6.206E-06" izz="0.00016181" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_5.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.69804 0.69804 0.69804 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_5.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${prefix}joint_5" type="revolute">
+      <origin xyz="-0.0010256 0.083 0.10269" rpy="-1.5692 0.030978 0.050701" />
+      <parent link="${prefix}link_4" />
+      <child link="${prefix}link_5" />
+      <axis xyz="0 0 -1" />
+      <limit lower="-3.14" upper="3.14" effort="50" velocity="4" />
+    </joint>
+
+    <link name="${prefix}link_6">
+      <inertial>
+        <origin xyz="-0.0017619 0.062304 -0.18532" rpy="0 0 0" />
+        <mass value="0.14212" />
+        <inertia ixx="0.00013968" ixy="3.672E-07" ixz="-4.6713E-08" iyy="0.00027464" iyz="-8.9751E-07" izz="0.00017205" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_6.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.1098 0.1098 0.1098 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/link_6.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${prefix}joint_6" type="revolute">
+      <origin xyz="0 -0.050807 0.26285" rpy="0 0 -0.010445" />
+      <parent link="${prefix}link_5" />
+      <child link="${prefix}link_6" />
+      <axis xyz="0 0 -1" />
+      <limit lower="0" upper="0" effort="50" velocity="0" />
+    </joint>
+
+    <link name="${prefix}Right_ee">
+      <inertial>
+        <origin xyz="-0.00085871 0.15395 0.039904" rpy="0 0 0" />
+        <mass value="0.12335" />
+        <inertia ixx="0.00024187" ixy="-4.1406E-06" ixz="2.7514E-06" iyy="0.00013628" iyz="-3.1315E-06" izz="0.00016437" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/Right_ee.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.79216 0.81961 0.93333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/Right_ee.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${prefix}joint_ree" type="revolute">
+      <origin xyz="-0.030505 0.047691 -0.19085" rpy="1.5698 0 0.010445" />
+      <parent link="${prefix}link_6" />
+      <child link="${prefix}Right_ee" />
+      <axis xyz="0 -0.0010429 1" />
+      <limit lower="0" upper="0.8" effort="15" velocity="1" />
+    </joint>
+
+    <link name="${prefix}Left_ee">
+      <inertial>
+        <origin xyz="0.0019003 -0.1544 -0.039691" rpy="0 0 0" />
+        <mass value="0.12478" />
+        <inertia ixx="0.00024968" ixy="-3.9203E-06" ixz="4.0773E-06" iyy="0.00014248" iyz="-4.0157E-06" izz="0.00016861" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/Left_ee.STL" />
+        </geometry>
+        <material name="">
+          <color rgba="0.79216 0.81961 0.93333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="package://roar_simulation/meshes/arm/Left_ee.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${prefix}joint_lee" type="revolute">
+      <origin xyz="0.029492 0.048318 -0.19085" rpy="-1.5718 0 0.010445" />
+      <parent link="${prefix}link_6" />
+      <child link="${prefix}Left_ee" />
+      <axis xyz="0 -0.0010429 1" />
+      <limit lower="0" upper="0.8" effort="15" velocity="1" />
+    </joint>
+
+    <!-- ============================================================================= -->
+    <!-- TRANSMISSIONS (for ros_control) - Carried over from previous version -->
+    <!-- ============================================================================= -->
+
+    <transmission name="${prefix}link_1_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}joint_1">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}link_1_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}link_2_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}joint_2">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}link_2_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}link_3_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}joint_3">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}link_3_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}link_4_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}joint_4">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}link_4_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}link_5_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}joint_5">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}link_5_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}link_6_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}joint_6">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}link_6_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    
+    <transmission name="${prefix}Right_ee_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}joint_ree">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}Right_ee_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="${prefix}Left_ee_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${prefix}joint_lee">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${prefix}Left_ee_motor">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+  </xacro:macro>
+</robot>
