@@ -1,19 +1,11 @@
-# ROS2 build artifacts (never commit these!)
 build/
 install/
 log/
 
-# Python cache
+*.zone.identifier
+*Zone.Identifier
+
+.vscode/
+.idea/
 __pycache__/
 *.pyc
-
-# Temporary files
-*.backup
-output.urdf
-rover.urdf
-frames*.gv
-frames*.pdf
-
-# Old packages (already deleted)
-src/roar_rover/
-src/roar_rover_ros2/
