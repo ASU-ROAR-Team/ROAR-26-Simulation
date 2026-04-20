@@ -81,7 +81,8 @@ src/roar_simulation/launch/basic_rover.launch.py
 
 2. Go to the `return LaunchDescription(...)` section near the end of the file.
 3. Locate the second node shown in the image.
-4. Increase the startup delay period.
-5. Keep increasing the delay until the controller launches successfully.
+<img width="981" height="289" alt="Screenshot from 2026-04-21 00-49-28" src="https://github.com/user-attachments/assets/f7a8b6c4-5cf2-4f41-9610-312a48271851" />
+5. Increase the startup delay period.
+6. Keep increasing the delay until the controller launches successfully.
 
 For WSL users, a delay of around 45 to 60 seconds is recommended.
