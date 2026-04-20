@@ -49,7 +49,7 @@ You should source the workspace every time you open a new terminal or rebuild th
 To launch the rover in Gazebo without the robotic arm, use:
 
 ```bash
-ros2 launch basic_rover.launch.py
+ros2 launch roar_simulation basic_rover.launch.py
 ```
 
 You can control the simulation by publishing commands to the following topic:
