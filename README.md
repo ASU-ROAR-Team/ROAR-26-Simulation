@@ -1,28 +1,87 @@
-# ROAR Workspace Old (ROS2 - MOST COMPLETE)
+# ROS 2 Rover Simulation 🚀
 
-## Purpose
-**MAIN ROS2 workspace** - Contains fully migrated roar_simulation package
+Welcome to the ROS 2 Humble Rover Simulation repository.
+Please read the following instructions carefully before using the simulation.
 
-## Status
-- ✅ Package builds successfully
-- ✅ Launch files migrated to Python
-- ✅ Python scripts migrated (rospy → rclpy)
-- ✅ URDF valid
-- ✅ All backups preserved
-- ❌ RViz rendering (WSL OpenGL issue)
+---
 
-## Launch Commands
+# Installation Steps
+
+## Step 0: Clone the Repository
+
+Only do this the first time you use the simulation.
+
 ```bash
-cd ~/roar_workspace_old
-source install/setup.bash
-
-# View in RViz (after fixing graphics)
-ros2 launch roar_simulation view_rover_rviz.launch.py
-
-# Spawn in Gazebo
-ros2 launch roar_simulation rover_spawn.launch.py
+git clone https://github.com/ASU-ROAR-Team/ROAR-26-Simulation roar_onsite_ws
 ```
 
-## Package
-- roar_simulation (ROS2 Humble)
-- Format 3, ament_cmake
+This command clones the simulation repository into a workspace directory named `roar_onsite_ws`
+
+---
+
+## Step 0.5: Install Dependencies
+
+This step involve installing dependancies but there is no dependancies ( yet! :) )
+
+---
+
+## Step 1: Build the Workspace
+
+Navigate to the workspace and build it using:
+
+```bash
+cd roar_onsite_ws
+colcon build --symlink-install
+```
+
+After building, remember to source the workspace:
+
+```bash
+source install/setup.bash
+```
+
+You should source the workspace every time you open a new terminal or rebuild the project.
+
+---
+
+## Step 2: Launch the Simulation
+
+To launch the rover in Gazebo without the robotic arm, use:
+
+```bash
+ros2 launch basic_rover.launch.py
+```
+
+You can control the simulation by publishing commands to the following topic:
+
+```bash
+/diff_drive_controller/cmd_vel_unstamped
+```
+
+You can also use the teleoperation keyboard node from another terminal:
+
+```bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/diff_drive_controller/cmd_vel_unstamped
+```
+
+---
+
+
+## Common Issue: Controller Activation Failure
+
+A common issue, especially when using WSL instead of dual boot, is that the controller may fail to activate.
+
+To solve this:
+
+1. Open the following file:
+
+```bash
+src/roar_simulation/launch/basic_rover.launch.py
+```
+
+2. Go to the `return LaunchDescription(...)` section near the end of the file.
+3. Locate the second node shown in the image.
+4. Increase the startup delay period.
+5. Keep increasing the delay until the controller launches successfully.
+
+For WSL users, a delay of around 45 to 60 seconds is recommended.
