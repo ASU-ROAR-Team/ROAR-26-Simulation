@@ -1,55 +1,27 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="roar_simulated_rover">
+<robot xmlns:xacro="http://www.ros.org/wiki/name" name="roar_simulated_rover">
 
-  <!--
-    ===================================================================================
-    THIS IS A ROVER-ONLY INTEGRATION FILE
-    ===================================================================================
-    Purpose: To generate a complete, stand-alone, simulatable model of the ROAR rover,
-             including its sensors and Gazebo plugins, but WITHOUT the robotic arm.
+  <xacro:arg name="use_gazebo" default="true" />
+  <xacro:arg name="use_hardware" default="false" />
 
-    This file is useful for:
-      - Testing rover-specific functionalities (driving, sensors) in Gazebo.
-      - Visualizing just the rover platform in RViz.
-    
-    It works by including our modular Xacro files and calling their macros.
-    ===================================================================================
-  -->
-
-  <!-- =============================================================================== -->
-  <!-- 1. INCLUDE THE REQUIRED MODULES (The "Recipe Book")                             -->
-  <!-- =============================================================================== -->
-
-  <!-- The physical structure of the rover (links, joints, transmissions) -->
   <xacro:include filename="$(find roar_simulation)/urdf/base/rover.xacro" />
-
-  <!-- The physical structure of the sensors (the camera's TF frames) -->
   <xacro:include filename="$(find roar_simulation)/urdf/modules/sensors.xacro" />
-
-  <!-- The simulation logic for the rover and its sensors (all Gazebo plugins) -->
+  <xacro:include filename="$(find roar_simulation)/urdf/arm/sex_dof_arm.xacro" />
   <xacro:include filename="$(find roar_simulation)/urdf/modules/rover_gazebo.xacro" />
+  <xacro:include filename="$(find roar_simulation)/urdf/modules/arm_gazebo.xacro" />
 
-
-  <!-- =============================================================================== -->
-  <!-- 2. INSTANTIATE THE MODULES (Following the "Recipes")                            -->
-  <!-- =============================================================================== -->
-  
-  <!-- First, build the physical rover base. -->
   <xacro:rover_base />
 
-  <!-- Second, build and attach the physical camera structure to the rover's base_link. -->
+  <xacro:robotic_arm prefix="arm_" parent_link="arm_mount_point">
+    <origin xyz="0.0 0 0" rpy="0 0 0"/>
+  </xacro:robotic_arm>
+
   <xacro:depth_camera name="camera" parent_link="base_link">
-    <!-- Define the pose of the camera relative to its parent, 'base_link' -->
     <origin xyz="0 0.3 0.35" rpy="0 0 1.57079632679" /> 
   </xacro:depth_camera>
 
-  <!-- Third, attach all the Gazebo simulation plugins. 
-       The plugins will find the links created by the macros above. -->
-        
-  <!--xacro:rover_gazebo
-  controllers_yaml="$(find roar_simulation)/config/combined_controllers.yaml"/-->
-
-  <xacro:rover_gazebo
-  controllers_yaml="$(find roar_simulation)/config/diff_controller.yaml"/>
-                                                                                
+  <xacro:rover_gazebo controllers_yaml="$(find roar_simulation)/config/diff_controller.yaml"/>
+  
+  <xacro:arm_gazebo prefix="arm_" />
+                      
 </robot>

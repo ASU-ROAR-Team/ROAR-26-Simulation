@@ -3,13 +3,11 @@
   
   <xacro:macro name="arm_gazebo" params="prefix">
   
-    <!-- ROS2_CONTROL HARDWARE INTERFACE FOR ARM -->
     <ros2_control name="GazeboSystemArm" type="system">
       <hardware>
         <plugin>gazebo_ros2_control/GazeboSystem</plugin>
       </hardware>
       
-      <!-- Arm joints - position control -->
       <joint name="${prefix}joint_1">
         <command_interface name="position">
           <param name="min">-3.14</param>
@@ -32,8 +30,11 @@
         <command_interface name="position">
           <param name="min">-3.14</param>
           <param name="max">3.14</param>
+          <param name="initial_value">-1.57</param>
         </command_interface>
-        <state_interface name="position"/>
+        <state_interface name="position">
+          <param name="initial_value">-1.57</param>
+        </state_interface>
         <state_interface name="velocity"/>
       </joint>
       
@@ -41,8 +42,11 @@
         <command_interface name="position">
           <param name="min">-3.14</param>
           <param name="max">3.14</param>
+          <param name="initial_value">-1.57</param>
         </command_interface>
-        <state_interface name="position"/>
+        <state_interface name="position">
+          <param name="initial_value">-1.57</param>
+        </state_interface>
         <state_interface name="velocity"/>
       </joint>
       
@@ -50,8 +54,11 @@
         <command_interface name="position">
           <param name="min">-3.14</param>
           <param name="max">3.14</param>
+          <param name="initial_value">0.0</param>
         </command_interface>
-        <state_interface name="position"/>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
         <state_interface name="velocity"/>
       </joint>
       
@@ -64,7 +71,6 @@
         <state_interface name="velocity"/>
       </joint>
       
-      <!-- End effector joints -->
       <joint name="${prefix}joint_lee">
         <command_interface name="position">
           <param name="min">0.0</param>
@@ -85,8 +91,7 @@
       
     </ros2_control>
     
-    <!-- SELF-COLLISION PROPERTIES -->
-    <gazebo reference="${prefix}base_arm">
+    <gazebo reference="${prefix}base_link">
       <selfCollide>true</selfCollide>
     </gazebo>
     <gazebo reference="${prefix}link_1">

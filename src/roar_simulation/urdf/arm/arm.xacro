@@ -1,18 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="roar_arm">
 
-  <!--
-    This file defines the updated robotic arm and gripper as a self-contained Xacro macro.
-    - All link and joint values have been updated from the new 'roar_arm_urdf' file.
-    - Mesh paths are updated to a consistent package structure.
-    - Transmission tags are retained to define the ros_control interface.
-  -->
-
   <xacro:macro name="robotic_arm" params="prefix">
-
-    <!-- ============================================================================= -->
-    <!-- ARM LINKS AND JOINTS (Updated Values from new URDF) -->
-    <!-- ============================================================================= -->
 
     <link name="${prefix}base_arm">
       <inertial>
@@ -59,12 +48,11 @@
         </geometry>
       </collision>
     </link>
-    <joint name="${prefix}joint_1" type="revolute">
+    <joint name="${prefix}joint_1" type="fixed">
       <origin xyz="0 0 0.133" rpy="0 0 0" />
       <parent link="${prefix}base_arm" />
       <child link="${prefix}link_1" />
       <axis xyz="0 0 1" />
-      <limit lower="-3.14" upper="3.14" effort="100" velocity="2" />
     </joint>
 
     <link name="${prefix}link_2">
@@ -89,12 +77,11 @@
         </geometry>
       </collision>
     </link>
-    <joint name="${prefix}joint_2" type="revolute">
+    <joint name="${prefix}joint_2" type="fixed">
       <origin xyz="0.035502 0 0.1489" rpy="1.6351 -1.0672 -0.073404" />
       <parent link="${prefix}link_1" />
       <child link="${prefix}link_2" />
       <axis xyz="0.035393 0 0.99937" />
-      <limit lower="0" upper="4.71" effort="100" velocity="2" />
     </joint>
 
     <link name="${prefix}link_3">
@@ -119,12 +106,11 @@
         </geometry>
       </collision>
     </link>
-    <joint name="${prefix}joint_3" type="revolute">
+    <joint name="${prefix}joint_3" type="fixed">
       <origin xyz="0 0.5275 0.1315" rpy="0 0 -1.0686" />
       <parent link="${prefix}link_2" />
       <child link="${prefix}link_3" />
       <axis xyz="0 0 -1" />
-      <limit lower="0" upper="6.28" effort="50" velocity="4" />
     </joint>
 
     <link name="${prefix}link_4">
@@ -149,12 +135,11 @@
         </geometry>
       </collision>
     </link>
-    <joint name="${prefix}joint_4" type="revolute">
+    <joint name="${prefix}joint_4" type="fixed">
       <origin xyz="6.8566E-05 -0.12961 0.10761" rpy="-0.50301 1.5354 -2.073" />
       <parent link="${prefix}link_3" />
       <child link="${prefix}link_4" />
       <axis xyz="-0.031013 0 -0.99952" />
-      <limit lower="0" upper="6.28" effort="50" velocity="4" />
     </joint>
 
     <link name="${prefix}link_5">
@@ -179,12 +164,11 @@
         </geometry>
       </collision>
     </link>
-    <joint name="${prefix}joint_5" type="revolute">
+    <joint name="${prefix}joint_5" type="fixed">
       <origin xyz="-0.0010256 0.083 0.10269" rpy="-1.5692 0.030978 0.050701" />
       <parent link="${prefix}link_4" />
       <child link="${prefix}link_5" />
       <axis xyz="0 0 -1" />
-      <limit lower="-3.14" upper="3.14" effort="50" velocity="4" />
     </joint>
 
     <link name="${prefix}link_6">
@@ -209,12 +193,11 @@
         </geometry>
       </collision>
     </link>
-    <joint name="${prefix}joint_6" type="revolute">
-      <origin xyz="0 -0.050807 0.26285" rpy="0 0 -0.010445" />
+    <joint name="${prefix}joint_6" type="fixed">
+      <origin xyz="0 -0.050807 0.26285" rpy="0 0 1.560355" />
       <parent link="${prefix}link_5" />
       <child link="${prefix}link_6" />
       <axis xyz="0 0 -1" />
-      <limit lower="0" upper="0" effort="50" velocity="0" />
     </joint>
 
     <link name="${prefix}Right_ee">
@@ -239,12 +222,11 @@
         </geometry>
       </collision>
     </link>
-    <joint name="${prefix}joint_ree" type="revolute">
+    <joint name="${prefix}joint_ree" type="fixed">
       <origin xyz="-0.030505 0.047691 -0.19085" rpy="1.5698 0 0.010445" />
       <parent link="${prefix}link_6" />
       <child link="${prefix}Right_ee" />
       <axis xyz="0 -0.0010429 1" />
-      <limit lower="0" upper="0.8" effort="15" velocity="1" />
     </joint>
 
     <link name="${prefix}Left_ee">
@@ -269,105 +251,12 @@
         </geometry>
       </collision>
     </link>
-    <joint name="${prefix}joint_lee" type="revolute">
+    <joint name="${prefix}joint_lee" type="fixed">
       <origin xyz="0.029492 0.048318 -0.19085" rpy="-1.5718 0 0.010445" />
       <parent link="${prefix}link_6" />
       <child link="${prefix}Left_ee" />
       <axis xyz="0 -0.0010429 1" />
-      <limit lower="0" upper="0.8" effort="15" velocity="1" />
     </joint>
-
-    <!-- ============================================================================= -->
-    <!-- TRANSMISSIONS (for ros_control) - Carried over from previous version -->
-    <!-- ============================================================================= -->
-
-    <transmission name="${prefix}link_1_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}joint_1">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="${prefix}link_1_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="${prefix}link_2_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}joint_2">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="${prefix}link_2_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="${prefix}link_3_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}joint_3">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="${prefix}link_3_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="${prefix}link_4_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}joint_4">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="${prefix}link_4_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="${prefix}link_5_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}joint_5">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="${prefix}link_5_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="${prefix}link_6_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}joint_6">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="${prefix}link_6_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-    
-    <transmission name="${prefix}Right_ee_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}joint_ree">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="${prefix}Right_ee_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
-
-    <transmission name="${prefix}Left_ee_trans">
-      <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}joint_lee">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="${prefix}Left_ee_motor">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        <mechanicalReduction>1</mechanicalReduction>
-      </actuator>
-    </transmission>
 
   </xacro:macro>
 </robot>
