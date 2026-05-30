@@ -17,12 +17,11 @@ ROAR-26-Simulation/
 │   │   └── config/              # Controller YAML configurations
 │   └── erc2025_remote_sim/      # Marsyard world environment
 │       ├── worlds/              # Marsyard 2024 world file
+        └── models/              # Marsyard and ArUco markers models
 
 
 
 
-
-│       └── models/              # Marsyard and ArUco markers models
 🛠️ PrerequisitesUbuntu 22.04ROS2 HumbleGazebo FortressInstall required packages:Bashsudo apt update
 sudo apt install -y \
   ros-humble-ros-gz-sim \
