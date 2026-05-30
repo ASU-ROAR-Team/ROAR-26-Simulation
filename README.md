@@ -1,4 +1,14 @@
-Here is the updated README.md file, restructured to reflect the new "Single Workspace" setup while keeping all the technical details intact. You can copy and paste this directly into your repository.🚀 ROAR 26 Simulation — Rover + 6-DOF Arm on MarsyardROS2 Humble simulation of the ROAR rover with a 6-DOF robotic arm running on Gazebo Fortress with the Marsyard 2024 environment.Part of ASU ROAR Team's ERC 2026 preparation.📁 Package StructurePlaintextROAR-26-Simulation/
+# 🚀 ROAR 26 Simulation — Rover + 6-DOF Arm on Marsyard
+
+> ROS2 Humble simulation of the ROAR rover with a 6-DOF robotic arm running on Gazebo Fortress with the Marsyard 2024 environment.  
+> Part of **ASU ROAR Team's ERC 2026** preparation.
+
+---
+
+## 📁 Package Structure
+
+```text
+ROAR-26-Simulation/
 ├── src/
 │   ├── roar_simulation/         # Rover configuration and control
 │   │   ├── launch/              # Main launch files
@@ -24,7 +34,7 @@ cd ~/roar_ws/src
 
 # 2. Clone this repository (ensure you are on the correct branch)
 git clone -b Rover_Arm_Marsyard_Simualtion \
-  https://github.com/ASU-ROAR-Team/ROAR-26-Simulation.git .
+  [https://github.com/ASU-ROAR-Team/ROAR-26-Simulation.git](https://github.com/ASU-ROAR-Team/ROAR-26-Simulation.git) .
 
 # 3. Build the workspace
 cd ~/roar_ws
