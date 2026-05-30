@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="aruco_marker_5">
+    <static>true</static>
+    <link name="link">
+
+      <!-- عصاية -->
+      <visual name="pole">
+        <pose>0 0 0.2 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.4</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.6 0.4 0.2 1</ambient>
+          <diffuse>0.6 0.4 0.2 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- البوكس الأبيض -->
+      <visual name="box">
+        <pose>0 0 0.55 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.25 0.25 0.25</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+        </material>
+      </visual>
+
+      <!-- وجه أمامي +Y -->
+      <visual name="face_front">
+        <pose>0 -0.126 0.55 0 0 0</pose>
+        <geometry><box><size>0.24 0.001 0.24</size></box></geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <pbr><metal>
+            <albedo_map>model://aruco_marker_5/meshes/marker_5.png</albedo_map>
+          </metal></pbr>
+        </material>
+      </visual>
+
+      <!-- وجه خلفي -Y -->
+      <visual name="face_back">
+        <pose>0 0.126 0.55 0 0 3.14159</pose>
+        <geometry><box><size>0.24 0.001 0.24</size></box></geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <pbr><metal>
+            <albedo_map>model://aruco_marker_5/meshes/marker_5.png</albedo_map>
+          </metal></pbr>
+        </material>
+      </visual>
+
+      <!-- وجه يمين +X -->
+      <visual name="face_right">
+        <pose>0.126 0 0.55 0 0 1.5708</pose>
+        <geometry><box><size>0.24 0.001 0.24</size></box></geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <pbr><metal>
+            <albedo_map>model://aruco_marker_5/meshes/marker_5.png</albedo_map>
+          </metal></pbr>
+        </material>
+      </visual>
+
+      <!-- وجه شمال -X -->
+      <visual name="face_left">
+        <pose>-0.126 0 0.55 0 0 -1.5708</pose>
+        <geometry><box><size>0.24 0.001 0.24</size></box></geometry>
+        <material>
+          <diffuse>1 1 1 1</diffuse>
+          <pbr><metal>
+            <albedo_map>model://aruco_marker_5/meshes/marker_5.png</albedo_map>
+          </metal></pbr>
+        </material>
+      </visual>
+
+    </link>
+  </model>
+</sdf>
