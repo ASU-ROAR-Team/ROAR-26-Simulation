@@ -1,88 +1,41 @@
-# ROS 2 Rover Simulation 🚀
+Here is the updated README.md file, restructured to reflect the new "Single Workspace" setup while keeping all the technical details intact. You can copy and paste this directly into your repository.🚀 ROAR 26 Simulation — Rover + 6-DOF Arm on MarsyardROS2 Humble simulation of the ROAR rover with a 6-DOF robotic arm running on Gazebo Fortress with the Marsyard 2024 environment.Part of ASU ROAR Team's ERC 2026 preparation.📁 Package StructurePlaintextROAR-26-Simulation/
+├── src/
+│   ├── roar_simulation/         # Rover configuration and control
+│   │   ├── launch/              # Main launch files
+│   │   ├── urdf/                # Rover and Arm URDF/Xacro files
+│   │   ├── meshes/              # Rover and Arm STL/PNG assets
+│   │   └── config/              # Controller YAML configurations
+│   └── erc2025_remote_sim/      # Marsyard world environment
+│       ├── worlds/              # Marsyard 2024 world file
+│       └── models/              # Marsyard and ArUco markers models
+🛠️ PrerequisitesUbuntu 22.04ROS2 HumbleGazebo FortressInstall required packages:Bashsudo apt update
+sudo apt install -y \
+  ros-humble-ros-gz-sim \
+  ros-humble-ros-gz-bridge \
+  ros-humble-controller-manager \
+  ros-humble-diff-drive-controller \
+  ros-humble-joint-state-broadcaster \
+  ros-humble-robot-state-publisher \
+  ros-humble-xacro \
+  python3-colcon-common-extensions
+⚙️ Setup — Single Workspace⚠️ This simulation is now integrated into a single workspace for easier management and build process.Bash# 1. Create the workspace
+mkdir -p ~/roar_ws/src
+cd ~/roar_ws/src
 
-Welcome to the ROS 2 Humble Rover Simulation repository.
-Please read the following instructions carefully before using the simulation.
+# 2. Clone this repository (ensure you are on the correct branch)
+git clone -b Rover_Arm_Marsyard_Simualtion \
+  https://github.com/ASU-ROAR-Team/ROAR-26-Simulation.git .
 
----
+# 3. Build the workspace
+cd ~/roar_ws
+colcon build
 
-# Installation Steps
-
-## Step 0: Clone the Repository
-
-Only do this the first time you use the simulation.
-
-```bash
-git clone https://github.com/ASU-ROAR-Team/ROAR-26-Simulation roar_onsite_ws
-```
-
-This command clones the simulation repository into a workspace directory named `roar_onsite_ws`
-
----
-
-## Step 0.5: Install Dependencies
-
-This step involve installing dependancies but there is no dependancies ( yet! :) )
-
----
-
-## Step 1: Build the Workspace
-
-Navigate to the workspace and build it using:
-
-```bash
-cd roar_onsite_ws
-colcon build --symlink-install
-```
-
-After building, remember to source the workspace:
-
-```bash
+# 4. Source the workspace
 source install/setup.bash
-```
+🚀 LaunchBash# Every time you open a new terminal:
+cd ~/roar_ws
+source install/setup.bash
 
-You should source the workspace every time you open a new terminal or rebuild the project.
-
----
-
-## Step 2: Launch the Simulation
-
-To launch the rover in Gazebo without the robotic arm, use:
-
-```bash
-ros2 launch roar_simulation basic_rover.launch.py
-```
-
-You can control the simulation by publishing commands to the following topic:
-
-```bash
-/diff_drive_controller/cmd_vel_unstamped
-```
-
-You can also use the teleoperation keyboard node from another terminal:
-
-```bash
-ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -r cmd_vel:=/diff_drive_controller/cmd_vel_unstamped
-```
-
----
-
-
-## Common Issue: Controller Activation Failure
-
-A common issue, especially when using WSL instead of dual boot, is that the controller may fail to activate.
-
-To solve this:
-
-1. Open the following file:
-
-```bash
-src/roar_simulation/launch/basic_rover.launch.py
-```
-
-2. Go to the `return LaunchDescription(...)` section near the end of the file.
-3. Locate the second node shown in the image.
-<img width="981" height="289" alt="Screenshot from 2026-04-21 00-49-28" src="https://github.com/user-attachments/assets/f7a8b6c4-5cf2-4f41-9610-312a48271851" />
-4. Increase the startup delay period.
-5. Keep increasing the delay until the controller launches successfully.
-
-For WSL users, a delay of around 45 to 60 seconds is recommended.
+# Launch the simulation
+ros2 launch roar_simulation basic_rover_mars.launch.py
+⏳ After Gazebo opens, wait ~12 seconds for the controllers to finish loading.You will see the rover spawn in the Marsyard world with the arm attached.✅ Expected Launch OrderGazebo Fortress opens with Marsyard 2024 world.Rover spawns after ~2 seconds.joint_state_broadcaster loads after ~12 seconds.diff_drive_controller loads after broadcaster is ready.Arm appears on the rover ✅.🤖 What's IncludedComponentDescriptionROAR RoverMecanum wheel rover with full URDF6-DOF Robotic ArmMounted on rover with position controlDepth CameraMounted on rover frontMarsyard 2024Full ERC world environmentDiff Drive ControllerRover movement controlJoint State BroadcasterPublishes all joint states📡 ROS2 TopicsTopicTypeDescription/diff_drive_controller/cmd_vel_unstampedTwistRover velocity command/diff_drive_controller/odomOdometryRover odometry/joint_statesJointStateAll joint positions/robot_descriptionStringFull URDF⚠️ Common IssuesProblemFixGazebo crashes on startupRun export QT_QPA_PLATFORM=xcb before launchingControllers not loadingWait longer — they need ~12s after spawnArm missing in GazeboRebuild: colcon build --packages-select roar_simulationPackage not found errorSource the workspace: source install/setup.bashDo NOT copy build/ or install/ folders between machines — always rebuild locally.ASU ROAR Team — ERC 2026 🚀
