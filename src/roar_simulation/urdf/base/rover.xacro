@@ -22,7 +22,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/base_link.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/base_link_visual.STL" />
         </geometry>
         <material name="light_grey">
           <color rgba="0.52941 0.54901 0.54901 1" />
@@ -31,7 +31,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/base_link.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/base_link_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -45,7 +45,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/rocker_rhs.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/rocker_rhs_visual.STL" />
         </geometry>
         <material name="light_blue">
           <color rgba="0.79215 0.81960 0.93333 1" />
@@ -54,7 +54,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/rocker_rhs.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/rocker_rhs_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -75,7 +75,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/bogie_rhs.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/bogie_rhs_visual.STL" />
         </geometry>
         <material name="light_blue">
           <color rgba="0.79215 0.81960 0.93333 1" />
@@ -84,7 +84,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/bogie_rhs.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/bogie_rhs_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -114,7 +114,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/wheel_rhs_mid.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/wheel_rhs_mid_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -144,7 +144,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/wheel_rhs_front.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/wheel_rhs_front_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -174,7 +174,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/wheel_rhs_rear.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/wheel_rhs_rear_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -195,7 +195,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/rocker_lhs.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/rocker_lhs_visual.STL" />
         </geometry>
         <material name="light_blue">
           <color rgba="0.79215 0.81960 0.93333 1" />
@@ -204,7 +204,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/rocker_lhs.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/rocker_lhs_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -225,7 +225,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/bogie_lhs.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/bogie_lhs_visual.STL" />
         </geometry>
         <material name="light_blue">
           <color rgba="0.79215 0.81960 0.93333 1" />
@@ -234,7 +234,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/bogie_lhs.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/bogie_lhs_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -264,7 +264,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/wheel_lhs_mid.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/wheel_lhs_mid_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -294,7 +294,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/wheel_lhs_front.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/wheel_lhs_front_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -324,7 +324,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/rover/wheel_lhs_rear.STL" />
+          <mesh filename="package://roar_simulation/meshes/rover/wheel_lhs_rear_collision.STL" />
         </geometry>
       </collision>
     </link>
