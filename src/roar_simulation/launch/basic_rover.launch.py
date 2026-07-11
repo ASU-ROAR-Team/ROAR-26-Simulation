@@ -21,7 +21,11 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time')
 
     # 2. SETUP PATHS
-    install_dir = os.path.join(pkg_roar_simulation, '..')
+    # Change this:
+    # install_dir = os.path.join(pkg_roar_simulation, '..')
+
+    # To this absolute parent path resolution:
+    install_dir = os.path.dirname(pkg_roar_simulation)
     gz_resource_path = install_dir
     if 'IGN_GAZEBO_RESOURCE_PATH' in os.environ:
         gz_resource_path = os.environ['IGN_GAZEBO_RESOURCE_PATH'] + ':' + install_dir

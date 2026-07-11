@@ -12,7 +12,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/base_arm.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/base_arm_new.STL" />
         </geometry>
         <material name="">
           <color rgba="0.79216 0.81961 0.93333 1" />
@@ -21,7 +21,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/base_arm.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/base_arm_new.STL" />
         </geometry>
       </collision>
     </link>
@@ -35,7 +35,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_1.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_1_new.STL" />
         </geometry>
         <material name="">
           <color rgba="0.89804 0.91765 0.92941 1" />
@@ -44,7 +44,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_1.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_1_new.STL" />
         </geometry>
       </collision>
     </link>
@@ -64,7 +64,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_2.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_2_new.STL" />
         </geometry>
         <material name="">
           <color rgba="0.79216 0.81961 0.93333 1" />
@@ -73,7 +73,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_2.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_2_new.STL" />
         </geometry>
       </collision>
     </link>
@@ -93,7 +93,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_3.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_3_new.STL" />
         </geometry>
         <material name="">
           <color rgba="0.79216 0.81961 0.93333 1" />
@@ -102,7 +102,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_3.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_3_new.STL" />
         </geometry>
       </collision>
     </link>
@@ -122,7 +122,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_4.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_4_new.STL" />
         </geometry>
         <material name="">
           <color rgba="0.79216 0.81961 0.93333 1" />
@@ -131,7 +131,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_4.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_4_new.STL" />
         </geometry>
       </collision>
     </link>
@@ -151,7 +151,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_5.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_5_new.STL" />
         </geometry>
         <material name="">
           <color rgba="0.69804 0.69804 0.69804 1" />
@@ -160,7 +160,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_5.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_5_new.STL" />
         </geometry>
       </collision>
     </link>
@@ -180,7 +180,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_6.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_6_new.STL" />
         </geometry>
         <material name="">
           <color rgba="0.1098 0.1098 0.1098 1" />
@@ -189,7 +189,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/arm/link_6.STL" />
+          <mesh filename="package://roar_simulation/meshes/arm/link_6_new.STL" />
         </geometry>
       </collision>
     </link>

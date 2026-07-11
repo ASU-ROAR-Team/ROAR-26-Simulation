@@ -5,13 +5,17 @@
 
   <xacro:macro name="rover_base">
 
-    <link name="dummy_root" />
-    
-    <joint name="dummy_joint" type="fixed">
-      <parent link="dummy_root"/>
+
+    <!-- ADD THESE LINES -->
+    <link name="base_footprint"/>
+
+    <joint name="base_footprint_joint" type="fixed">
+      <parent link="base_footprint"/>
       <child link="base_link"/>
       <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
+    <!-- END ADDITION -->
+    <!-- Keep everything else exactly the same below this point -->
 
     <link name="base_link">
       <inertial>

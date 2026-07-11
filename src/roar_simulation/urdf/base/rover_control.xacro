@@ -4,7 +4,7 @@
   <xacro:macro name="rover_control">
     <ros2_control name="GazeboSimSystem" type="system">
       <hardware>
-        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        <plugin>ign_ros2_control/IgnitionSystem</plugin>
       </hardware>
       
       <joint name="wheel_lhs_front_joint">

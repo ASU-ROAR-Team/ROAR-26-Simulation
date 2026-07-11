@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/name" name="roar_simulated_rover">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="roar_simulated_rover">
 
   <xacro:arg name="use_gazebo" default="true" />
   <xacro:arg name="use_hardware" default="false" />
@@ -11,17 +11,21 @@
   <xacro:include filename="$(find roar_simulation)/urdf/modules/arm_gazebo.xacro" />
 
   <xacro:rover_base />
-
   <xacro:robotic_arm prefix="arm_" parent_link="arm_mount_point">
     <origin xyz="0.0 0 0" rpy="0 0 0"/>
   </xacro:robotic_arm>
 
-  <xacro:depth_camera name="camera" parent_link="base_link">
-    <origin xyz="0 0.3 0.35" rpy="0 0 1.57079632679" /> 
+  <xacro:depth_camera name="zed2i" parent_link="base_link">
+    <origin xyz="0.0 0.35 0.25" rpy="0 0 0" />
   </xacro:depth_camera>
+  <xacro:depth_camera_gazebo name="zed2i" />
+
+  <xacro:bno055_imu name="bno055" parent_link="base_link">
+     <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </xacro:bno055_imu>
+  <xacro:bno055_imu_gazebo name="bno055" />
 
   <xacro:rover_gazebo controllers_yaml="$(find roar_simulation)/config/diff_controller.yaml"/>
-  
   <xacro:arm_gazebo prefix="arm_" />
-                      
+               
 </robot>
