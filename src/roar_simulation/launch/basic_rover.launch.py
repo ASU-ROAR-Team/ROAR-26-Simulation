@@ -26,9 +26,16 @@ def generate_launch_description():
 
     # To this absolute parent path resolution:
     install_dir = os.path.dirname(pkg_roar_simulation)
-    gz_resource_path = install_dir
-    if 'IGN_GAZEBO_RESOURCE_PATH' in os.environ:
-        gz_resource_path = os.environ['IGN_GAZEBO_RESOURCE_PATH'] + ':' + install_dir
+
+    gz_sim_resource_paths = [install_dir]
+    if 'GZ_SIM_RESOURCE_PATH' in os.environ and os.environ['GZ_SIM_RESOURCE_PATH']:
+        gz_sim_resource_paths.insert(0, os.environ['GZ_SIM_RESOURCE_PATH'])
+    gz_sim_resource_path = ':'.join(gz_sim_resource_paths)
+
+    ign_resource_paths = [install_dir]
+    if 'IGN_GAZEBO_RESOURCE_PATH' in os.environ and os.environ['IGN_GAZEBO_RESOURCE_PATH']:
+        ign_resource_paths.insert(0, os.environ['IGN_GAZEBO_RESOURCE_PATH'])
+    ign_gazebo_resource_path = ':'.join(ign_resource_paths)
 
     # 3. Process URDF
     xacro_file = os.path.join(pkg_roar_simulation, 'urdf', 'base', 'rover_simulation.urdf.xacro')
@@ -94,10 +101,11 @@ def generate_launch_description():
         use_sim_time_arg,
         
         # Set resource path for meshes
-        SetEnvironmentVariable(name='IGN_GAZEBO_RESOURCE_PATH', value=gz_resource_path),
+        SetEnvironmentVariable(name='GZ_SIM_RESOURCE_PATH', value=gz_sim_resource_path),
+        SetEnvironmentVariable(name='IGN_GAZEBO_RESOURCE_PATH', value=ign_gazebo_resource_path),
         
         # --- THE FIXES ---
-        # 1. Force Qt to use X11 instead of Wayland to prevent the libEGL crash across different machines
+        # 1. Force Qt to use X11 instead of Wayland to prevent the libEGL crash across different machines       
         #SetEnvironmentVariable(name='QT_QPA_PLATFORM', value='xcb'),
         
         gazebo,

@@ -3,7 +3,7 @@
   
   <xacro:macro name="rover_gazebo" params="controllers_yaml">
     <gazebo>
-      <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
         <parameters>${controllers_yaml}</parameters>
       </plugin>
       <!-- Keeping the sensors system here as a fallback, though it is also in the SDF -->

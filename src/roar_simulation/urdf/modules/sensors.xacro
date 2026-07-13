@@ -10,7 +10,8 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://roar_simulation/meshes/ZED2i.stl"/>
+          <!-- ZED2i mesh is not present in this package; use a simple fallback visual -->
+          <box size="0.08 0.04 0.06"/>
         </geometry>
         <material name="camera_blue">
           <color rgba="0.1 0.4 0.9 1.0"/>
