@@ -65,11 +65,12 @@ The URDF utilizes the `ign_ros2_control` plugin. This bypasses topic-level bridg
 
 ## 🚀 Launching Procedures
 
-Ensure your workspace is compiled and sourced before launching:
+We highly recommend using the provided `roar_sim.sh` script to launch the simulation. This script automatically cleans up stale FastDDS memory, prevents GPU rendering crashes by resetting `ign` processes, and injects the correct library paths for Gazebo.
+
+Ensure your workspace is compiled before running the script:
 ```bash
 cd ~/roar_ws 
 colcon build --packages-select roar_simulation
-source install/setup.bash
 ```
 
 We provide two distinct simulation modes depending on your testing requirements:
@@ -77,13 +78,13 @@ We provide two distinct simulation modes depending on your testing requirements:
 ### 1. "Noise" Simulation (Mars Conditions)
 **[Recommended]** Includes active environmental degradation and encoder pulse simulation. Perfect for testing the final perception and state estimation stack.
 ```bash
-ros2 launch roar_simulation basic_rover.launch.py start_rviz:=true
+bash roar_sim.sh basic rviz
 ```
 
 ### 2. "Clean" Simulation (Ideal Conditions)
 Bypasses the degradation nodes. Best for testing pure navigation algorithms, path planning, and kinematics without environmental interference.
 ```bash
-ros2 launch roar_simulation basic_rover_clean.launch.py start_rviz:=true
+bash roar_sim.sh clean rviz
 ```
 
 > **Note on the Boot Sequence:**
