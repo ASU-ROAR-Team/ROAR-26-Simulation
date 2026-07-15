@@ -1,0 +1,9 @@
+/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard/CMakeFiles/uninstall.dir
+/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard/CMakeFiles/marsyard_uninstall.dir
+/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard/CMakeFiles/test.dir
+/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard/CMakeFiles/edit_cache.dir
+/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard/CMakeFiles/rebuild_cache.dir
+/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard/CMakeFiles/list_install_components.dir
+/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard/CMakeFiles/install.dir
+/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard/CMakeFiles/install/local.dir
+/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard/CMakeFiles/install/strip.dir

@@ -1,0 +1,6 @@
+newmtl marsyard_orthophoto_alpha
+Ka 1.0 1.0 1.0
+Kd 1.0 1.0 1.0
+Ks 0.0 0.0 0.0
+illum 2
+map_Kd ../materials/textures/marsyard_orthophoto_alpha.png

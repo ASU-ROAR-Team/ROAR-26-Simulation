@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="mars_yard_visual_only">
+    <static>true</static>
+    <link name="terrain_link">
+      <visual name="mars_yard_visual_textured">
+        <geometry>
+          <mesh>
+            <uri>model://mars_yard/meshes/mars_yard_only_textured.obj</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+        <cast_shadows>false</cast_shadows>
+      </visual>
+    </link>
+  </model>
+</sdf>

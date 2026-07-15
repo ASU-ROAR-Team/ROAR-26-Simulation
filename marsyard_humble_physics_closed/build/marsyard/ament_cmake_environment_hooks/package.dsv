@@ -1,0 +1,4 @@
+source;share/marsyard/local_setup.bash
+source;share/marsyard/local_setup.dsv
+source;share/marsyard/local_setup.sh
+source;share/marsyard/local_setup.zsh

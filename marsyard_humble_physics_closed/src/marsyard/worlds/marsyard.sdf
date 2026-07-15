@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <world name="marsyard">
+    <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics"/>
+    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands"/>
+    <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster"/>
+
+    <!-- ERC rover runs on Earth, not Mars gravity. Keep 9.81 for real rover testing. -->
+    <gravity>0 0 -9.81</gravity>
+
+    <!-- Stable but light physics for Humble / Ignition Fortress / DART. -->
+    <physics name="marsyard_physics" type="dart">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+    </physics>
+
+    <scene>
+      <ambient>0.95 0.90 0.82 1</ambient>
+      <background>0.68 0.72 0.76 1</background>
+      <!-- Hide the grey Gazebo floor grid so the terrain does not look like it is floating over a net. -->
+      <grid>false</grid>
+      <shadows>false</shadows>
+    </scene>
+
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>0 -30 24 0 0.82 1.5708</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+
+    <light type="directional" name="sun">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 65 0 0 0</pose>
+      <diffuse>1.0 0.94 0.82 1</diffuse>
+      <specular>0.08 0.08 0.08 1</specular>
+      <direction>-0.35 0.25 -0.90</direction>
+    </light>
+
+    <!-- Mars Yard terrain only. No rover, no dummy object, no flat plane. -->
+    <include>
+      <name>mars_yard</name>
+      <uri>model://mars_yard</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+  </world>
+</sdf>

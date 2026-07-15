@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>marsyard</name>
+  <version>2.0.0</version>
+  <description>ERC Mars Yard Gazebo Sim environment for ROS 2 Humble. Terrain only, no rover.</description>
+  <maintainer email="omar@example.com">Omar</maintainer>
+  <license>Proprietary reference assets</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

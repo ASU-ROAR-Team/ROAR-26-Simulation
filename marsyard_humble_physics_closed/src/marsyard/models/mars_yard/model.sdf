@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="mars_yard">
+    <!-- Static environment model. Rover will be URDF/Xacro later; this remains SDF. -->
+    <static>true</static>
+    <link name="terrain_link">
+
+      <!-- What you SEE: textured Mars Yard surface only. -->
+      <visual name="mars_yard_visual_textured">
+        <geometry>
+          <mesh>
+            <uri>model://mars_yard/meshes/mars_yard_only_textured.obj</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+        <cast_shadows>false</cast_shadows>
+      </visual>
+
+      <!-- What the ROBOT FEELS: invisible low-poly terrain collision.
+           Do not add a visual for this mesh. It must stay hidden.
+           It is intentionally low-poly so Ignition Fortress / DART stays stable. -->
+      <collision name="mars_yard_collision_lowpoly_invisible">
+        <geometry>
+          <mesh>
+            <uri>model://mars_yard/meshes/mars_yard_collision_lowpoly.obj</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+        <surface>
+          <!-- Sand / compact soil style friction.
+               mu/mu2 around 0.9-1.1 gives climbing grip without making it unrealistically sticky. -->
+          <friction>
+            <ode>
+              <mu>1.05</mu>
+              <mu2>1.05</mu2>
+              <slip1>0.015</slip1>
+              <slip2>0.015</slip2>
+            </ode>
+          </friction>
+          <bounce>
+            <restitution_coefficient>0.0</restitution_coefficient>
+            <threshold>100000</threshold>
+          </bounce>
+          <contact>
+            <ode>
+              <kp>10000000</kp>
+              <kd>1</kd>
+              <max_vel>0.1</max_vel>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+
+    </link>
+  </model>
+</sdf>

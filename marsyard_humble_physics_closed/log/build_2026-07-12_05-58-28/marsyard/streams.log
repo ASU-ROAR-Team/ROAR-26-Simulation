@@ -1,0 +1,56 @@
+[0.008s] Invoking command in '/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/src/marsyard -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard
+[0.062s] -- The C compiler identification is GNU 11.4.0
+[0.114s] -- The CXX compiler identification is GNU 11.4.0
+[0.124s] -- Detecting C compiler ABI info
+[0.177s] -- Detecting C compiler ABI info - done
+[0.183s] -- Check for working C compiler: /usr/lib/ccache/cc - skipped
+[0.183s] -- Detecting C compile features
+[0.184s] -- Detecting C compile features - done
+[0.186s] -- Detecting CXX compiler ABI info
+[0.250s] -- Detecting CXX compiler ABI info - done
+[0.256s] -- Check for working CXX compiler: /usr/lib/ccache/c++ - skipped
+[0.256s] -- Detecting CXX compile features
+[0.256s] -- Detecting CXX compile features - done
+[0.258s] -- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.384s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[0.436s] -- Override CMake install command with custom implementation using symlinks instead of copying resources
+[0.513s] -- Configuring done
+[0.516s] -- Generating done
+[0.517s] -- Build files have been written to: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard
+[0.522s] Invoked command in '/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/src/marsyard -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard
+[0.524s] Invoking command in '/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard -- -j16 -l16
+[0.560s] Invoked command in '/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard -- -j16 -l16
+[0.570s] Invoking command in '/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard
+[0.577s] -- Install configuration: ""
+[0.578s] -- Execute custom install script
+[0.578s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/launch/marsyard.launch.py
+[0.586s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/launch/spawn_robot.launch.py
+[0.594s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/worlds/marsyard.sdf
+[0.602s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/models/mars_yard/materials/textures/marsyard_orthophoto_alpha.png
+[0.610s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/models/mars_yard/meshes/mars_yard_collision_lowpoly.obj
+[0.619s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/models/mars_yard/meshes/mars_yard_only_textured.mtl
+[0.627s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/models/mars_yard/meshes/mars_yard_only_textured.obj
+[0.636s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/models/mars_yard/model.config
+[0.646s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/models/mars_yard/model.sdf
+[0.655s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/models/mars_yard/model_visual_only.sdf
+[0.664s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/config/points_centered.yaml
+[0.671s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/config/terrain_metadata.json
+[0.680s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/maps/MarsYard_CoordSys.PNG
+[0.687s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/docs/PHYSICS_NOTES.md
+[0.694s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/docs/SOURCE_ANALYSIS.md
+[0.702s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/ament_index/resource_index/package_run_dependencies/marsyard
+[0.710s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/ament_index/resource_index/parent_prefix_path/marsyard
+[0.719s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/environment/ament_prefix_path.sh
+[0.727s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/environment/ament_prefix_path.dsv
+[0.737s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/environment/path.sh
+[0.746s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/environment/path.dsv
+[0.754s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/local_setup.bash
+[0.762s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/local_setup.sh
+[0.769s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/local_setup.zsh
+[0.778s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/local_setup.dsv
+[0.786s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/package.dsv
+[0.794s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/ament_index/resource_index/packages/marsyard
+[0.802s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/cmake/marsyardConfig.cmake
+[0.810s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/cmake/marsyardConfig-version.cmake
+[0.818s] -- Symlinking: /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/install/marsyard/share/marsyard/package.xml
+[0.830s] Invoked command in '/home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/saif/Desktop/ROAR/MARS_YARD_INIT/marsyard_humble_physics_closed/build/marsyard
