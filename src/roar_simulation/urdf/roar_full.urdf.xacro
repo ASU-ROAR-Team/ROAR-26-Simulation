@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="roar_full">
+
+  <!--
+    ===================================================================================
+    THIS IS THE PURE ROBOT DESCRIPTION FILE (Rover + Arm)
+    ===================================================================================
+    Purpose: To generate a complete description of the ROAR robot's physical structure,
+             including the rover base and the robotic arm.
+
+    This file is "simulation-agnostic" and contains NO Gazebo plugins or sensor logic.
+    It is the ideal file to use for:
+      - Visualizing the robot model in RViz.
+      - Running MoveIt! for motion planning.
+      - Deploying on the real robot hardware.
+    ===================================================================================
+  -->
+
+  <!-- The physical structure of the rover (chassis, wheels, transmissions) -->
+  <xacro:include filename="$(find roar_simulation)/urdf/base/rover.xacro" />
+
+  <!-- The physical structure of the arm (links, joints, transmissions) -->
+  <xacro:include filename="$(find roar_simulation)/urdf/arm/arm.xacro" />
+  
+  <!-- First, build the physical rover base. -->
+  <xacro:rover_base />
+
+  <!-- Second, build the physical robotic arm. We use an empty prefix. -->
+  <xacro:robotic_arm prefix="" />
+
+  <!-- Third, create the "stitching" joint that rigidly connects the arm to the rover.
+       This is the critical step that merges the two modules. -->
+  <joint name="arm_mount_joint" type="fixed">
+    <parent link="arm_mount_point" /> <!-- The connection point exposed by rover.xacro -->
+    <child link="base_arm" />          <!-- The root link of the arm from arm.xacro -->
+    <origin xyz="0 0 0" rpy="0 0 0" />  <!-- The offset is already defined in the arm_mount_point joint -->
+  </joint>
+
+</robot>

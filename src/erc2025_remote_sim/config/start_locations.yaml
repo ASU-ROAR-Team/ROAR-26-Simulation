@@ -1,0 +1,16 @@
+locations:
+
+  #location  1 is default
+
+  1:
+    position: [0.0, -2.0, 0.15]  
+    orientation: [0.0, 0.0, 1.57]
+  2:
+    position: [2.0, 3.0, 0.0]
+    orientation: [0.0, 0.0, 0.0]
+  3:
+    position: [-1.0, 2.5, 0.0]
+    orientation: [0.0, 0.0, -1.57]
+  4:
+    position: [4.5, -1.2, 0.0]
+    orientation: [0.0, 0.0, 3.14]

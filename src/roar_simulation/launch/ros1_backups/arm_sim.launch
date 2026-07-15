@@ -1,0 +1,36 @@
+<launch>
+    <arg name="x" default="0.0" />
+    <arg name="y" default="0.0" />
+    <arg name="z" default="0.0" /> 
+    <arg name="yaw" default="0.0"/>
+
+    <!-- Launch an empty Gazebo world -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch"/> 
+    
+    <!-- KEY CHANGE: Process the ARM-ONLY Xacro file -->
+    <!-- NOTE: I am using 'roar_simulation' as the package name to match your recent error logs. -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find roar_simulation)/urdf/arm/arm_simulation.urdf.xacro'" />
+
+    <!-- Spawn the arm model from the robot_description parameter into Gazebo -->
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
+          args="-urdf -model roar_arm -param robot_description 
+                -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw)" />
+
+
+
+    <!-- KEY CHANGE: Load the ARM-ONLY controller configuration YAML file -->
+    <rosparam file="$(find roar_simulation)/config/arm_controller.yaml" command="load"/>
+    
+    <!-- KEY CHANGE: Spawn ONLY the arm and hand controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen" args="joint_state_controller 
+                               rover_arm_controller
+                               hand_ee_controller" />
+
+    <!-- Publishes TF transforms for the arm based on robot_description and joint_states -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <!-- Optional: for manual control with a GUI slider -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+</launch>

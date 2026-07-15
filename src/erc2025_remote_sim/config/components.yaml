@@ -1,0 +1,29 @@
+components:
+
+  - type: CAM06
+    name: camera
+    parent_link: mount_link
+    xyz: "0.2 0.0 0.1"
+    rpy: "0.0 0.0 0.0"
+    device_namespace: front_cam
+
+ # - type: CAM06
+ #   name: camera
+ #   parent_link: mount_link
+ #   xyz: "-0.2 0.0 0.1"
+ #   rpy: "0.0 0.0 3.1416"
+ #   device_namespace: back_cam
+
+ # - type: CAM06
+ #   name: camera
+ #   parent_link: mount_link
+ #   xyz: "0.0 0.2 0.1"
+ #   rpy: "0.0 0.0 1.5708"
+ #   device_namespace: left_cam
+
+ # - type: CAM06
+ #   name: camera
+ #   parent_link: mount_link
+ #   xyz: "0.0 -0.2 0.1"
+ #   rpy: "0.0 0.0 -1.5708"
+ #   device_namespace: right_cam
