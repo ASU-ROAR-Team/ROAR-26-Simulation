@@ -58,6 +58,8 @@ The URDF utilizes the `ign_ros2_control` plugin. This bypasses topic-level bridg
 | 🌫️ `/zed2i/image_raw_updated` | `sensor_msgs/Image` | Degraded RGB simulating Martian dust and glare. |
 | 📷 `/zed2i/depth` | `sensor_msgs/Image` | Pure, unaffected Depth map. |
 | 🌫️ `/zed2i/depth_updated` | `sensor_msgs/Image` | Degraded Depth map with $0.003 \times Z^2$ decay and blinding. |
+| 🧭 `/bno055/data` | `sensor_msgs/Imu` | Acceleration, angular velocity, and orientation data. |
+| 🧲 `/bno055/mag` | `sensor_msgs/MagneticField` | 3-axis magnetometer readings. |
 
 ---
 
