@@ -26,6 +26,10 @@ diff_drive_controller:
     
 
     use_stamped_vel: false  # Allows standard Twist messages instead of TwistStamped
+
+    # odom->base_link TF is broadcast by ieskf_node instead
+    # Without this, diff_drive_controller and ieskf_node would fight over the same TF edge
+    enable_odom_tf: false
     
     # Optional but recommended limits
     linear.x.has_velocity_limits: true
