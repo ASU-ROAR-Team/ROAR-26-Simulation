@@ -10,7 +10,7 @@
       <visual name="visual">
         <geometry>
           <mesh>
-            <uri>meshes/rock_9.glb</uri>
+            <uri>meshes/rock_9.stl</uri>
           </mesh>
         </geometry>
       </visual>
