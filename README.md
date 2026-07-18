@@ -69,41 +69,84 @@ We highly recommend using the provided `roar_sim.sh` script to launch the simula
 
 Ensure your workspace is compiled before running the script:
 ```bash
-cd ~/roar_ws 
-colcon build --packages-select roar_simulation
+cd ~/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion
+colcon build --symlink-install
 ```
 
-We provide two distinct simulation modes depending on your testing requirements:
+We provide three distinct simulation packages depending on your testing requirements:
 
-### 1. "Noise" Simulation (Mars Conditions)
-**[Recommended]** Includes active environmental degradation and encoder pulse simulation. Perfect for testing the final perception and state estimation stack.
+### 1. "Clean" Simulation (`roar_rover_clean`)
+Bypasses the degradation nodes and arm controllers. Best for testing pure navigation algorithms, path planning, and kinematics without environmental interference.
 ```bash
-bash roar_sim.sh basic rviz
+  cd src/roar_rover_clean
+  bash launch_sim.sh rviz
 ```
 
-### 2. "Clean" Simulation (Ideal Conditions)
-Bypasses the degradation nodes. Best for testing pure navigation algorithms, path planning, and kinematics without environmental interference.
+### 2. "Noise" Simulation (`roar_rover_noise`)
+Includes active environmental degradation (sun glare) and encoder pulse simulation. Perfect for testing the final perception and state estimation stack.
 ```bash
-bash roar_sim.sh clean rviz
+cd src/roar_rover_noise
+bash launch_sim.sh rviz
+```
+
+### 3. "Full" Simulation (`roar_simulation_full`)
+**[Recommended]** Includes active environmental degradation, encoder pulse simulation, AND the 6-DOF robotic arm.
+```bash
+cd src/roar_simulation_full
+bash launch_sim.sh rviz
 ```
 
 > **Note on the Boot Sequence:**
-> To prevent `ros2_control` race conditions, the launch file executes a carefully timed sequence: 
-> Spawns the rover -> Waits 12s -> Loads Broadcasters -> Waits 1s -> Loads Controllers -> Waits 20s -> Launches RViz.
+> To prevent `ros2_control` race conditions, the launch files execute a carefully timed sequence: 
+> Spawns the rover -> Waits 12s -> Loads Broadcasters -> Waits 1s -> Loads Controllers -> Waits 10-20s -> Launches RViz.
 
 ---
 
 ## 🎮 Controlling the Simulation
 
 ### Driving the Rover (Teleop)
-You can command the differential drive by running the custom teleop script:
+You can command the differential drive by running the custom teleop script for whichever package you launched:
 ```bash
-ros2 run roar_simulation teleop.py
+ros2 run roar_rover_clean teleop.py
+# OR
+ros2 run roar_rover_noise teleop.py
+# OR
+ros2 run roar_simulation_full teleop.py
 ```
 > **Usage:** This will open a small Tkinter GUI window. **You must click the GUI window to focus it.** Once focused, use your **Arrow Keys** to drive the rover. It will automatically stop when you release the keys.
 
-### Controlling the Arm
-The 6-DOF arm requires properly timed trajectory points. The expected methodology is to use **MoveIt2** to calculate Inverse Kinematics (IK) and safely path-plan collision-free trajectories directly into the `/arm_controller/joint_trajectory` topic.
+The 6-DOF arm requires properly timed trajectory points. The expected methodology is to use **MoveIt2** to calculate Inverse Kinematics (IK) and safely path-plan collision-free trajectories. 
+
+### Manual GUI Control (Slider Bars)
+If you want to manually control each joint using a graphical interface with slider bars (the "node with the bar"), you can use the built-in ROS 2 trajectory GUI:
+
+```bash
+ros2 run rqt_joint_trajectory_controller rqt_joint_trajectory_controller
+```
+**How to use:**
+1. In the drop-down menu at the top, select `/controller_manager`.
+2. Select `arm_controller`.
+3. Use the slider bars to move each individual joint in real-time!
+
+### Command Line Control
+You can also manually test the arm joints by publishing a `JointTrajectory` message directly to the `/arm_controller/joint_trajectory` topic.
+
+**Example Command (Moves the arm up and opens the gripper):**
+```bash
+ros2 topic pub /arm_controller/joint_trajectory trajectory_msgs/msg/JointTrajectory "{
+  joint_names: [
+    'arm_joint_0', 'arm_joint_1', 'arm_joint_2', 
+    'arm_joint_3', 'arm_joint_4', 'arm_joint_5',
+    'arm_left_gripper', 'arm_right_gripper'
+  ],
+  points: [
+    {
+      positions: [0.0, -0.5, 0.5, 0.0, 0.0, 0.0, 0.02, 0.02],
+      time_from_start: {sec: 2, nanosec: 0}
+    }
+  ]
+}" -1
+```
 
 ---
 

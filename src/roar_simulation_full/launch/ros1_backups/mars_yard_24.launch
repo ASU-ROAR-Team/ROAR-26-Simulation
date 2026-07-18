@@ -1,0 +1,29 @@
+<launch>
+    <env name="GAZEBO_MODEL_PATH" value="$(find roar_simulation_full)/Mars_yard_2024"/>
+    <!-- Launch empty world in gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch" >
+        <arg name="world_name" value="$(find roar_simulation_full)/Mars_yard_2024/mars_yard.world"/>
+        <arg name="verbose" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="paused" value="true"/>
+    </include>
+
+    <!-- Define robot_description -->
+    <param name="robot_description" textfile="$(find roar_simulation_full)/urdf/roar.urdf" />
+
+    <!-- Spawn the robot in gazebo -->
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -model roar -param robot_description -x 11.54 -y 17.24 -z 1 -Y -1.5708" />
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(find roar_simulation_full)/config/Controllers.yaml" command="load" ns="/"/>
+    
+    <!-- Load the controllers with namespace -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller wheel_lhs_front_velocity_controller wheel_lhs_mid_velocity_controller wheel_lhs_rear_velocity_controller wheel_rhs_front_velocity_controller wheel_rhs_mid_velocity_controller wheel_rhs_rear_velocity_controller  --timeout 500" />
+
+    <!-- Start the joint state publisher -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+    <!-- Start the teleoperation node-->
+    <node pkg="roar_simulation_full" type="teleop.py" name="teleop_node" output="screen" />
+
+</launch>

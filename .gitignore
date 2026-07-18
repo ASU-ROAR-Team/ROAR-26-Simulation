@@ -9,3 +9,4 @@ log/
 .idea/
 __pycache__/
 *.pyc
+erc_2025_remote_simu/src

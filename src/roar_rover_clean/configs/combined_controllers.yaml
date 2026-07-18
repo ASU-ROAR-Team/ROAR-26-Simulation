@@ -1,0 +1,37 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    use_sim_time: True
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    wheel_lhs_front_velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+    wheel_lhs_mid_velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+    wheel_lhs_rear_velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+    wheel_rhs_front_velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+    wheel_rhs_mid_velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+    wheel_rhs_rear_velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+
+joint_state_broadcaster:
+  ros__parameters:
+    use_sim_time: True
+
+wheel_lhs_front_velocity_controller:
+  ros__parameters:
+    joints:
+      - wheel_lhs_front_joint
+    command_interfaces:
+      - velocity
+    state_interfaces:
+      - position
+      - velocity
+    use_sim_time: True
+
+# ... Apply 'use_sim_time: True' to ALL other controllers below ...
