@@ -1,65 +1,72 @@
-# ROAR Simulation Workspace (`simulation_ws`)
+# ROAR Simulation Repository — `theOriginal` Branch
 
-Welcome to the global ROAR Simulation Workspace. This workspace compiles and manages the complete suite of ROAR simulation packages, including rover models, terrain environments, performance monitors, and navigation setups.
-
----
-
-## 1. Directory Structure
-
-The `src/` folder is organized into functional categories to group relevant ROS 2 packages together:
-
-*   **`marsyards/`**
-    *   **`worlds/`**: Standalone worlds/launch packages containing the customized Gazebo world configurations and the parameterized world launcher.
-*   **`rover/`**: ROS 2 packages and configuration assets for the ROAR Rover and arm models.
-*   **`monitors/`**: Diagnostic, benchmarking, and telemetry nodes to monitor the simulation in real time.
-*   **`navMission_setup/`**: Nodes and launch configurations to set up Nav2 path planning and checkpoints.
-*   **`dev_environment/`**: Configuration scripts, container setups, and environment variables.
+Welcome to the `theOriginal` branch of the ROAR Simulation repository. This repository represents the package source space (`src/`) for the ROAR simulation workspace (`simulation_ws`).
 
 ---
 
-## 2. Getting Started & Building
+## 1. Branch Hierarchy & Directory Structure
 
-To compile the entire workspace (including the new `worlds` package):
+The repository source space is structured into modular directories representing distinct categories of the simulation:
 
-1.  **Navigate to the workspace root:**
+*   **`dev_environment/`**: Contains Dockerfiles, container setups, and environment customization scripts to configure the workspace dependencies.
+*   **`history/`**: Contains archival packages, logs, and development historical versions of simulation assets.
+*   **`marsyards/`**: Contains simulation terrain layouts and world models:
+    *   **`worlds/`**: The parameterized launcher package containing Gazebo `.world` files (standard Mars Yard footprint) and custom launch scripts.
+*   **`monitors/`**: Telemetry, diagnostic, and benchmarking scripts to analyze simulation health and performance.
+*   **`navMission_setup/`**: Navigation mission configurations, waypoint lists, and launch setups for Nav2 mapping and navigation.
+*   **`rover/`**: The core ROS 2 robot description packages (URDF/Xacro, controllers, and meshes) for the ROAR Rover and its robotic arm.
+
+---
+
+## 2. Onboarding Workflow & Guidelines (For First-Timers)
+
+To ensure smooth collaborative development and maintain a clean git history, all developers working on this branch must adhere to the following rules:
+
+### A. Cloning & Initializing the Repository
+*   **Cloning the Branch:**
+    If you are connected to a network that blocks SSH (Port 22), clone using the HTTPS remote URL:
     ```bash
-    cd ~/Desktop/ROAR/simulation_ws
+    git clone -b theOriginal https://github.com/ASU-ROAR-Team/ROAR-26-Simulation.git
     ```
-2.  **Sourcing ROS 2 dependencies:**
-    Ensure ROS 2 Humble (or your active ROS 2 distribution) is sourced:
+*   **Initial Setup:**
+    Make sure to source the underlying ROS 2 Humble setup file before building:
     ```bash
     source /opt/ros/humble/setup.bash
     ```
-3.  **Compile with Colcon:**
+
+### B. Pull Latest Updates Before Working
+Before making any changes locally, always fetch and pull the latest modifications from the remote branch to prevent merge conflicts:
+```bash
+git fetch origin
+git pull origin theOriginal
+```
+
+### C. Surgical Editing Rule
+*   **Only edit files you are actively working on:**
+    Do not modify, format, or clean up adjacent files that are unrelated to your assigned task. Keeping your edits surgical makes reviewing diffs straightforward.
+
+### D. Strict Build Protocol
+*   **Build from OUTSIDE the `src/` folder:**
+    Always navigate to the root of the workspace (`simulation_ws/`) to build the packages. **Never** run `colcon build` from inside the `src/` directory.
     ```bash
+    # Navigate to the workspace root
+    cd ~/Desktop/ROAR/simulation_ws/
+    
+    # Compile
     colcon build --symlink-install
-    ```
-4.  **Source the Workspace Overlay:**
-    ```bash
     source install/setup.bash
     ```
 
----
-
-## 3. Running Simulation Worlds
-
-With the `worlds` package integrated, you can load and launch any map dynamically:
-
-*   **Launch the Mars Yard world directly:**
+### E. Committing & Pushing Guidelines (Git Hygiene)
+*   **Only push files you need:**
+    Avoid running `git add .` blindly. Check modified files using `git status` and stage only the specific source files you changed.
+*   **No large binary files:**
+    Do not commit zip archives, tarballs, raw 3D mesh files, or database backups to the repository.
+*   **Push from INSIDE the repository:**
+    Run your commit and push commands from within the cloned repository directory:
     ```bash
-    ros2 launch worlds marsyard.launch.py
+    cd ~/Desktop/ROAR/simulation_ws/src/
+    git add <specific_file>
+    git commit -m "Brief and descriptive commit message"
+    git push origin theOriginal
     ```
-*   **Launch a specific world dynamically (using arguments):**
-    ```bash
-    ros2 launch worlds launch_map.launch.py world:=marsyard.world
-    ```
-
----
-
-## 4. Cleaning Up Between Runs
-
-To avoid node registration collisions or lingering simulator processes, use the global cleanup command before starting a new run:
-```bash
-RosClean
-```
-*(This triggers the alias defined in your `.bashrc` to kill all ROS 2, Gazebo, and teleoperation background processes).*
