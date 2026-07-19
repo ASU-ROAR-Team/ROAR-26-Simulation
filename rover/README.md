@@ -90,7 +90,7 @@ We highly recommend using the provided `roar_sim.sh` script to launch the simula
 
 Ensure your workspace is compiled before running the script:
 ```bash
-cd ~/Desktop/ROAR/simulation_ws/
+cd ~/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion
 colcon build --symlink-install
 ```
 
@@ -99,21 +99,21 @@ We provide three distinct simulation packages depending on your testing requirem
 ### 1. "Clean" Simulation (`roar_rover_clean`)
 Bypasses the degradation nodes and arm controllers. Best for testing pure navigation algorithms, path planning, and kinematics without environmental interference.
 ```bash
-cd src/rover/roar_rover_clean
-bash launch_sim.sh rviz
+  cd src/roar_rover_clean
+  bash launch_sim.sh rviz
 ```
 
 ### 2. "Noise" Simulation (`roar_rover_noise`)
 Includes active environmental degradation (sun glare) and encoder pulse simulation. Perfect for testing the final perception and state estimation stack.
 ```bash
-cd src/rover/roar_rover_noise
+cd src/roar_rover_noise
 bash launch_sim.sh rviz
 ```
 
 ### 3. "Full" Simulation (`roar_simulation_full`)
 **[Recommended]** Includes active environmental degradation, encoder pulse simulation, AND the 6-DOF robotic arm.
 ```bash
-cd src/rover/roar_simulation_full
+cd src/roar_simulation_full
 bash launch_sim.sh rviz
 ```
 
@@ -187,7 +187,7 @@ Intercepts the ZED2i camera streams and injects:
 #### ☀️ Editing the Sun Position
 The dynamic glare relies on the invisible `sun_marker` entity. If you move the visual Gazebo sky sun in your `.sdf` file, you **must also move the `sun_marker`** to match. 
 
-Edit `src/rover/roar_simulation_full/launch/basic_rover.launch.py` (or noise package, around line 102):
+Edit `src/roar_simulation/launch/basic_rover.launch.py` (around line 102):
 ```python
 spawn_sun = Node(
     package='ros_gz_sim',
@@ -203,7 +203,7 @@ spawn_sun = Node(
 
 ## ⚙️ Configuration Files Directory
 
-All core tuning parameters reside in `src/rover/roar_simulation_full/configs/` (or noise/clean packages):
+All core tuning parameters reside in `src/roar_simulation/config/`:
 
 | File | Purpose |
 |------|---------|

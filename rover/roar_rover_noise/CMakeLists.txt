@@ -33,6 +33,7 @@ install(DIRECTORY
   configs
   launch
   meshes
+  rviz
   urdf
   worlds
   DESTINATION share/${PROJECT_NAME}
