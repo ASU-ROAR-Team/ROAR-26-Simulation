@@ -14,7 +14,10 @@ The repository source space is structured into modular directories representing 
     *   **`worlds/`**: The parameterized launcher package containing Gazebo `.world` files (standard Mars Yard footprint) and custom launch scripts.
 *   **`monitors/`**: Telemetry, diagnostic, and benchmarking scripts to analyze simulation health and performance.
 *   **`navMission_setup/`**: Navigation mission configurations, waypoint lists, and launch setups for Nav2 mapping and navigation.
-*   **`rover/`**: The core ROS 2 robot description packages (URDF/Xacro, controllers, and meshes) for the ROAR Rover and its robotic arm.
+*   **`rover/`**: The core ROS 2 robot description packages (URDF/Xacro, controllers, and meshes) for the ROAR Rover and its robotic arm. It contains three distinct package configurations:
+    *   **`roar_rover_clean/`**: Bypasses degradation nodes and arm controllers. Ideal for testing pure navigation and kinematic algorithms.
+    *   **`roar_rover_noise/`**: Includes environmental noise (Martian dust, camera glare) and encoder pulse simulations.
+    *   **`roar_simulation_full/`**: [Recommended] Combines active environmental degradation, encoder pulse simulation, and the 6-DOF robotic arm.
 
 ---
 
