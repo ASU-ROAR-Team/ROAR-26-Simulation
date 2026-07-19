@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<robot name="rotary" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- <xacro:include filename="$(find rotary_description)/urdf/rotary_materials.xacro" />  color defined in main xacro now-->
+<xacro:include filename="$(find rotary_description)/urdf/rotary.ros2control" />
+<xacro:include filename="$(find rotary_description)/urdf/rotary.gazebo" />
+
+<xacro:macro name="rotary" params="name parent x y z">
+
+<link name="${name}_base_link">
+  <inertial>
+    <origin xyz="6.95959573865574e-05 0.019982734908322544 0.03523063033701029" rpy="0 0 0"/>
+    <mass value="1.6539079196317716"/>
+    <inertia ixx="0.001351" iyy="0.000958" izz="0.00126" ixy="-3e-06" iyz="2.8e-05" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find rotary_description)/meshes/rotary_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="dark_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find rotary_description)/meshes/rotary_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="${name}_link">
+  <inertial>
+    <origin xyz="-3.2981890471998155e-05 0.012699381403597693 0.0001268316921512469" rpy="0 0 0"/>
+    <mass value="0.13622839071127538"/>
+    <inertia ixx="1.6e-05" iyy="2.4e-05" izz="2.8e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.000209 -0.052756 -0.033931" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find rotary_description)/meshes/rotary_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="dark_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.000209 -0.052756 -0.033931" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find rotary_description)/meshes/rotary_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="${name}_revolute" type="revolute">
+  <origin xyz="0.000209 0.052756 0.033931" rpy="0 0 0"/>
+  <parent link="${name}_base_link"/>
+  <child link="${name}_link"/>
+  <axis xyz="0.0 1.0 0.0"/>
+  <limit upper="0.0" lower="-1.570796" effort="100" velocity="100"/>
+</joint>
+
+<!-- attach rotary to parent -->
+<joint name="${name}_mount_joint" type="fixed">
+  <parent link="${parent}"/>
+  <child link="${name}_base_link"/>
+  <origin xyz="${x} ${y} ${z}" rpy="0 0 3.14159"/> <!-- also needed rotation:might rotate the parent link instead -->
+</joint>
+</xacro:macro>
+
+</robot>

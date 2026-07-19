@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+<robot name="electromagnet" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--<xacro:include filename="$(find electromagnet_description)/urdf/materials.xacro" />-->
+<xacro:include filename="$(find electromagnet_description)/urdf/electromagnet.ros2control" />
+<xacro:include filename="$(find electromagnet_description)/urdf/electromagnet.gazebo" />
+<xacro:macro name="electromagnet" params="name parent x y z">
+
+<link name="${name}_link">
+  <inertial>
+    <origin xyz="0.0 0.0 0.015" rpy="0 0 0"/>
+    <mass value="0.20213247599999995"/>
+    <inertia ixx="9.8e-05" iyy="1.8e-05" izz="8.5e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find electromagnet_description)/meshes/magnet_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="dark_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find electromagnet_description)/meshes/magnet_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="${name}_magnet_link">
+  <inertial>
+    <origin xyz="3.3536888849219022e-18 -1.3414755539687609e-17 -0.009999999999999998" rpy="0 0 0"/>
+    <mass value="0.3326343418910592"/>
+    <inertia ixx="0.000471" iyy="3.6e-05" izz="0.000484" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 -0.0 -0.03" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find electromagnet_description)/meshes/magnet_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 -0.0 -0.03" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find electromagnet_description)/meshes/magnet_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="${name}_rigid" type="fixed">
+  <origin xyz="0.0 0.0 0.03" rpy="0 0 0"/>
+  <parent link="${name}_link"/>
+  <child link="${name}_magnet_link"/>
+</joint>
+
+<joint name="${name}_mount_joint" type="fixed">
+  <parent link="${parent}"/>
+  <child link="${name}_link"/>
+  <origin xyz="${x} ${y} ${z}" rpy="1.5708 0 -1.5708"/>
+</joint>
+
+</xacro:macro>
+</robot>

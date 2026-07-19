@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<robot name="led_indicator" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- <xacro:include filename="$(find led_indicator_description)/urdf/materials.xacro" /> -->
+<xacro:include filename="$(find led_indicator_description)/urdf/led_indicator.ros2control" />
+<xacro:include filename="$(find led_indicator_description)/urdf/led_indicator.gazebo" />
+
+<xacro:macro name="led_indicator" params="name parent x y z">
+<link name="${name}_link">
+  <inertial>
+    <origin xyz="8.88227426576511e-15 -6.347234338233283e-16 0.012147131966664481" rpy="0 0 0"/>
+    <mass value="0.26226045019813793"/>
+    <inertia ixx="9.6e-05" iyy="0.000616" izz="0.00069" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find led_indicator_description)/meshes/led_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find led_indicator_description)/meshes/led_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="${name}_led_link">
+  <inertial>
+    <origin xyz="2.1800306699036818e-08 3.487266513728785e-08 0.006022779928682715" rpy="0 0 0"/>
+    <mass value="0.44916964746577537"/>
+    <inertia ixx="5.6e-05" iyy="0.001001" izz="0.001038" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 0.0 -0.007566" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find led_indicator_description)/meshes/led_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 0.0 -0.007566" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find led_indicator_description)/meshes/led_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="${name}_rigid" type="fixed">
+  <origin xyz="0.0 0.0 0.007566" rpy="0 0 0"/>
+  <parent link="${name}_link"/>
+  <child link="${name}_led_link"/>
+</joint>
+<!-- attach to parent -->
+<joint name="${name}_mount_joint" type="fixed">
+  <parent link="${parent}"/>
+  <child link="${name}_link"/>
+  <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/> 
+</joint>
+</xacro:macro>
+</robot>

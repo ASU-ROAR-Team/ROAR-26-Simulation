@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<robot name="electromagnet" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<xacro:property name="body_color" value="Gazebo/Silver" />
+
+<gazebo reference="magnet_base_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+  <gravity>true</gravity>
+</gazebo>
+
+<gazebo reference="magnet_link">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="magnet_link">
+  <plugin filename="libignition-gazebo-magnet-system.so"
+          name="ignition::gazebo::systems::Magnet">
+    <force>10.0</force> <range>0.05</range> </plugin>
+</gazebo>
+</robot>

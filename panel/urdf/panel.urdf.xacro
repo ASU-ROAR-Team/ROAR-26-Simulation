@@ -1,0 +1,236 @@
+<?xml version="1.0"?>
+<robot name="erc_panel" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ═══════════════════════════════════════════
+       PROPERTIES — tweak these to match real panel
+       ═══════════════════════════════════════════ -->
+  <xacro:property name="panel_w"    value="0.60"/>  <!-- metres -->
+  <xacro:property name="panel_h"    value="0.50"/>
+  <xacro:property name="panel_d"    value="0.02"/>
+
+  <!-- switch travel limits (radians) -->
+  <xacro:property name="lever_off"  value="-0.436"/>  <!-- -25 deg -->
+  <xacro:property name="lever_on"   value=" 0.436"/>  <!--  25 deg -->
+  <xacro:property name="rotary_max" value=" 1.571"/>  <!--  90 deg -->
+  <xacro:property name="power_max"  value=" 1.571"/>
+
+  <!-- ═══════════════════════════════════════════
+       MATERIALS
+       ═══════════════════════════════════════════ -->
+  <material name="panel_gray">
+    <color rgba="0.3 0.3 0.3 1.0"/>
+  </material>
+  <material name="switch_black">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+  <material name="knob_dark">
+    <color rgba="0.15 0.15 0.15 1.0"/>
+  </material>
+  <material name="socket_white">
+    <color rgba="0.9 0.9 0.9 1.0"/>
+  </material>
+  <material name="led_blue">
+    <color rgba="0.0 0.4 1.0 1.0"/>
+  </material>
+
+  <!-- ═══════════════════════════════════════════
+       MACRO — lever switch
+       args: name, x, y (position on panel face)
+       ═══════════════════════════════════════════ -->
+  <xacro:macro name="lever_switch" params="name x y">
+
+    <!-- static base block mounted to panel -->
+    <link name="${name}_base">
+      <visual>
+        <geometry><box size="0.025 0.015 0.04"/></geometry>
+        <material name="switch_black"/>
+      </visual>
+      <collision>
+        <geometry><box size="0.025 0.015 0.04"/></geometry>
+      </collision>
+      <inertial>
+        <mass value="0.05"/>
+        <inertia ixx="1e-5" iyy="1e-5" izz="1e-5" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <joint name="${name}_base_joint" type="fixed">
+      <parent link="panel_base"/>
+      <child  link="${name}_base"/>
+      <origin xyz="${x} ${y} ${panel_d/2 + 0.02}" rpy="0 0 0"/>
+    </joint>
+
+    <!-- the handle that actually flips -->
+    <link name="${name}_handle">
+      <visual>
+        <geometry><cylinder radius="0.005" length="0.035"/></geometry>
+        <material name="switch_black"/>
+      </visual>
+      <collision>
+        <geometry><cylinder radius="0.005" length="0.035"/></geometry>
+      </collision>
+      <inertial>
+        <mass value="0.01"/>
+        <inertia ixx="1e-6" iyy="1e-6" izz="1e-6" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <!-- revolute: rotates around X axis (tilts forward/back) -->
+    <joint name="${name}_joint" type="revolute">
+      <parent link="${name}_base"/>
+      <child  link="${name}_handle"/>
+      <origin xyz="0 0 0.02" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="${lever_off}" upper="${lever_on}"
+             effort="5.0" velocity="1.0"/>
+      <dynamics damping="0.1" friction="0.05"/>
+    </joint>
+
+  </xacro:macro>
+
+  <!-- ═══════════════════════════════════════════
+       MACRO — rotary knob
+       args: name, x, y, max_angle
+       ═══════════════════════════════════════════ -->
+  <xacro:macro name="rotary_knob" params="name x y max_angle">
+
+    <link name="${name}_body">
+      <visual>
+        <geometry><cylinder radius="0.018" length="0.022"/></geometry>
+        <material name="knob_dark"/>
+      </visual>
+      <collision>
+        <geometry><cylinder radius="0.018" length="0.022"/></geometry>
+      </collision>
+      <inertial>
+        <mass value="0.03"/>
+        <inertia ixx="1e-6" iyy="1e-6" izz="1e-6" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <!-- revolute around Z axis (spins in plane of panel) -->
+    <joint name="${name}_joint" type="revolute">
+      <parent link="panel_base"/>
+      <child  link="${name}_body"/>
+      <origin xyz="${x} ${y} ${panel_d/2 + 0.011}" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="0.0" upper="${max_angle}"
+             effort="3.0" velocity="1.0"/>
+      <dynamics damping="0.2" friction="0.1"/>
+    </joint>
+
+  </xacro:macro>
+
+  <!-- ═══════════════════════════════════════════
+       MACRO — IEC320 C14 socket (fixed, no moving parts)
+       ═══════════════════════════════════════════ -->
+  <xacro:macro name="iec_socket" params="name x y">
+
+    <link name="${name}_body">
+      <visual>
+        <geometry><box size="0.040 0.028 0.018"/></geometry>
+        <material name="socket_white"/>
+      </visual>
+      <collision>
+        <!-- slightly deeper collision so plug contact registers -->
+        <geometry><box size="0.040 0.028 0.025"/></geometry>
+      </collision>
+      <inertial>
+        <mass value="0.02"/>
+        <inertia ixx="1e-6" iyy="1e-6" izz="1e-6" ixy="0" ixz="0" iyz="0"/>
+      </inertial>
+    </link>
+
+    <joint name="${name}_joint" type="fixed">
+      <parent link="panel_base"/>
+      <child  link="${name}_body"/>
+      <origin xyz="${x} ${y} ${panel_d/2 + 0.009}" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro>
+
+  <!-- ═══════════════════════════════════════════
+       PANEL BASE LINK
+       ═══════════════════════════════════════════ -->
+  <link name="panel_base">
+    <visual>
+      <geometry>
+        <box size="${panel_w} ${panel_h} ${panel_d}"/>
+      </geometry>
+      <material name="panel_gray"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="${panel_w} ${panel_h} ${panel_d}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="5.0"/>
+      <inertia ixx="0.05" iyy="0.05" izz="0.05" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <!-- world → panel (static, leaning slightly toward rover) -->
+  <joint name="panel_world_joint" type="fixed">
+    <parent link="world"/>
+    <child  link="panel_base"/>
+    <origin xyz="1.0 0.0 0.6" rpy="0 -0.2 0"/>
+  </joint>
+
+  <!-- dummy world link required when panel_world_joint references world -->
+  <link name="world"/>
+
+  <!-- ═══════════════════════════════════════════
+       OP 1 — MAIN SWITCH (top centre)
+       ═══════════════════════════════════════════ -->
+  <xacro:lever_switch name="main_switch" x="0.0" y="0.18"/>
+
+  <!-- LED indicator next to main switch (fixed visual only) -->
+  <link name="main_switch_led">
+    <visual>
+      <geometry><sphere radius="0.006"/></geometry>
+      <material name="led_blue"/>
+    </visual>
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="1e-8" iyy="1e-8" izz="1e-8" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+  <joint name="main_switch_led_joint" type="fixed">
+    <parent link="panel_base"/>
+    <child  link="main_switch_led"/>
+    <origin xyz="0.04 0.18 ${panel_d/2 + 0.006}" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ═══════════════════════════════════════════
+       OP 2 — LEVER SWITCHES (row of 6)
+       ═══════════════════════════════════════════ -->
+  <xacro:lever_switch name="lever_1" x="-0.21" y="0.08"/>
+  <xacro:lever_switch name="lever_2" x="-0.13" y="0.08"/>
+  <xacro:lever_switch name="lever_3" x="-0.05" y="0.08"/>
+  <xacro:lever_switch name="lever_4" x=" 0.03" y="0.08"/>
+  <xacro:lever_switch name="lever_5" x=" 0.11" y="0.08"/>
+  <xacro:lever_switch name="lever_6" x=" 0.19" y="0.08"/>
+
+  <!-- ═══════════════════════════════════════════
+       OP 3 — ROTARY SWITCHES (row of 5)
+       ═══════════════════════════════════════════ -->
+  <xacro:rotary_knob name="rotary_1" x="-0.18" y="-0.04" max_angle="${rotary_max}"/>
+  <xacro:rotary_knob name="rotary_2" x="-0.09" y="-0.04" max_angle="${rotary_max}"/>
+  <xacro:rotary_knob name="rotary_3" x=" 0.00" y="-0.04" max_angle="${rotary_max}"/>
+  <xacro:rotary_knob name="rotary_4" x=" 0.09" y="-0.04" max_angle="${rotary_max}"/>
+  <xacro:rotary_knob name="rotary_5" x=" 0.18" y="-0.04" max_angle="${rotary_max}"/>
+
+  <!-- ═══════════════════════════════════════════
+       OP 4 — IEC320 C14 SOCKETS (two, side by side)
+       ═══════════════════════════════════════════ -->
+  <xacro:iec_socket name="socket_a" x="-0.08" y="-0.13"/>
+  <xacro:iec_socket name="socket_b" x=" 0.08" y="-0.13"/>
+
+  <!-- ═══════════════════════════════════════════
+       OP 5 — ROTARY POWER SWITCHES (two large knobs)
+       ═══════════════════════════════════════════ -->
+  <xacro:rotary_knob name="power_rotary_1" x="-0.10" y="-0.21" max_angle="${power_max}"/>
+  <xacro:rotary_knob name="power_rotary_2" x=" 0.10" y="-0.21" max_angle="${power_max}"/>
+
+</robot>

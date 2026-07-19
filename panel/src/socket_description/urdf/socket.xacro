@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<robot name="socket" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- <xacro:include filename="$(find socket_description)/urdf/materials.xacro" /> -->
+<xacro:include filename="$(find socket_description)/urdf/socket.ros2control" />
+<xacro:include filename="$(find socket_description)/urdf/socket.gazebo" />
+
+<xacro:macro name="socket" params="name parent x y z">
+<link name="${name}_link">
+  <inertial>
+    <origin xyz="0.0001832207134426815 0.0004074634746267801 -0.0028454250518360606" rpy="0 0 0"/>
+    <mass value="0.03941166079976311"/>
+    <inertia ixx="3e-06" iyy="6e-06" izz="6e-06" ixy="-0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find socket_description)/meshes/socket_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="dark_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find socket_description)/meshes/socket_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+  <!-- attach socket body to parent -->
+<joint name="${name}_mount_joint" type="fixed">
+  <parent link="${parent}"/>
+  <child link="${name}_link"/>
+  <origin xyz="${x} ${y} ${z}" rpy="1.5708 3.14159 0"/> <!-- added 1.5708 to flip the socket body -->
+</joint>
+</xacro:macro>
+
+</robot>

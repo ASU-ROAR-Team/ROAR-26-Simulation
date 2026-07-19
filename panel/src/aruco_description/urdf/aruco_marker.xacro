@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="aruco_marker" params="name parent x y z texture_file">
+    
+    <link name="${name}_frame_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.07 0.07 0.001"/>
+        </geometry>
+        <material name="white">
+          <color rgba="1.0 1.0 1.0 1.0"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.07 0.07 0.001"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="${name}_pattern_link">
+      <visual>
+        <origin xyz="0 0 0.0001" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.05 0.05 0.001"/>
+        </geometry>
+        <material name="${name}_pattern_mat">
+          <texture filename="package://aruco_description/meshes/${texture_file}"/>
+        </material>
+      </visual>
+    </link>
+
+    <joint name="${name}_pattern_joint" type="fixed">
+      <parent link="${name}_frame_link"/>
+      <child link="${name}_pattern_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+
+<!-- mount to parent link -->
+<joint name="${name}_mount_joint" type="fixed">
+  <parent link="${parent}"/>
+  <child link="${name}_frame_link"/>
+  <origin xyz="${x} ${y} ${z}" rpy="1.5708 0 0"/>
+</joint>
+  </xacro:macro>
+</robot>

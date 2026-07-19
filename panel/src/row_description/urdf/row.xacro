@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<robot name="row" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- xacro:include filename="$(find row_description)/urdf/materials.xacro" /> -->
+<xacro:include filename="$(find row_description)/urdf/row.ros2control" />
+<xacro:include filename="$(find row_description)/urdf/row.gazebo" />
+
+<xacro:macro name="row" params="name parent x y z"> 
+
+<link name="${name}_link">
+  <inertial>
+    <origin xyz="-2.401626702229826e-05 -0.018325361046344836 -3.6757290967744284e-05" rpy="0 0 0"/>
+    <mass value="0.5845136871250228"/>
+    <inertia ixx="0.000452" iyy="0.00029" izz="0.000191" ixy="-0.0" iyz="-1e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find row_description)/meshes/row_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="dark_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find row_description)/meshes/row_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="${name}_row_link">
+  <inertial>
+    <origin xyz="-4.057487931493324e-07 0.0003920169114006583 -0.004603424306532057" rpy="0 0 0"/>
+    <mass value="0.00434807010112859"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="1e-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/> <!-- copied from switch-->
+  </inertial>
+  <visual>
+    <origin xyz="-5.6e-05 -0.017761 0.008932" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find row_description)/meshes/row_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="dark_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="-5.6e-05 -0.017761 0.008932" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find row_description)/meshes/row_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="${name}_revolute" type="revolute">
+  <origin xyz="5.6e-05 0.017761 -0.008932" rpy="0 0 0"/>
+  <parent link="${name}_link"/>
+  <child link="${name}_row_link"/>
+  <axis xyz="-1.0 -0.0 -0.0"/>
+  <limit upper="0.0" lower="-2.094395" effort="100" velocity="100"/>
+</joint>
+  <!-- attach switch body to parent -->
+<joint name="${name}_mount_joint" type="fixed">
+  <parent link="${parent}"/>
+  <child link="${name}_link"/>
+  <origin xyz="${x} ${y} ${z}" rpy="0 0 3.14159"/> <!-- added 3.14159 to flip the switch body because it was directed inwards -->
+</joint>
+</xacro:macro>
+</robot>

@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<robot name="slab" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--<xacro:include filename="$(find slab_description)/urdf/materials.xacro" />-->
+<xacro:include filename="$(find slab_description)/urdf/slab.ros2control" />
+<xacro:include filename="$(find slab_description)/urdf/slab.gazebo" />
+<xacro:macro name="slab" params="name parent x y z">
+<link name="${name}_link">
+  <inertial>
+    <origin xyz="0.0010048686400626185 -0.0006186790953504218 0.029978908553673085" rpy="0 0 0"/>
+    <mass value="0.7143499999999998"/>
+    <inertia ixx="0.00287" iyy="0.000942" izz="0.002174" ixy="0.0" iyz="0.0" ixz="1e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find slab_description)/meshes/slab_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="dark_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find slab_description)/meshes/slab_base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="${name}_mount_joint" type="fixed">
+  <parent link="${parent}"/>
+  <child link="${name}_link"/>
+  <origin xyz="${x} ${y} ${z}" rpy="0 -1.5708 1.5708"/>
+</joint>
+
+</xacro:macro>
+</robot>
