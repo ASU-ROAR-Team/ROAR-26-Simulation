@@ -1,0 +1,24 @@
+Obstacle Data Summary
+World Name: marsyard.world
+Total Rocks: 15
+Density: 0.012 rocks/m²
+Collidable Ratio: 0.5
+Spacing Min: 1.2 m
+Deadends: False
+Timestamped File: obstacle_data_20260720_174847.npy
+
+[1] Rock_1 | Rock Model #8 | Pos: (2.15, 5.26, 4.00) | Collidable: True
+[2] Rock_2 | Rock Model #3 | Pos: (-11.10, -3.44, 4.00) | Collidable: True
+[3] Rock_3 | Rock Model #8 | Pos: (9.05, 0.92, 4.00) | Collidable: True
+[4] Rock_4 | Rock Model #5 | Pos: (-8.96, 6.65, 4.00) | Collidable: False
+[5] Rock_5 | Rock Model #7 | Pos: (-13.58, -9.82, 4.00) | Collidable: True
+[6] Rock_6 | Rock Model #7 | Pos: (-11.00, -7.32, 4.00) | Collidable: False
+[7] Rock_7 | Rock Model #5 | Pos: (-1.62, -3.28, 4.00) | Collidable: False
+[8] Rock_8 | Rock Model #4 | Pos: (-17.52, 4.50, 4.00) | Collidable: True
+[9] Rock_9 | Rock Model #9 | Pos: (6.48, 3.32, 4.00) | Collidable: False
+[10] Rock_10 | Rock Model #9 | Pos: (9.70, 8.37, 4.00) | Collidable: True
+[11] Rock_11 | Rock Model #2 | Pos: (-6.84, 12.38, 4.00) | Collidable: False
+[12] Rock_12 | Rock Model #2 | Pos: (10.57, 9.48, 4.00) | Collidable: True
+[13] Rock_13 | Rock Model #7 | Pos: (-4.67, 5.26, 4.00) | Collidable: True
+[14] Rock_14 | Rock Model #6 | Pos: (-0.81, -7.64, 4.00) | Collidable: False
+[15] Rock_15 | Rock Model #1 | Pos: (-16.45, 12.65, 4.00) | Collidable: False
