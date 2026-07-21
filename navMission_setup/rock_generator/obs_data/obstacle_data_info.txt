@@ -1,24 +1,74 @@
-Obstacle Data Summary
-World Name: marsyard.world
-Total Rocks: 15
-Density: 0.012 rocks/m²
-Collidable Ratio: 0.5
-Spacing Min: 1.2 m
-Deadends: False
-Timestamped File: obstacle_data_20260720_174847.npy
+Settled Obstacle Data Summary (Captured after simulation free-fall)
+World Name: marsyard
+Total Settled Rocks: 69
+Timestamp: 20260721_010000
 
-[1] Rock_1 | Rock Model #8 | Pos: (2.15, 5.26, 4.00) | Collidable: True
-[2] Rock_2 | Rock Model #3 | Pos: (-11.10, -3.44, 4.00) | Collidable: True
-[3] Rock_3 | Rock Model #8 | Pos: (9.05, 0.92, 4.00) | Collidable: True
-[4] Rock_4 | Rock Model #5 | Pos: (-8.96, 6.65, 4.00) | Collidable: False
-[5] Rock_5 | Rock Model #7 | Pos: (-13.58, -9.82, 4.00) | Collidable: True
-[6] Rock_6 | Rock Model #7 | Pos: (-11.00, -7.32, 4.00) | Collidable: False
-[7] Rock_7 | Rock Model #5 | Pos: (-1.62, -3.28, 4.00) | Collidable: False
-[8] Rock_8 | Rock Model #4 | Pos: (-17.52, 4.50, 4.00) | Collidable: True
-[9] Rock_9 | Rock Model #9 | Pos: (6.48, 3.32, 4.00) | Collidable: False
-[10] Rock_10 | Rock Model #9 | Pos: (9.70, 8.37, 4.00) | Collidable: True
-[11] Rock_11 | Rock Model #2 | Pos: (-6.84, 12.38, 4.00) | Collidable: False
-[12] Rock_12 | Rock Model #2 | Pos: (10.57, 9.48, 4.00) | Collidable: True
-[13] Rock_13 | Rock Model #7 | Pos: (-4.67, 5.26, 4.00) | Collidable: True
-[14] Rock_14 | Rock Model #6 | Pos: (-0.81, -7.64, 4.00) | Collidable: False
-[15] Rock_15 | Rock Model #1 | Pos: (-16.45, 12.65, 4.00) | Collidable: False
+[1] Rock_1 | Rock Model #7 | Settled Pos: (-6.74, 2.26, 1.217) | Rot: (0.00, -0.00, 1.87) | Collidable: False
+[2] Rock_2 | Rock Model #2 | Settled Pos: (-4.50, 1.94, 1.046) | Rot: (0.00, 0.00, -1.86) | Collidable: True
+[3] Rock_3 | Rock Model #5 | Settled Pos: (-3.48, 2.67, 0.828) | Rot: (-0.00, 0.00, 2.19) | Collidable: True
+[4] Rock_4 | Rock Model #1 | Settled Pos: (-1.64, 8.31, 1.077) | Rot: (0.00, 0.00, 0.25) | Collidable: True
+[5] Rock_5 | Rock Model #6 | Settled Pos: (1.17, -2.29, 1.534) | Rot: (0.00, 0.00, -2.49) | Collidable: False
+[6] Rock_6 | Rock Model #9 | Settled Pos: (8.00, 3.82, 1.475) | Rot: (-0.00, 0.00, 1.82) | Collidable: True
+[7] Rock_7 | Rock Model #7 | Settled Pos: (6.74, -9.75, 1.900) | Rot: (0.00, 0.00, -0.72) | Collidable: False
+[8] Rock_8 | Rock Model #8 | Settled Pos: (1.16, 6.62, 1.338) | Rot: (0.00, 0.01, 1.23) | Collidable: False
+[9] Rock_9 | Rock Model #5 | Settled Pos: (-1.54, -5.08, 1.340) | Rot: (-0.00, 0.00, 2.26) | Collidable: True
+[10] Rock_10 | Rock Model #7 | Settled Pos: (10.29, 9.17, 1.036) | Rot: (-0.02, -0.03, -2.14) | Collidable: True
+[11] Rock_11 | Rock Model #1 | Settled Pos: (-15.42, 0.76, 1.096) | Rot: (0.00, -0.01, 2.32) | Collidable: True
+[12] Rock_12 | Rock Model #9 | Settled Pos: (6.05, 6.30, 2.043) | Rot: (-0.00, 0.00, 1.46) | Collidable: True
+[13] Rock_13 | Rock Model #8 | Settled Pos: (-8.37, -3.07, 1.141) | Rot: (0.00, 0.01, -2.76) | Collidable: True
+[14] Rock_14 | Rock Model #3 | Settled Pos: (-12.91, 0.89, 0.776) | Rot: (0.00, 0.01, 0.78) | Collidable: True
+[15] Rock_15 | Rock Model #8 | Settled Pos: (-13.48, -8.63, 0.555) | Rot: (0.00, -0.00, 2.00) | Collidable: True
+[16] Rock_16 | Rock Model #7 | Settled Pos: (-15.42, -8.11, 1.165) | Rot: (-0.00, 0.00, 2.98) | Collidable: True
+[17] Rock_17 | Rock Model #5 | Settled Pos: (12.83, 1.52, 1.421) | Rot: (0.01, -0.01, 3.05) | Collidable: True
+[18] Rock_18 | Rock Model #1 | Settled Pos: (-2.74, -1.70, 1.359) | Rot: (0.00, 0.00, -1.94) | Collidable: True
+[19] Rock_19 | Rock Model #9 | Settled Pos: (-6.90, -3.61, 1.212) | Rot: (-0.00, 0.00, -1.60) | Collidable: True
+[20] Rock_20 | Rock Model #3 | Settled Pos: (8.36, 9.14, 0.776) | Rot: (-0.00, -0.00, 1.05) | Collidable: True
+[21] Rock_21 | Rock Model #2 | Settled Pos: (3.67, 9.45, 1.024) | Rot: (0.00, 0.00, -0.49) | Collidable: False
+[22] Rock_22 | Rock Model #7 | Settled Pos: (-9.69, 9.40, 1.152) | Rot: (-0.00, 0.00, 1.81) | Collidable: False
+[23] Rock_23 | Rock Model #1 | Settled Pos: (-2.59, -0.06, 0.963) | Rot: (0.00, 0.00, -1.52) | Collidable: True
+[24] Rock_24 | Rock Model #7 | Settled Pos: (-8.37, -9.12, 0.807) | Rot: (-0.00, -0.01, 0.12) | Collidable: False
+[25] Rock_25 | Rock Model #1 | Settled Pos: (-1.98, -8.03, 1.175) | Rot: (0.00, 0.00, -1.57) | Collidable: True
+[26] Rock_26 | Rock Model #7 | Settled Pos: (-12.76, 5.50, 1.121) | Rot: (0.00, -0.00, -1.82) | Collidable: True
+[27] Rock_27 | Rock Model #9 | Settled Pos: (2.16, -7.22, 0.878) | Rot: (-0.00, 0.00, -1.80) | Collidable: True
+[28] Rock_28 | Rock Model #7 | Settled Pos: (-9.15, 2.50, 0.707) | Rot: (-0.01, 0.00, 1.31) | Collidable: True
+[29] Rock_29 | Rock Model #3 | Settled Pos: (4.30, 2.92, 1.660) | Rot: (-0.01, -0.00, 2.77) | Collidable: True
+[30] Rock_30 | Rock Model #4 | Settled Pos: (3.40, -7.43, 0.595) | Rot: (0.00, 0.00, -1.19) | Collidable: True
+[31] Rock_31 | Rock Model #5 | Settled Pos: (5.56, 10.02, 0.927) | Rot: (-0.00, -0.00, 0.41) | Collidable: False
+[32] Rock_32 | Rock Model #9 | Settled Pos: (-7.88, 7.88, 1.197) | Rot: (-0.00, 0.00, -1.96) | Collidable: False
+[33] Rock_33 | Rock Model #2 | Settled Pos: (-7.74, 3.57, 0.973) | Rot: (0.01, -0.00, -1.31) | Collidable: False
+[34] Rock_34 | Rock Model #4 | Settled Pos: (12.69, 4.63, 1.215) | Rot: (-0.08, -0.00, 2.68) | Collidable: True
+[35] Rock_35 | Rock Model #1 | Settled Pos: (4.86, 4.00, 2.024) | Rot: (-0.01, -0.01, 0.97) | Collidable: False
+[36] Rock_36 | Rock Model #5 | Settled Pos: (-2.51, -4.06, 1.428) | Rot: (0.01, -0.00, 0.44) | Collidable: True
+[37] Rock_37 | Rock Model #2 | Settled Pos: (-10.08, 4.85, 1.038) | Rot: (0.00, 0.00, 1.97) | Collidable: False
+[38] Rock_38 | Rock Model #9 | Settled Pos: (-14.74, 8.94, 1.086) | Rot: (0.00, 0.00, 2.96) | Collidable: False
+[39] Rock_39 | Rock Model #6 | Settled Pos: (6.16, 2.55, 1.256) | Rot: (-0.03, 0.03, -0.75) | Collidable: True
+[40] Rock_40 | Rock Model #9 | Settled Pos: (-12.35, -0.79, 1.096) | Rot: (-0.01, -0.01, 1.84) | Collidable: True
+[41] Rock_41 | Rock Model #8 | Settled Pos: (-13.54, 8.86, 1.085) | Rot: (-0.00, 0.00, -0.62) | Collidable: True
+[42] Rock_42 | Rock Model #1 | Settled Pos: (-10.89, -0.39, 0.884) | Rot: (0.00, 0.00, 0.90) | Collidable: False
+[43] Rock_43 | Rock Model #4 | Settled Pos: (-0.19, -9.71, 1.536) | Rot: (-0.10, 0.18, 0.63) | Collidable: False
+[44] Rock_44 | Rock Model #3 | Settled Pos: (5.35, 8.29, 0.826) | Rot: (0.00, 0.00, 2.27) | Collidable: True
+[45] Rock_45 | Rock Model #8 | Settled Pos: (-2.80, 9.14, 0.925) | Rot: (0.02, -0.00, 1.67) | Collidable: True
+[46] Rock_46 | Rock Model #2 | Settled Pos: (3.10, 6.89, 0.783) | Rot: (-0.00, -0.00, 1.54) | Collidable: False
+[47] Rock_47 | Rock Model #8 | Settled Pos: (-18.88, 8.69, 1.241) | Rot: (-0.00, 0.00, 1.24) | Collidable: True
+[48] Rock_48 | Rock Model #2 | Settled Pos: (-13.28, -5.57, 1.032) | Rot: (0.00, -0.00, 2.58) | Collidable: True
+[49] Rock_49 | Rock Model #7 | Settled Pos: (-17.27, -9.51, 1.146) | Rot: (-0.02, -0.01, -1.38) | Collidable: True
+[50] Rock_50 | Rock Model #4 | Settled Pos: (5.29, -7.70, 0.763) | Rot: (-0.00, -0.01, 2.74) | Collidable: True
+[51] Rock_51 | Rock Model #3 | Settled Pos: (-14.98, 5.29, 1.135) | Rot: (0.00, 0.00, 1.40) | Collidable: True
+[52] Rock_52 | Rock Model #1 | Settled Pos: (-3.81, -6.34, 1.176) | Rot: (-0.15, 0.02, -2.21) | Collidable: True
+[53] Rock_53 | Rock Model #7 | Settled Pos: (2.50, 8.27, 1.205) | Rot: (-0.01, 0.00, 1.12) | Collidable: False
+[54] Rock_54 | Rock Model #5 | Settled Pos: (6.69, 0.10, 1.346) | Rot: (0.01, -0.06, 2.33) | Collidable: True
+[55] Rock_55 | Rock Model #5 | Settled Pos: (-0.77, -7.30, 1.062) | Rot: (-0.01, 0.03, 2.62) | Collidable: True
+[56] Rock_56 | Rock Model #7 | Settled Pos: (9.77, 2.52, 1.323) | Rot: (-0.04, -0.07, -1.26) | Collidable: True
+[57] Rock_57 | Rock Model #6 | Settled Pos: (4.55, -9.10, 1.231) | Rot: (-0.06, 0.05, 2.25) | Collidable: True
+[58] Rock_58 | Rock Model #1 | Settled Pos: (10.05, 10.96, 1.583) | Rot: (0.03, 0.06, -1.06) | Collidable: True
+[59] Rock_59 | Rock Model #3 | Settled Pos: (1.13, 3.00, 1.466) | Rot: (-0.00, 0.00, -2.34) | Collidable: False
+[60] Rock_60 | Rock Model #6 | Settled Pos: (12.61, 9.97, 1.072) | Rot: (-0.00, -0.00, -2.64) | Collidable: True
+[61] Rock_61 | Rock Model #3 | Settled Pos: (-17.05, -7.82, 1.179) | Rot: (-0.00, -0.00, -2.78) | Collidable: True
+[62] Rock_62 | Rock Model #6 | Settled Pos: (9.79, 6.36, 1.311) | Rot: (-0.00, -0.01, 2.49) | Collidable: False
+[63] Rock_63 | Rock Model #9 | Settled Pos: (-14.37, 3.45, 0.829) | Rot: (-0.01, -0.02, 0.34) | Collidable: True
+[64] Rock_64 | Rock Model #9 | Settled Pos: (-3.55, 8.18, 1.161) | Rot: (-0.04, -0.01, 0.78) | Collidable: True
+[65] Rock_65 | Rock Model #2 | Settled Pos: (4.78, -1.17, 1.573) | Rot: (-0.00, 0.00, 1.69) | Collidable: True
+[66] Rock_66 | Rock Model #5 | Settled Pos: (-9.36, -6.48, 1.081) | Rot: (0.01, 0.02, 0.80) | Collidable: False
+[68] Rock_68 | Rock Model #4 | Settled Pos: (-6.75, -0.61, 1.324) | Rot: (0.02, -0.05, -0.17) | Collidable: False
+[69] Rock_69 | Rock Model #5 | Settled Pos: (4.00, -3.97, 1.639) | Rot: (0.05, -0.02, 0.55) | Collidable: True
+[70] Rock_70 | Rock Model #9 | Settled Pos: (7.56, 1.99, 0.928) | Rot: (-0.04, -0.06, -0.83) | Collidable: True

@@ -11,6 +11,7 @@ def get_data_files():
         ('share/' + package_name + '/launch', glob('launch/*.launch.py')),
         ('share/' + package_name + '/obs_data', glob('obs_data/*') if glob('obs_data/*') else []),
         ('share/' + package_name + '/Gen_worlds', glob('Gen_worlds/*') if glob('Gen_worlds/*') else []),
+        ('share/' + package_name + '/heightmap_tools', glob('heightmap_tools/*') if glob('heightmap_tools/*') else []),
     ]
     
     # Recursively add rocks_ws directory files
