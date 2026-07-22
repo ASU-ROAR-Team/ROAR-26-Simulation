@@ -9,3 +9,7 @@ __pycache__/
 build/
 install/
 log/
+
+# Gemini configuration
+.gemini/
+.gemini.md
