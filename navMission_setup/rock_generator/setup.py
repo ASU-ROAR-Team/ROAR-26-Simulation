@@ -15,15 +15,18 @@ def get_data_files():
     ]
     
     # Recursively add rocks_ws directory files
-    rocks_ws_dir = 'rocks_ws'
+    setup_dir = os.path.dirname(os.path.abspath(__file__))
+    rocks_ws_dir = os.path.join(setup_dir, 'rocks_ws')
     if os.path.exists(rocks_ws_dir):
         for root, dirs, files in os.walk(rocks_ws_dir):
             if files:
                 rel_dir = os.path.relpath(root, rocks_ws_dir)
                 dest_dir = os.path.join('share', package_name, 'rocks_ws', rel_dir if rel_dir != '.' else '')
-                file_paths = [os.path.join(root, f) for f in files]
+                # Make paths relative to setup_dir so colcon doesn't complain about absolute paths
+                rel_root = os.path.relpath(root, setup_dir)
+                file_paths = [os.path.join(rel_root, f) for f in files]
                 data_files.append((dest_dir, file_paths))
-                
+
     return data_files
 
 setup(

@@ -83,20 +83,25 @@ def _launch_gazebo(context, *args, **kwargs):
         output='screen'
     )
 
+    # Set up Gazebo environment variables directly
+    gazebo_env = dict(os.environ)
+    gazebo_env['IGN_GAZEBO_RESOURCE_PATH'] = ign_path
+    gazebo_env['GZ_SIM_RESOURCE_PATH'] = gz_path
+    gazebo_env['IGN_GAZEBO_SYSTEM_PLUGIN_PATH'] = system_plugin_path
+    gazebo_env['GZ_SIM_SYSTEM_PLUGIN_PATH'] = system_plugin_path
+
     # Launch Ignition Gazebo
     gazebo_process = ExecuteProcess(
         cmd=['ign', 'gazebo', '-v', '4', '-r', world_path],
+        additional_env=gazebo_env,
         output='screen'
     )
 
     return [
-        SetEnvironmentVariable(name='IGN_GAZEBO_RESOURCE_PATH', value=ign_path),
-        SetEnvironmentVariable(name='GZ_SIM_RESOURCE_PATH', value=gz_path),
-        SetEnvironmentVariable(name='IGN_GAZEBO_SYSTEM_PLUGIN_PATH', value=system_plugin_path),
-        SetEnvironmentVariable(name='GZ_SIM_SYSTEM_PLUGIN_PATH', value=system_plugin_path),
         gazebo_process,
         clock_bridge
     ]
+
 
 def generate_launch_description():
     # Declare the world argument

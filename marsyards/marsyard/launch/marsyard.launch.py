@@ -104,16 +104,24 @@ def _make_runtime_world(context, *args, **kwargs):
         output='screen'
     )
 
+    # Set up Gazebo environment variables directly
+    gazebo_env = dict(os.environ)
+    gazebo_env['IGN_GAZEBO_RESOURCE_PATH'] = ign_path
+    gazebo_env['GZ_SIM_RESOURCE_PATH'] = gz_path
+    gazebo_env['IGN_GAZEBO_SYSTEM_PLUGIN_PATH'] = system_plugin_path
+    gazebo_env['GZ_SIM_SYSTEM_PLUGIN_PATH'] = system_plugin_path
+
     return [
-        SetEnvironmentVariable(name='IGN_GAZEBO_RESOURCE_PATH', value=ign_path),
-        SetEnvironmentVariable(name='GZ_SIM_RESOURCE_PATH', value=gz_path),
-        SetEnvironmentVariable(name='IGN_GAZEBO_SYSTEM_PLUGIN_PATH', value=system_plugin_path),
-        SetEnvironmentVariable(name='GZ_SIM_SYSTEM_PLUGIN_PATH', value=system_plugin_path),
         LogInfo(msg=f'Mars Yard runtime world: {runtime_world}'),
         LogInfo(msg=f'Mars Yard model.sdf: {model_sdf}'),
-        ExecuteProcess(cmd=['ign', 'gazebo', '-v', '4', '-r', runtime_world], output='screen'),
+        ExecuteProcess(
+            cmd=['ign', 'gazebo', '-v', '4', '-r', runtime_world],
+            additional_env=gazebo_env,
+            output='screen'
+        ),
         clock_bridge
     ]
+
 
 
 def generate_launch_description():
