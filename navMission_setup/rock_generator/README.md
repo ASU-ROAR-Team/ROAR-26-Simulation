@@ -87,93 +87,76 @@ source install/setup.bash
 
 ## 💻 Workflows & Commands
 
-### Workflow 1: Generate Initial NumPy Data Only (`obs_data/`)
-
-Generates initial random obstacle placements based on parameters and saves `.npy` datasets inside `obs_data/`:
-
+### Workflow 1: Launch the Clean Plain World
+Always start by launching the plain world (without rocks) to act as the active simulator instance:
 ```bash
-ros2 run rock_generator generate_obs --world-name marsyard.world --density 0.012 -c 0.5 -s 1.2
-```
-
----
-
-### Workflow 2: Test in Simulation & Capture Settled Landed Coordinates (Recommended)
-
-Spawns rocks into live Gazebo, lets them fall under gravity to settle onto terrain mesh contours, freezes them as static obstacles, and **automatically updates `obs_data/` and `Gen_worlds/` with the exact landed coordinates $(X, Y, Z, \text{Roll}, \text{Pitch}, \text{Yaw})$**:
-
-#### Step A: Launch Base World (From `worlds` package)
-> ℹ️ **Note**: `launch_world.launch.py` includes and executes `launch_map.launch.py` directly from the **`worlds`** package.
-
-```bash
-# Option 1: Via rock_generator wrapper
-ros2 launch rock_generator launch_world.launch.py world_name:=marsyard.world
-
-# Option 2: Directly via worlds package
 ros2 launch worlds launch_map.launch.py world:=marsyard.world
 ```
 
-#### Step B: Spawn, Settle, and Capture Landed Positional Dataset
-In **Terminal 2**:
+---
+
+### Workflow 2: Generate Obstacles & Spawn Statically in Gazebo (Unified Execution)
+With the plain world running, launch the unified rock generator. It reads the terrain heightmap, generates random placements on rough terrain, saves them to `obs_data/`, spawns them statically in Gazebo, and automatically fuses them into a new world configuration:
 ```bash
-ros2 run rock_generator spawn_rocks
+ros2 run rock_generator rock_generator --world-name marsyard.world --density 0.025 --collidable-ratio 0.6
+```
+This single command automatically executes:
+1. **Generation**: Saves placements to `navMission_setup/rock_generator/obs_data/obstacle_data.npy`.
+2. **Visual Spawning**: Instantly renders the models statically in Gazebo at ground height.
+3. **World Fusion & Launch Generation**: Creates a parameterized `.world` and matching `.launch.py` inside the `worlds` package.
+
+---
+
+### Workflow 3: Manual World Fusing (Optional)
+If you already have an `obstacle_data.npy` file and want to manually fuse it with the base world:
+```bash
+ros2 run rock_generator generate_world -i navMission_setup/rock_generator/obs_data/obstacle_data.npy -w marsyard.world
 ```
 
 ---
 
-### Workflow 3: Generate Standalone Fused `.world` File (`Gen_worlds/`)
-
-Fuses the obstacle dataset in `obs_data/` with the `marsyard.world` base file from the `worlds` package into a ready-to-load `.world` file in `Gen_worlds/`:
-
-```bash
-ros2 run rock_generator generate_world --world-name marsyard.world
-```
-
----
-
-### Workflow 4: Full Automated Pipeline (Generate, Fuse & Live Spawn)
-
-Runs initial generation, world fusion, and simulation spawning in one command:
-
-```bash
-ros2 launch rock_generator rock_generator.launch.py world_name:=marsyard.world density:=0.012 collidable_ratio:=0.5 spacing:=1.2
-```
-
----
-
-### Workflow 5: Launch Pre-Generated Fused World Directly in Gazebo
-
-To directly launch a previously captured fused `.world` file from `Gen_worlds/`:
-
-```bash
-ign gazebo $(ros2 pkg prefix rock_generator)/share/rock_generator/Gen_worlds/marsyard_with_rocks.world
-```
+### Workflow 4: Launch Fused Parameterized World
+To run a pre-generated world configuration:
+1. Recompile the workspace to register the new launch and world files:
+   ```bash
+   colcon build
+   source install/setup.bash
+   ```
+2. Launch your custom configuration directly:
+   ```bash
+   ros2 launch worlds w_d{density}_c{collidable_ratio}.launch.py
+   ```
+   *(For example: `ros2 launch worlds w_d0.026_c0.50.launch.py`)*
 
 ---
 
 ## 📁 Package Directory Layout
 
-All generated files are saved directly inside your source repository (`src/navMission_setup/rock_generator`) so they can be easily shared via Git:
+All package files are organized as follows:
 
 ```text
-navMission_setup/rock_generator/
-├── setup.py                       <-- Package entry points & setup
-├── package.xml
-├── README.md                      <-- Package documentation
-├── obs_data/                      <-- Settled obstacle datasets (.npy & .txt)
-│   ├── obstacle_data.npy          <-- Latest dataset (updated with landed Z & rotations)
-│   ├── obstacle_data_settled_YYYYMMDD_HHMMSS.npy
-│   └── obstacle_data_info.txt
-├── Gen_worlds/                    <-- Fused Gazebo .world files with settled poses
-│   ├── marsyard_with_rocks.world
-│   └── marsyard_rocks_YYYYMMDD_HHMMSS.world
-├── launch/
-│   ├── launch_world.launch.py     <-- Includes launch_map.launch.py from worlds package
-│   ├── visualize_rocks.launch.py
-│   └── rock_generator.launch.py
-├── rock_generator/
-│   ├── generator.py               <-- Generates initial .npy data
-│   ├── world_generator.py         <-- Fuses dataset into .world XML
-│   ├── spawner.py                 <-- Spawns, settles & exports captured poses
-│   └── main.py                    <-- Unified CLI entry point
-└── rocks_ws/                      <-- 3D Rock SDF models (rock_1 to rock_9)
+simulation_ws/src/
+├── marsyards/
+│   └── worlds/
+│       ├── launch/
+│       │   ├── launch_map.launch.py
+│       │   ├── marsyard.launch.py
+│       │   └── w_d{density}_c{collidable_ratio}.launch.py   <-- Auto-generated launcher
+│       └── worlds/
+│           ├── marsyard.world                                <-- Plain clean base world
+│           └── w_d{density}_c{collidable_ratio}.world        <-- Auto-generated fused world
+├── navMission_setup/
+│   └── rock_generator/
+│       ├── setup.py
+│       ├── package.xml
+│       ├── README.md                      <-- Package documentation
+│       ├── obs_data/
+│       │   ├── obstacle_data.npy          <-- Latest coordinates (updated with true Z)
+│       │   └── obstacle_data_info.txt
+│       ├── rock_generator/
+│       │   ├── generator.py               <-- Terrain heightmap sampling generator
+│       │   ├── spawner.py                 <-- Static spawner script
+│       │   ├── world_generator.py         <-- Dynamic world fuser & launch creator
+│       │   └── main.py                    <-- Unified CLI entry point
+│       └── rocks_ws/                      <-- Rock SDF model database (rock_1 to rock_9)
 ```
