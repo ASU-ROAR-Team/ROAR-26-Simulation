@@ -59,3 +59,23 @@ You can launch `marsyard.world` directly using the shortcut:
 ```bash
 ros2 launch worlds marsyard.launch.py
 ```
+
+---
+
+## Parameterized World Generation Integration
+
+This package integrates directly with the **`rock_generator`** package to store and run customized terrain layouts:
+- **Dynamic Worlds**: Fused worlds are saved to the `worlds/` folder using the name pattern `w_d{density}_c{collidable_ratio}.world`.
+- **Dynamic Launch Files**: Custom launch files are saved to the `launch/` folder using the name pattern `w_d{density}_c{collidable_ratio}.launch.py`.
+
+### How to Launch a Generated Configuration:
+Once the rock generator pipeline finishes spawning and fusing obstacles, compile the package:
+```bash
+colcon build --packages-select worlds
+source install/setup.bash
+```
+Then launch it using its custom launch script:
+```bash
+ros2 launch worlds w_d{density}_c{collidable_ratio}.launch.py
+```
+

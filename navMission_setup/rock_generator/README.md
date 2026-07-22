@@ -32,20 +32,31 @@ graph TD
 
 ---
 
-## 🗺️ Future Height Map Integration Roadmap
+## 🗺️ Height Map & Parameterized World Workflow
 
-The package architecture is fully decoupled, making it effortless to transition from the air-drop physics settling method to direct **Height Map (Elevation Grid)** sampling in the future:
+The package uses a **Height Map (Elevation Grid) Sampling** strategy combined with **Dynamic Standalone World & Launch Generation** inside the `worlds` package:
 
-### How to Transition to a Height Map:
-1. **Direct $Z$-Sampling in `generator.py`**:
-   - Replace the default $Z=4.0\text{ m}$ height with a direct query to your height map image/array:
-     $$Z = \text{HeightMap}(X, Y)$$
-   - The generated `.npy` file will already contain exact ground surface $Z$ values.
-2. **Instant Static Spawning in `spawner.py`**:
-   - Bypass the dynamic drop (`is_static=False`) and the 2-second fall delay.
-   - Rocks will spawn **instantaneously as static models** (`is_static=True`) at their exact surface $(X, Y, Z)$ coordinates.
-3. **Zero Structural Changes Required**:
-   - The launch system, world fuser (`world_generator.py`), parameter CLI, and dataset directory layout will remain 100% identical.
+```mermaid
+graph TD
+    A[1. Launch Plain World] -->|Start Gazebo with marsyard.world| B(Active Simulation)
+    C[2. Sampling Heightmap] -->|Read terrain elevations & generate rock coordinates| D[3. Save to obs_data/obstacle_data.npy]
+    D -->|Read coordinates| E[4. Spawn Rocks in Simulator]
+    E -->|Spawn models at exact Z coordinates| B
+    D -->|Read coordinates| F[5. Fuse World File]
+    F -->|Merge marsyard.world + coordinates| G[w_d{density}_c{collidable_ratio}.world]
+    G -->|Generate Launch File| H[w_d{density}_c{collidable_ratio}.launch.py]
+```
+
+1. **Step 1: Open the Plain World**: Gazebo is launched with the plain, clean `marsyard.world` (which contains no rocks).
+2. **Step 2: Generate Rock Placements**: The generator script reads the world heightmap (`marsyard_heightmap.npz`) to find the exact ground elevation ($Z$ coordinates) of rough terrain areas. It selects $N$ random positions based on your target density.
+3. **Step 3: Save to `obs_data`**: The generator saves these generated rock coordinates directly to the source folder: `navMission_setup/rock_generator/obs_data/obstacle_data.npy`.
+4. **Step 4: Spawn Rocks in Simulator**: The spawner reads the generated coordinates from `obstacle_data.npy` and spawns the rock models statically at their true ground heights directly in your active Gazebo window so you can visualize them.
+5. **Step 5: Fuse and Save Standalone World**: The fuser parses your clean `marsyard.world` and appends all the rock coordinates from `obstacle_data.npy` to write a brand new world file under the `worlds` package:
+   `marsyards/worlds/worlds/w_d{density}_c{collidable_ratio}.world`
+6. **Step 6: Generate Launch File**: It writes a matching launch script under `worlds/launch/w_d{density}_c{collidable_ratio}.launch.py` so you can launch or share that exact rock configuration directly at any time.
+
+This ensures the base `marsyard.world` file always remains **clean and rock-free**, while every run generates a distinct, retrievable simulation setup.
+
 
 ---
 

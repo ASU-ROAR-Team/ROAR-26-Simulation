@@ -1,0 +1,11 @@
+# VS Code C/C++ cache and settings
+.vscode/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# ROS/colcon build directories if any end up here
+build/
+install/
+log/

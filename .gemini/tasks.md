@@ -1,0 +1,6 @@
+- [x] Verify workspace build with colcon
+- [x] Inspect rock meshes and model SDF configurations
+- [x] Test rock generator/spawner pipeline
+- [x] Inspect workspace packages excluding rover
+- [x] Apply fixes if any issues are found
+- [x] Verify final behavior and write walkthrough

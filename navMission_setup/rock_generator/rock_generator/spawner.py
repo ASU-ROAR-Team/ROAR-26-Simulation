@@ -14,6 +14,11 @@ FREEZE_DELAY = 0.3
 
 def get_package_src_dir():
     """Locates the source directory of the rock_generator package inside src/."""
+    # Prioritize correct source workspace directory structure
+    hardcoded = '/home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/rock_generator'
+    if os.path.exists(os.path.join(hardcoded, 'package.xml')):
+        return hardcoded
+
     mod_dir = os.path.dirname(os.path.abspath(__file__))
     pkg_src = os.path.dirname(mod_dir)
     if os.path.exists(os.path.join(pkg_src, 'package.xml')):
@@ -33,6 +38,7 @@ def get_package_src_dir():
         pass
 
     return pkg_src
+
 
 def get_rocks_ws_path():
     """Locate package rocks_ws directory containing model definitions."""
@@ -190,6 +196,15 @@ def spawn_rocks_from_npy(input_npy_path=None, target_world=None):
         print(f"Error: Could not locate rocks_ws directory", file=sys.stderr)
         return False
 
+    # Cleanup any leftover temp files in the rocks_ws directory
+    for root, _, files in os.walk(rocks_ws):
+        for f in files:
+            if f.startswith('temp_spawn_') or f.startswith('temp_static_'):
+                try:
+                    os.remove(os.path.join(root, f))
+                except OSError:
+                    pass
+
     obs_data = np.load(input_npy_path, allow_pickle=True)
     if len(obs_data) == 0:
         print("Warning: Obstacle data file is empty!")
@@ -206,7 +221,7 @@ def spawn_rocks_from_npy(input_npy_path=None, target_world=None):
     print(f"  Total Rocks to Spawn:     {len(obs_data)}")
     print(f"==================================================")
 
-    settling_rocks = []
+    settled_rock_list = []
 
     for i, item in enumerate(obs_data, 1):
         r = item if isinstance(item, dict) else (item.item() if hasattr(item, 'item') else dict(item))
@@ -214,6 +229,8 @@ def spawn_rocks_from_npy(input_npy_path=None, target_world=None):
         x = float(r.get('x', 0.0))
         y = float(r.get('y', 0.0))
         z = float(r.get('z', 4.0))
+        roll = float(r.get('roll', 0.0))
+        pitch = float(r.get('pitch', 0.0))
         yaw = float(r.get('yaw', 0.0))
         rock_id = int(r.get('rock_id', 1))
         is_collidable = bool(r.get('is_collidable', True))
@@ -225,82 +242,34 @@ def spawn_rocks_from_npy(input_npy_path=None, target_world=None):
             print(f"Warning: model.sdf missing for rock_{rock_id}. Skipping.")
             continue
 
-        temp_name = f"temp_fall_{final_name}"
-        temp_sdf = os.path.join(rock_folder, f"temp_spawn_{i}.sdf")
+        static_sdf = os.path.join(rock_folder, f"temp_static_{i}.sdf")
+        col_str = "solid (collidable)" if is_collidable else "ghost (non-collidable)"
+        print(f"[{i}/{len(obs_data)}] Spawning '{final_name}' ({col_str}) statically at Pos(X={x:.2f}, Y={y:.2f}, Z={z:.3f}), Yaw={yaw:.2f}...")
 
-        if generate_modified_sdf(orig_sdf, temp_sdf, temp_name, is_static=False, keep_collision=True):
-            col_type = "solid" if is_collidable else "ghost"
-            print(f"[{i}/{len(obs_data)}] Spawning '{final_name}' ({col_type}) at (X={x:.2f}, Y={y:.2f})...")
-            spawn_model_cmd(temp_sdf, temp_name, x, y, z, yaw=yaw)
-            settling_rocks.append({
-                'temp_name': temp_name,
-                'final_name': final_name,
-                'orig_sdf': orig_sdf,
-                'temp_sdf_dir': rock_folder,
-                'keep_collision': is_collidable,
-                'temp_sdf_file': temp_sdf,
-                'rock_id': rock_id
-            })
+        if generate_modified_sdf(orig_sdf, static_sdf, final_name, is_static=True, keep_collision=is_collidable):
+            spawn_model_cmd(static_sdf, final_name, x, y, z, roll, pitch, yaw)
+            try:
+                os.remove(static_sdf)
+            except OSError:
+                pass
+
+        settled_entry = {
+            'id': i,
+            'name': final_name,
+            'x': float(x),
+            'y': float(y),
+            'z': float(z),
+            'roll': float(roll),
+            'pitch': float(pitch),
+            'yaw': float(yaw),
+            'rock_id': int(rock_id),
+            'is_collidable': bool(is_collidable),
+            'is_barrier': False,
+            'world_name': str(world)
+        }
+        settled_rock_list.append(settled_entry)
         time.sleep(SPAWN_DELAY)
 
-    settled_rock_list = []
-
-    if settling_rocks:
-        print(f"\nWaiting {FALL_WAIT_TIME}s for rocks to settle under gravity...")
-        time.sleep(FALL_WAIT_TIME)
-
-        print("\nFreezing settled rocks & capturing final landed 3D coordinates:")
-        for idx, rock in enumerate(settling_rocks, 1):
-            temp_name = rock['temp_name']
-            final_name = rock['final_name']
-            orig_sdf = rock['orig_sdf']
-            temp_sdf_dir = rock['temp_sdf_dir']
-            keep_collision = rock['keep_collision']
-            temp_sdf_file = rock['temp_sdf_file']
-            rock_id = rock['rock_id']
-
-            if os.path.exists(temp_sdf_file):
-                try:
-                    os.remove(temp_sdf_file)
-                except OSError:
-                    pass
-
-            pose = get_model_pose(temp_name)
-            if pose is None:
-                print(f"  [{idx}/{len(settling_rocks)}] Pose not found for {temp_name}. Removing.")
-                remove_model(world, temp_name)
-                continue
-
-            x, y, z, roll, pitch, yaw = pose
-            remove_model(world, temp_name)
-
-            static_sdf = os.path.join(temp_sdf_dir, f"temp_static_{idx}.sdf")
-            col_str = "solid (collidable)" if keep_collision else "ghost (non-collidable)"
-            print(f"  [{idx}/{len(settling_rocks)}] Frozen '{final_name}' as {col_str} at settled pose: Pos(X={x:.2f}, Y={y:.2f}, Z={z:.3f}), Rot(R={roll:.2f}, P={pitch:.2f}, Y={yaw:.2f})")
-
-            if generate_modified_sdf(orig_sdf, static_sdf, final_name, is_static=True, keep_collision=keep_collision):
-                spawn_model_cmd(static_sdf, final_name, x, y, z, roll, pitch, yaw)
-                try:
-                    os.remove(static_sdf)
-                except OSError:
-                    pass
-
-            settled_entry = {
-                'id': idx,
-                'name': final_name,
-                'x': float(x),
-                'y': float(y),
-                'z': float(z),
-                'roll': float(roll),
-                'pitch': float(pitch),
-                'yaw': float(yaw),
-                'rock_id': int(rock_id),
-                'is_collidable': bool(keep_collision),
-                'is_barrier': False,
-                'world_name': str(world)
-            }
-            settled_rock_list.append(settled_entry)
-            time.sleep(FREEZE_DELAY)
 
     # Export final settled obstacle coordinates dataset to package src obs_data folder!
     if settled_rock_list:

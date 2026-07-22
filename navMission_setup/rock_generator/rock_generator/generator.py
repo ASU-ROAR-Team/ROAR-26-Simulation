@@ -174,6 +174,11 @@ class HeightmapSampler:
 
 def get_package_src_dir():
     """Locates the source directory of the rock_generator package inside src/."""
+    # Prioritize correct source workspace directory structure
+    hardcoded = '/home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/rock_generator'
+    if os.path.exists(os.path.join(hardcoded, 'package.xml')):
+        return hardcoded
+
     mod_dir = os.path.dirname(os.path.abspath(__file__))
     pkg_src = os.path.dirname(mod_dir)
     if os.path.exists(os.path.join(pkg_src, "package.xml")):
@@ -195,6 +200,7 @@ def get_package_src_dir():
         pass
 
     return pkg_src
+
 
 
 def get_heightmap_path():
@@ -471,6 +477,7 @@ def parse_args():
     return parser.parse_args()
 
 
+
 def main():
     args = parse_args()
     generate_obstacle_data(
@@ -478,8 +485,6 @@ def main():
         density=args.density,
         collidable_ratio=args.collidable_ratio,
         spacing=args.spacing,
-        x_range=tuple(args.x_range),
-        y_range=tuple(args.y_range),
         min_terrain_height=args.min_terrain_height,
         min_roughness=args.min_roughness,
         deadends=args.deadends,

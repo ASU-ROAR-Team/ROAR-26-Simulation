@@ -62,6 +62,18 @@ def _make_runtime_world(context, *args, **kwargs):
     except Exception as e:
         print(f"[marsyard.launch] Could not find roar_simulation package path: {e}")
 
+    # Find rock_generator package if available
+    try:
+        pkg_rock_gen = get_package_share_directory('rock_generator')
+        # rock models are under rock_generator/rocks_ws
+        resource_paths.append(os.path.join(pkg_rock_gen, 'rocks_ws'))
+        # Add parent to resolve package://rock_generator/rocks_ws/ paths
+        resource_paths.append(os.path.dirname(pkg_rock_gen))
+    except Exception as e:
+        print(f"[marsyard.launch] Could not find rock_generator package: {e}")
+
+
+
     ign_existing = os.environ.get('IGN_GAZEBO_RESOURCE_PATH', '')
     gz_existing = os.environ.get('GZ_SIM_RESOURCE_PATH', '')
     
