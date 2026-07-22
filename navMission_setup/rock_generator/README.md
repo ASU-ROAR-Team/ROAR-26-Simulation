@@ -1,34 +1,9 @@
 # ROAR Rock Generator, Spawner & World Fuser Package (`rock_generator`)
 
 `rock_generator` is a modular ROS 2 package located in `simulation_ws/src/navMission_setup/rock_generator` designed for:
-1. Generating obstacle datasets in NumPy (`.npy`) format.
-2. Spawning dynamic rock models into Gazebo, letting gravity drop and settle them onto terrain mesh contours.
-3. Capturing and exporting the **exact landed 3D poses ($X, Y, Z, \text{Roll}, \text{Pitch}, \text{Yaw}$)** back into `obs_data/` and `Gen_worlds/` inside the package source repository (`src/`).
-4. Fusing obstacle datasets with base Gazebo world templates from the **`worlds`** package (`marsyard.world`) into standalone ready-to-use `.world` files in `Gen_worlds/`.
-
----
-
-## 🌟 Settled Physics-Capture Workflow
-
-Because exact ground heightmap data may not always be available initially, `rock_generator` uses a **Physics-Based Settling & Pose Capture** strategy:
-
-```mermaid
-graph TD
-    A[1. Generate Initial X, Y Coordinates] --> B[2. Spawn Dynamic Rocks at Z = 4.0m Height]
-    B --> C[3. Physics Free Fall & Settle onto Terrain - 2s]
-    C --> D[4. Query Gazebo for True Landed Poses: X, Y, Z, Roll, Pitch, Yaw]
-    D --> E[5. Freeze Rocks as Static Entities in Gazebo]
-    E --> F[6. Export Settled Poses to obs_data/ & Gen_worlds/ in src Package]
-```
-
-1. **Initial Air Drop**: Rocks spawn dynamically at $Z=4.0\text{ m}$ height above the terrain.
-2. **Free Fall & Settlement**: Physics runs for 2 seconds under gravity. Rocks fall, land on terrain mesh contours, and settle into their natural resting positions.
-3. **Pose Capture & Freeze**: The spawner queries Gazebo for the exact settled position and orientation $(X_{\text{settled}}, Y_{\text{settled}}, Z_{\text{settled}}, \text{Roll}_{\text{settled}}, \text{Pitch}_{\text{settled}}, \text{Yaw}_{\text{settled}})$, freezes models as static entities in simulation, and **overwrites the initial dataset with true landed coordinates**.
-4. **Source Directory Export**: Automatically saves updated datasets to:
-   - `obs_data/obstacle_data.npy` *(Updated with exact landed Z, Roll, Pitch, Yaw)*
-   - `obs_data/obstacle_data_settled_YYYYMMDD_HHMMSS.npy` *(Timestamped dataset)*
-   - `Gen_worlds/marsyard_with_rocks.world` *(Fused world with exact settled poses)*
-   - `Gen_worlds/marsyard_rocks_YYYYMMDD_HHMMSS.world` *(Timestamped fused world)*
+1. Generating obstacle datasets in NumPy (`.npy`) format based on terrain heightmap data.
+2. Spawning rock models statically at their true surface heights directly in Gazebo.
+3. Fusing obstacle datasets with clean base Gazebo world templates from the **`worlds`** package into parameterized, ready-to-use `.world` and `.launch.py` files.
 
 ---
 
@@ -56,7 +31,6 @@ graph TD
 6. **Step 6: Generate Launch File**: It writes a matching launch script under `worlds/launch/w_d{density}_c{collidable_ratio}.launch.py` so you can launch or share that exact rock configuration directly at any time.
 
 This ensures the base `marsyard.world` file always remains **clean and rock-free**, while every run generates a distinct, retrievable simulation setup.
-
 
 ---
 
