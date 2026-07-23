@@ -86,7 +86,7 @@ pip3 install numpy opencv-python
 
 ## 🚀 Launching Procedures
 
-We highly recommend using the provided `roar_sim.sh` script to launch the simulation. This script automatically cleans up stale FastDDS memory, prevents GPU rendering crashes by resetting `ign` processes, and injects the correct library paths for Gazebo.
+We highly recommend using the provided `launch_sim.sh` scripts to launch the simulation. These scripts are "nuke-and-launch" scripts—they automatically search out and destroy any ghost instances of `ros_gz_bridge`, lingering `teleop` nodes, frozen `rviz` sessions, and stale `gazebo` servers before they launch a fresh, stable simulation.
 
 Ensure your workspace is compiled before running the script:
 ```bash
@@ -99,22 +99,19 @@ We provide three distinct simulation packages depending on your testing requirem
 ### 1. "Clean" Simulation (`roar_rover_clean`)
 Bypasses the degradation nodes and arm controllers. Best for testing pure navigation algorithms, path planning, and kinematics without environmental interference.
 ```bash
-  cd src/roar_rover_clean
-  bash launch_sim.sh rviz
+bash src/rover/roar_rover_clean/launch_sim.sh rviz
 ```
 
 ### 2. "Noise" Simulation (`roar_rover_noise`)
 Includes active environmental degradation (sun glare) and encoder pulse simulation. Perfect for testing the final perception and state estimation stack.
 ```bash
-cd src/roar_rover_noise
-bash launch_sim.sh rviz
+bash src/rover/roar_rover_noise/launch_sim.sh rviz
 ```
 
 ### 3. "Full" Simulation (`roar_simulation_full`)
 **[Recommended]** Includes active environmental degradation, encoder pulse simulation, AND the 6-DOF robotic arm.
 ```bash
-cd src/roar_simulation_full
-bash launch_sim.sh rviz
+bash src/rover/roar_simulation_full/launch_sim.sh rviz
 ```
 
 > **Note on the Boot Sequence:**

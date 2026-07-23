@@ -5,6 +5,14 @@
 
   <xacro:macro name="rover_base">
 
+    <link name="base_footprint"/>
+    
+    <joint name="base_footprint_joint" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link"/>
+      <origin xyz="0 0 0" rpy="0 0 -1.57079632679"/>
+    </joint>
+
     <link name="base_link">
       <inertial>
         <origin xyz="0.00469098688936509 -0.0777682848151969 0.324101627417335" rpy="0 0 0" />

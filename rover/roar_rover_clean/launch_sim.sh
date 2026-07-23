@@ -6,7 +6,7 @@
 set -e
 
 # Find the workspace root automatically (assuming this script is in src/package/)
-WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+WORKSPACE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 
 # ── 1. Source the workspace ───────────────────────────────────────────────────
 if [[ ! -f "$WORKSPACE_DIR/install/setup.bash" ]]; then
@@ -21,13 +21,18 @@ echo "[launch_sim] Killing any stale Ignition/Gazebo/ROS2 processes..."
 pkill -9 -f "ign gazebo"  2>/dev/null || true
 pkill -9 -f "ign_gazebo"  2>/dev/null || true
 pkill -9 -f "ruby.*ignition" 2>/dev/null || true
-pkill -9 -f "rviz2" 2>/dev/null || true
+pkill -9 -x "rviz2" 2>/dev/null || true
+pkill -9 -x "rviz" 2>/dev/null || true
 pkill -9 -f "robot_state_publisher" 2>/dev/null || true
 pkill -9 -f "spawner" 2>/dev/null || true
 pkill -9 -f "ros2" 2>/dev/null || true
 pkill -9 -f "zed_degradation_node" 2>/dev/null || true
 pkill -9 -f "encoder_sim_node" 2>/dev/null || true
 pkill -9 -f "clean_camera_node" 2>/dev/null || true
+pkill -9 -f "ros_gz_bridge" 2>/dev/null || true
+pkill -9 -f "teleop" 2>/dev/null || true
+pkill -9 -x "gazebo" 2>/dev/null || true
+killall -9 ign rviz2 gzserver gzclient ruby gazebo 2>/dev/null || true
 sleep 1   
 
 # ── 3. Clean stale FastDDS shared-memory ports ───────────────────────────────
