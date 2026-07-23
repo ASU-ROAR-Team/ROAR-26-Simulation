@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-WORKSPACE_ROOT = Path(__file__).resolve().parents[3]
+WORKSPACE_ROOT = Path(__file__).resolve().parents[4]
 
 DEFAULT_INPUT_DIR = SCRIPT_DIR / "inputs"
 DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "outputs"
@@ -83,10 +83,8 @@ def main() -> None:
     preview.parent.mkdir(parents=True, exist_ok=True)
 
     command = [
-        "ros2",
-        "run",
-        "rock_generator",
-        "generate_heightmap",
+        "python3",
+        str(SCRIPT_DIR / "heightmap_generator.py"),
         str(input_world),
         "-o",
         str(output),
@@ -94,6 +92,8 @@ def main() -> None:
         str(preview),
         "--resolution",
         str(args.resolution),
+        "--package-path",
+        f"rock_generator={SCRIPT_DIR.parents[0]}",
     ]
 
     print("=" * 70)
@@ -103,7 +103,7 @@ def main() -> None:
     print(f"Preview PNG : {preview}")
     print("=" * 70)
 
-    run_ros_command(command)
+    subprocess.run(command, check=True)
 
 
 if __name__ == "__main__":

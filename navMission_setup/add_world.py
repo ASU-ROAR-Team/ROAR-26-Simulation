@@ -6,7 +6,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 SETUP_DIR = Path(__file__).resolve().parent
 WORLD_SETUP_DIR = SETUP_DIR / "world_setup"
 
@@ -39,22 +38,28 @@ def find_single_file(folder: Path, pattern: str, description: str) -> Path:
     return files[0].resolve()
 
 
-def next_run_id() -> str:
-    numbers = []
-
-    MASTER_OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
-
-    for directory in MASTER_OUTPUTS_DIR.glob("world_*"):
-        if not directory.is_dir():
-            continue
-
-        suffix = directory.name.removeprefix("world_")
-
-        if suffix.isdigit():
-            numbers.append(int(suffix))
-
-    next_number = max(numbers, default=0) + 1
-    return f"world_{next_number:03d}"
+def clean_pipeline() -> None:
+    print("=" * 78)
+    print("Cleaning Pipeline Temporary Folders (excluding initial_inputs)")
+    print("=" * 78)
+    stages = ["obsData_gen", "world_gen", "heightMap_gen", "costMap_gen"]
+    for stage in stages:
+        for folder_name in ["inputs", "outputs"]:
+            folder = WORLD_SETUP_DIR / stage / folder_name
+            if folder.exists():
+                print(f"Cleaning: {folder.relative_to(SETUP_DIR)}")
+                for item in folder.iterdir():
+                    if item.name == ".gitkeep":
+                        continue
+                    try:
+                        if item.is_dir():
+                            shutil.rmtree(item)
+                        else:
+                            item.unlink()
+                    except Exception as e:
+                        print(f"  Error removing {item}: {e}")
+    print("Pipeline cleaned successfully.")
+    print("=" * 78)
 
 
 def run_stage(command: list[str], title: str) -> None:
@@ -72,22 +77,37 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description=(
             "Run the complete Mars Yard world-generation pipeline and store "
-            "the final dataset inside outputs/world_XXX."
+            "the final dataset inside outputs/world{index}."
         )
     )
 
-    parser.add_argument("--index", type=int)
+    # Positional Arguments (required)
+    parser.add_argument(
+        "density",
+        type=float,
+        help="Rock density in rocks per square meter (e.g. 0.012)"
+    )
+    parser.add_argument(
+        "percentage",
+        type=float,
+        help="Ratio (0.0 to 1.0) or percentage (0 to 100) of solid/collidable vs ghost/non-collidable rocks (e.g. 50)"
+    )
+    parser.add_argument(
+        "index",
+        type=int,
+        help="Index of the world (e.g. 1)"
+    )
+
+    # Optional Arguments
     parser.add_argument(
         "--name",
         type=str,
-        help="Generated world name. If omitted, it will be requested interactively.",
+        help="Generated world name. If omitted, defaults to world{index}.",
     )
     parser.add_argument("--base-world", type=Path)
     parser.add_argument("--base-heightmap", type=Path)
 
     parser.add_argument("--world-name", default="marsyard.world")
-    parser.add_argument("--density", type=float, default=0.012)
-    parser.add_argument("--collidable-ratio", "-c", type=float, default=0.5)
     parser.add_argument("--spacing", "-s", type=float, default=1.0)
     parser.add_argument("--min-roughness", type=float, default=0.02)
     parser.add_argument("--min-terrain-height", type=float, default=0.15)
@@ -99,11 +119,11 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    world_name = args.name
+    # Clean the pipeline folders
+    clean_pipeline()
 
-    while not world_name or not world_name.strip():
-        world_name = input("Enter generated world name: ").strip()
-
+    # Determine world name and safe world name
+    world_name = args.name if args.name else f"world{args.index}"
     safe_world_name = "".join(
         character if character.isalnum() or character in ("_", "-") else "_"
         for character in world_name
@@ -114,6 +134,7 @@ def main() -> None:
             "World name must contain at least one letter or number."
         )
 
+    # Resolve initial inputs
     base_world = (
         args.base_world.resolve()
         if args.base_world
@@ -134,62 +155,41 @@ def main() -> None:
         )
     )
 
-    run_id = (
-        f"world_{args.index:03d}"
-        if args.index is not None
-        else next_run_id()
-    )
+    # Parse and convert percentage to ratio if necessary
+    collidable_ratio = args.percentage
+    if collidable_ratio > 1.0:
+        collidable_ratio /= 100.0
 
-    run_dir = MASTER_OUTPUTS_DIR / f"{run_id}_{safe_world_name}"
-
-    if run_dir.exists():
-        raise FileExistsError(
-            f"Output run already exists:\n{run_dir}\n"
-            "Choose another --index or omit it."
-        )
-
-    obstacle_dir = run_dir / "obstacle_data"
-    world_dir = run_dir / "world"
-    heightmap_dir = run_dir / "heightmap"
-    costmap_dir = run_dir / "costmap"
-    csv_dir = costmap_dir / "csv"
-
-    for directory in (
-        obstacle_dir,
-        world_dir,
-        heightmap_dir,
-        costmap_dir,
-        csv_dir,
-    ):
-        directory.mkdir(parents=True, exist_ok=True)
-
-    file_prefix = (
-        f"{safe_world_name}_"
-        f"d{args.density:.3f}_"
-        f"c{args.collidable_ratio:.2f}"
-    )
-
-    obstacle_output = obstacle_dir / "obstacle_data.npy"
-    world_output = world_dir / f"{file_prefix}.world"
-
-    heightmap_output = heightmap_dir / f"{file_prefix}_heightmap.npz"
-    heightmap_preview = heightmap_dir / f"{file_prefix}_heightmap.png"
-
-    costmap_output = costmap_dir / f"{file_prefix}_costmap.npz"
-    costmap_preview = costmap_dir / f"{file_prefix}_costmap.png"
+    # Ensure output folders exist
+    run_id = f"world{args.index}"
+    run_dir = MASTER_OUTPUTS_DIR / run_id
 
     try:
+        # -------------------------------------------------------------
+        # Stage 1: Obstacle Data Generation (obsData_gen)
+        # -------------------------------------------------------------
+        obs_inputs_dir = WORLD_SETUP_DIR / "obsData_gen" / "inputs"
+        obs_outputs_dir = WORLD_SETUP_DIR / "obsData_gen" / "outputs"
+        obs_inputs_dir.mkdir(parents=True, exist_ok=True)
+        obs_outputs_dir.mkdir(parents=True, exist_ok=True)
+
+        # Copy base world and base heightmap to inputs folder of obs gen
+        shutil.copy2(base_world, obs_inputs_dir / base_world.name)
+        shutil.copy2(base_heightmap, obs_inputs_dir / base_heightmap.name)
+
+        obs_output_file = obs_outputs_dir / "obstacle_data.npy"
+
         obs_command = [
             sys.executable,
             str(OBS_SCRIPT),
             "--world-name",
             args.world_name,
             "--heightmap",
-            str(base_heightmap),
+            str(obs_inputs_dir / base_heightmap.name),
             "--density",
             str(args.density),
             "--collidable-ratio",
-            str(args.collidable_ratio),
+            str(collidable_ratio),
             "--spacing",
             str(args.spacing),
             "--min-roughness",
@@ -197,7 +197,7 @@ def main() -> None:
             "--min-terrain-height",
             str(args.min_terrain_height),
             "--output",
-            str(obstacle_output),
+            str(obs_output_file),
         ]
 
         if args.deadends:
@@ -205,80 +205,142 @@ def main() -> None:
 
         run_stage(obs_command, "Stage 1/4 — Obstacle Data Generation")
 
-        run_stage(
-            [
-                sys.executable,
-                str(WORLD_SCRIPT),
-                "--input-data",
-                str(obstacle_output),
-                "--base-world",
-                str(base_world),
-                "--output-world",
-                str(world_output),
-            ],
-            "Stage 2/4 — World Generation",
-        )
+        # -------------------------------------------------------------
+        # Stage 2: World Generation (world_gen)
+        # -------------------------------------------------------------
+        world_inputs_dir = WORLD_SETUP_DIR / "world_gen" / "inputs"
+        world_outputs_dir = WORLD_SETUP_DIR / "world_gen" / "outputs"
+        world_inputs_dir.mkdir(parents=True, exist_ok=True)
+        world_outputs_dir.mkdir(parents=True, exist_ok=True)
 
-        run_stage(
-            [
-                sys.executable,
-                str(HEIGHTMAP_SCRIPT),
-                "--input-world",
-                str(world_output),
-                "--output",
-                str(heightmap_output),
-                "--preview",
-                str(heightmap_preview),
-                "--resolution",
-                str(args.heightmap_resolution),
-            ],
-            "Stage 3/4 — Heightmap Generation",
-        )
+        # Copy generated obstacle data and plain world to world gen inputs
+        shutil.copy2(obs_output_file, world_inputs_dir / obs_output_file.name)
+        for info_file in obs_outputs_dir.glob("*_info.txt"):
+            shutil.copy2(info_file, world_inputs_dir / info_file.name)
+        shutil.copy2(base_world, world_inputs_dir / base_world.name)
 
-        run_stage(
-            [
-                sys.executable,
-                str(COSTMAP_SCRIPT),
-                "--input-heightmap",
-                str(heightmap_output),
-                "--output",
-                str(costmap_output),
-                "--preview",
-                str(costmap_preview),
-                "--csv-dir",
-                str(csv_dir),
-                "--gradient-scale",
-                str(args.gradient_scale),
-                "--stability-scale",
-                str(args.stability_scale),
-            ],
-            "Stage 4/4 — Costmap Generation",
-        )
+        world_output_file = world_outputs_dir / f"world{args.index}.world"
 
-        info_candidates = sorted(
-            obstacle_output.parent.glob("*_info.txt")
-        )
+        world_command = [
+            sys.executable,
+            str(WORLD_SCRIPT),
+            "--input-data",
+            str(world_inputs_dir / obs_output_file.name),
+            "--base-world",
+            str(world_inputs_dir / base_world.name),
+            "--output-world",
+            str(world_output_file),
+        ]
 
-        if info_candidates:
-            expected_info = obstacle_dir / "obstacle_data_info.txt"
+        run_stage(world_command, "Stage 2/4 — World Generation")
 
-            if info_candidates[0] != expected_info:
-                shutil.copy2(info_candidates[0], expected_info)
+        # -------------------------------------------------------------
+        # Stage 3: Heightmap Generation (heightMap_gen)
+        # -------------------------------------------------------------
+        hm_inputs_dir = WORLD_SETUP_DIR / "heightMap_gen" / "inputs"
+        hm_outputs_dir = WORLD_SETUP_DIR / "heightMap_gen" / "outputs"
+        hm_inputs_dir.mkdir(parents=True, exist_ok=True)
+        hm_outputs_dir.mkdir(parents=True, exist_ok=True)
+
+        # Copy fused world to heightmap gen inputs
+        shutil.copy2(world_output_file, hm_inputs_dir / world_output_file.name)
+
+        hm_output_file = hm_outputs_dir / "heightmap.npz"
+        hm_preview_file = hm_outputs_dir / "heightmap.png"
+
+        hm_command = [
+            sys.executable,
+            str(HEIGHTMAP_SCRIPT),
+            "--input-world",
+            str(hm_inputs_dir / world_output_file.name),
+            "--output",
+            str(hm_output_file),
+            "--preview",
+            str(hm_preview_file),
+            "--resolution",
+            str(args.heightmap_resolution),
+        ]
+
+        run_stage(hm_command, "Stage 3/4 — Heightmap Generation")
+
+        # -------------------------------------------------------------
+        # Stage 4: Costmap Generation (costMap_gen)
+        # -------------------------------------------------------------
+        cm_inputs_dir = WORLD_SETUP_DIR / "costMap_gen" / "inputs"
+        cm_outputs_dir = WORLD_SETUP_DIR / "costMap_gen" / "outputs"
+        cm_inputs_dir.mkdir(parents=True, exist_ok=True)
+        cm_outputs_dir.mkdir(parents=True, exist_ok=True)
+
+        # Copy generated heightmap to costmap gen inputs
+        shutil.copy2(hm_output_file, cm_inputs_dir / hm_output_file.name)
+
+        cm_output_file = cm_outputs_dir / "costmap.npz"
+        cm_preview_file = cm_outputs_dir / "costmap.png"
+        cm_csv_dir = cm_outputs_dir / "csv"
+
+        cm_command = [
+            sys.executable,
+            str(COSTMAP_SCRIPT),
+            "--input-heightmap",
+            str(cm_inputs_dir / hm_output_file.name),
+            "--output",
+            str(cm_output_file),
+            "--preview",
+            str(cm_preview_file),
+            "--csv-dir",
+            str(cm_csv_dir),
+            "--gradient-scale",
+            str(args.gradient_scale),
+            "--stability-scale",
+            str(args.stability_scale),
+        ]
+
+        run_stage(cm_command, "Stage 4/4 — Costmap Generation")
+
+        # -------------------------------------------------------------
+        # Copy to Master Output Folder
+        # -------------------------------------------------------------
+        if run_dir.exists():
+            print(f"Removing pre-existing master output folder: {run_dir}")
+            shutil.rmtree(run_dir)
+        run_dir.mkdir(parents=True, exist_ok=True)
+
+        # Copied names to master folder
+        master_obs = run_dir / "obstacle_data.npy"
+        master_world = run_dir / f"world{args.index}.world"
+        master_heightmap = run_dir / "heightmap.npz"
+        master_heightmap_preview = run_dir / "heightmap.png"
+        master_costmap = run_dir / "costmap.npz"
+        master_costmap_preview = run_dir / "costmap.png"
+        master_csv_dir = run_dir / "csv"
+
+        shutil.copy2(obs_output_file, master_obs)
+        for info_file in obs_outputs_dir.glob("*_info.txt"):
+            shutil.copy2(info_file, run_dir / "obstacle_data_info.txt")
+
+        shutil.copy2(world_output_file, master_world)
+        shutil.copy2(hm_output_file, master_heightmap)
+        if hm_preview_file.exists():
+            shutil.copy2(hm_preview_file, master_heightmap_preview)
+
+        shutil.copy2(cm_output_file, master_costmap)
+        if cm_preview_file.exists():
+            shutil.copy2(cm_preview_file, master_costmap_preview)
+        if cm_csv_dir.exists():
+            shutil.copytree(cm_csv_dir, master_csv_dir)
 
         metadata = run_dir / "metadata.txt"
-
         metadata.write_text(
             "\n".join(
                 [
                     "ROAR World Dataset",
                     "=" * 50,
                     f"Run ID                  : {run_id}",
-                    f"World name              : {world_name}",
-                    f"Safe world name         : {safe_world_name}",
                     f"Base world              : {base_world}",
                     f"Base heightmap          : {base_heightmap}",
                     f"Requested density       : {args.density}",
-                    f"Requested collidable    : {args.collidable_ratio}",
+                    f"Requested percentage    : {args.percentage}",
+                    f"Mapped collidable ratio : {collidable_ratio}",
                     f"Rock spacing            : {args.spacing}",
                     f"Minimum roughness       : {args.min_roughness}",
                     f"Minimum terrain height  : {args.min_terrain_height}",
@@ -286,10 +348,10 @@ def main() -> None:
                     f"Heightmap resolution    : {args.heightmap_resolution}",
                     f"Gradient scale          : {args.gradient_scale}",
                     f"Stability scale         : {args.stability_scale}",
-                    f"Obstacle data           : {obstacle_output}",
-                    f"Generated world         : {world_output}",
-                    f"Generated heightmap     : {heightmap_output}",
-                    f"Generated costmap       : {costmap_output}",
+                    f"Obstacle data           : {master_obs}",
+                    f"Generated world         : {master_world}",
+                    f"Generated heightmap     : {master_heightmap}",
+                    f"Generated costmap       : {master_costmap}",
                     "",
                 ]
             ),
@@ -307,11 +369,10 @@ def main() -> None:
     print("WORLD PIPELINE COMPLETED SUCCESSFULLY")
     print("=" * 78)
     print(f"Run ID          : {run_id}")
-    print(f"World name      : {world_name}")
     print(f"Dataset folder  : {run_dir}")
-    print(f"World           : {world_output}")
-    print(f"Heightmap       : {heightmap_output}")
-    print(f"Costmap         : {costmap_output}")
+    print(f"World           : {master_world}")
+    print(f"Heightmap       : {master_heightmap}")
+    print(f"Costmap         : {master_costmap}")
     print(f"Metadata        : {metadata}")
     print("=" * 78)
 

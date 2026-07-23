@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-WORKSPACE_ROOT = Path(__file__).resolve().parents[3]
+WORKSPACE_ROOT = Path(__file__).resolve().parents[4]
 
 DEFAULT_INPUT_DIR = SCRIPT_DIR / "inputs"
 DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "outputs"
@@ -92,18 +92,14 @@ def main() -> None:
     output_world.parent.mkdir(parents=True, exist_ok=True)
 
     command = [
-        "ros2",
-        "run",
-        "rock_generator",
-        "generate_world",
+        "python3",
+        str(SCRIPT_DIR / "world_generator.py"),
         "-i",
         str(obstacle_data),
         "-w",
         str(base_world),
         "-o",
         str(output_world),
-        "--skip-heightmap",
-        "--skip-costmap",
     ]
 
     print("=" * 70)
@@ -113,7 +109,7 @@ def main() -> None:
     print(f"Output world  : {output_world}")
     print("=" * 70)
 
-    run_ros_command(command)
+    subprocess.run(command, check=True)
 
 
 if __name__ == "__main__":
