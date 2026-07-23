@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 import os
+import shutil
 import sys
 import argparse
 import datetime
 import xml.etree.ElementTree as ET
 import numpy as np
+
+from rock_generator.maps_tools.heightmap.heightmap_generator import generate_heightmap_for_world
+from rock_generator.maps_tools.costmap.costmap_generator import generate_costmap_from_heightmap
 
 def get_package_src_dir():
     """Locates the source directory of the rock_generator package inside src/."""
@@ -60,7 +64,14 @@ def get_base_world_path(world_name="marsyard.world"):
 
 
 def get_worlds_package_src_dir():
-    """Locates the source directory of the worlds package inside src/."""
+    """Locate the editable source directory of the worlds package dynamically."""
+    candidates = []
+    pkg_src = get_package_src_dir()
+    candidates.extend([
+        os.path.abspath(os.path.join(pkg_src, '..', '..', 'marsyards', 'worlds')),
+        os.path.abspath(os.path.join(pkg_src, '..', 'marsyards', 'worlds')),
+    ])
+
     try:
         from ament_index_python.packages import get_package_share_directory
         share_dir = get_package_share_directory('worlds')
@@ -68,18 +79,72 @@ def get_worlds_package_src_dir():
         if 'install' in parts:
             idx = parts.index('install')
             ws_root = os.sep.join(parts[:idx])
-            target_src = os.path.join(ws_root, 'src', 'marsyards', 'worlds')
-            if os.path.exists(os.path.join(target_src, 'package.xml')):
-                return target_src
+            candidates.extend([
+                os.path.join(ws_root, 'marsyards', 'worlds'),
+                os.path.join(ws_root, 'src', 'marsyards', 'worlds'),
+            ])
     except Exception:
         pass
-    # Fallback to hardcoded path
-    fallback = '/home/saif/Desktop/ROAR/simulation_ws/src/marsyards/worlds'
-    if os.path.exists(fallback):
-        return fallback
+
+    for candidate in candidates:
+        if os.path.isfile(os.path.join(candidate, 'package.xml')):
+            return candidate
     return None
 
-def fuse_obstacle_data_into_world(input_npy_path=None, world_name="marsyard.world", output_world_path=None, density=None, collidable_ratio=None):
+
+def create_numbered_world_directory(worlds_src_dir):
+    """Create generated_worlds/001, 002, 003, ..."""
+
+    generated_root = os.path.join(
+        worlds_src_dir,
+        "generated_worlds",
+    )
+    os.makedirs(generated_root, exist_ok=True)
+
+    existing_numbers = []
+
+    for entry in os.listdir(generated_root):
+        entry_path = os.path.join(generated_root, entry)
+
+        if os.path.isdir(entry_path) and entry.startswith("world_"):
+            number_part = entry.replace("world_", "", 1)
+            if number_part.isdigit():
+                existing_numbers.append(int(number_part))
+
+    next_number = max(existing_numbers, default=0) + 1
+    run_id = f"world_{next_number:03d}"
+
+    run_dir = os.path.join(generated_root, run_id)
+
+    directories = {
+        "run": run_dir,
+        "world": os.path.join(run_dir, "world"),
+        "obstacle_data": os.path.join(run_dir, "obstacle_data"),
+        "heightmap": os.path.join(run_dir, "heightmap"),
+        "costmap": os.path.join(run_dir, "costmap"),
+        "costmap_csv": os.path.join(run_dir, "costmap", "csv"),
+    }
+
+    for directory in directories.values():
+        os.makedirs(directory, exist_ok=True)
+
+    return run_id, directories
+
+
+def fuse_obstacle_data_into_world(
+    input_npy_path=None,
+    world_name="marsyard.world",
+    output_world_path=None,
+    density=None,
+    collidable_ratio=None,
+    generate_heightmap=True,
+    heightmap_resolution=0.25,
+    heightmap_output_path=None,
+    generate_costmap=True,
+    costmap_output_path=None,
+    gradient_scale=150.0,
+    stability_scale=90.0,
+):
     """
     Fuses numpy obstacle data from package obs_data folder into a Gazebo .world file
     and saves the resulting .world file directly inside the worlds package.
@@ -119,26 +184,100 @@ def fuse_obstacle_data_into_world(input_npy_path=None, world_name="marsyard.worl
     worlds_src_dir = get_worlds_package_src_dir()
     world_filename = f"w_d{density:.3f}_c{collidable_ratio:.2f}.world"
 
+    run_id = None
+    run_directories = None
+
     if output_world_path is None:
         if worlds_src_dir:
-            worlds_dir = os.path.join(worlds_src_dir, 'worlds')
-            os.makedirs(worlds_dir, exist_ok=True)
-            output_world_path = os.path.join(worlds_dir, world_filename)
+            run_id, run_directories = (
+                create_numbered_world_directory(
+                    worlds_src_dir
+                )
+            )
+
+            output_world_path = os.path.join(
+                run_directories["world"],
+                world_filename,
+            )
+
+            obstacle_copy_path = os.path.join(
+                run_directories["obstacle_data"],
+                "obstacle_data.npy",
+            )
+
+            shutil.copy2(
+                input_npy_path,
+                obstacle_copy_path,
+            )
+
+            source_info_path = (
+                os.path.splitext(input_npy_path)[0]
+                + "_info.txt"
+            )
+
+            destination_info_path = os.path.join(
+                run_directories["obstacle_data"],
+                "obstacle_data_info.txt",
+            )
+
+            if os.path.isfile(source_info_path):
+                shutil.copy2(
+                    source_info_path,
+                    destination_info_path,
+                )
+
+            metadata_path = os.path.join(
+                run_directories["run"],
+                "metadata.txt",
+            )
+
+            with open(
+                metadata_path,
+                "w",
+                encoding="utf-8",
+            ) as metadata:
+                metadata.write(f"Run ID              : {run_id}\n")
+                metadata.write(f"World Filename      : {world_filename}\n")
+                metadata.write(f"Actual Density      : {density:.6f}\n")
+                metadata.write(
+                    f"Actual Collidable   : {collidable_ratio:.6f}\n"
+                )
+                metadata.write(
+                    f"Total Obstacles     : {len(obs_data)}\n"
+                )
+                metadata.write(f"Base World          : {base_world_file}\n")
+                metadata.write(f"Source Dataset      : {input_npy_path}\n")
+
+            print(f"  Generated Run ID:         {run_id}")
+            print(
+                "  Generated Dataset Folder: "
+                f"{run_directories['run']}"
+            )
+
         else:
-            gen_worlds_dir = os.path.join(pkg_src_dir, 'Gen_worlds')
-            os.makedirs(gen_worlds_dir, exist_ok=True)
-            output_world_path = os.path.join(gen_worlds_dir, world_filename)
-    else:
-        gen_worlds_dir = os.path.dirname(os.path.abspath(output_world_path))
-        if gen_worlds_dir:
+            gen_worlds_dir = os.path.join(
+                pkg_src_dir,
+                "Gen_worlds",
+            )
             os.makedirs(gen_worlds_dir, exist_ok=True)
 
-    print(f"==================================================")
-    print(f"   Fusing Obstacle Data into Gazebo World File")
-    print(f"==================================================")
-    print(f"  Input Dataset:            {input_npy_path}")
-    print(f"  Base World File:          {base_world_file}")
-    print(f"  Total Obstacles to Fuse:  {len(obs_data)}")
+            output_world_path = os.path.join(
+                gen_worlds_dir,
+                world_filename,
+            )
+
+    else:
+        output_world_path = os.path.abspath(
+            os.path.expanduser(output_world_path)
+        )
+
+        output_directory = os.path.dirname(
+            output_world_path
+        )
+
+        if output_directory:
+            os.makedirs(output_directory, exist_ok=True)
+
     print(f"  Estimated Density:        {density:.4f}")
     print(f"  Estimated Collidable:     {collidable_ratio:.2f}")
     print(f"  Output World File:        {output_world_path}")
@@ -193,6 +332,107 @@ def fuse_obstacle_data_into_world(input_npy_path=None, world_name="marsyard.worl
     tree.write(output_world_path, encoding='utf-8', xml_declaration=True)
     print(f"-> Saved fused world to: {output_world_path}")
 
+    # Every generated world gets its own metric height map containing the
+    # terrain and the newly fused rock meshes. Paths are resolved dynamically.
+    if generate_heightmap:
+        world_stem = os.path.splitext(os.path.basename(output_world_path))[0]
+        if heightmap_output_path is None:
+            if run_directories is not None:
+                heightmap_dir = run_directories["heightmap"]
+            else:
+                heightmap_dir = os.path.join(
+                    os.path.dirname(output_world_path),
+                    "heightmap",
+                )
+
+            os.makedirs(heightmap_dir, exist_ok=True)
+
+            heightmap_output_path = os.path.join(
+                heightmap_dir,
+                f"{world_stem}_heightmap.npz",
+            )
+        else:
+            heightmap_output_path = os.path.abspath(
+                os.path.expanduser(heightmap_output_path)
+            )
+
+            os.makedirs(
+                os.path.dirname(heightmap_output_path),
+                exist_ok=True,
+            )
+
+        preview_path = os.path.splitext(heightmap_output_path)[0] + '.png'
+        model_paths = []
+        if worlds_src_dir:
+            sibling_marsyard_models = os.path.abspath(
+                os.path.join(worlds_src_dir, '..', 'marsyard', 'models')
+            )
+            if os.path.isdir(sibling_marsyard_models):
+                model_paths.append(sibling_marsyard_models)
+        base_world_dir = os.path.dirname(base_world_file)
+        for candidate in (
+            os.path.abspath(os.path.join(base_world_dir, '..', '..', 'marsyard', 'models')),
+            os.path.abspath(os.path.join(base_world_dir, '..', 'models')),
+        ):
+            if os.path.isdir(candidate) and candidate not in model_paths:
+                model_paths.append(candidate)
+
+        generate_heightmap_for_world(
+            output_world_path,
+            heightmap_output_path,
+            resolution=float(heightmap_resolution),
+            model_paths=model_paths,
+            package_paths={'rock_generator': pkg_src_dir},
+            prefer='collision',
+            visual_fallback=True,
+            preview_path=preview_path,
+        )
+        print(f"-> Generated world heightmap: {heightmap_output_path}")
+
+        if generate_costmap:
+            if costmap_output_path is None:
+                if run_directories is not None:
+                    costmap_dir = run_directories["costmap"]
+                else:
+                    costmap_dir = os.path.join(
+                        os.path.dirname(output_world_path),
+                        "costmap",
+                    )
+
+                os.makedirs(costmap_dir, exist_ok=True)
+
+                costmap_output_path = os.path.join(
+                    costmap_dir,
+                    f"{world_stem}_costmap.npz",
+                )
+            else:
+                costmap_output_path = os.path.abspath(
+                    os.path.expanduser(costmap_output_path)
+                )
+
+                os.makedirs(
+                    os.path.dirname(costmap_output_path),
+                    exist_ok=True,
+                )
+
+            costmap_preview = os.path.splitext(costmap_output_path)[0] + '.png'
+            if run_directories is not None:
+                csv_directory = run_directories["costmap_csv"]
+            else:
+                csv_directory = (
+                    os.path.splitext(costmap_output_path)[0]
+                    + "_csv"
+                )
+            generate_costmap_from_heightmap(
+                heightmap_output_path,
+                costmap_output_path,
+                preview_path=costmap_preview,
+                csv_directory=csv_directory,
+                gradient_scale=float(gradient_scale),
+                stability_scale=float(stability_scale),
+            )
+            print(f"-> Generated world costmap: {costmap_output_path}")
+
     # Generate a launch file inside the worlds package launch directory
     if worlds_src_dir:
         launch_filename = f"w_d{density:.3f}_c{collidable_ratio:.2f}.launch.py"
@@ -212,7 +452,7 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(
                 os.path.join(pkg_worlds, 'launch', 'launch_map.launch.py')
             ),
-            launch_arguments={{'world': '{world_filename}'}}.items()
+            launch_arguments={{'world': r'{output_world_path}'}}.items()
         )
     ])
 """
@@ -237,6 +477,20 @@ def parse_args():
                         help="Density value for the output filename")
     parser.add_argument("--collidable-ratio", type=float, default=None,
                         help="Collidable ratio value for the output filename")
+    parser.add_argument("--heightmap-resolution", type=float, default=0.25,
+                        help="Generated heightmap resolution in metres per cell (default: 0.25)")
+    parser.add_argument("--heightmap-output", type=str, default=None,
+                        help="Optional output .npz path for this world's heightmap")
+    parser.add_argument("--skip-heightmap", action="store_true",
+                        help="Generate the .world only (also skips costmap generation)")
+    parser.add_argument("--skip-costmap", action="store_true",
+                        help="Generate the world and heightmap, but do not generate a costmap")
+    parser.add_argument("--costmap-output", type=str, default=None,
+                        help="Optional output .npz path for this world's costmap")
+    parser.add_argument("--gradient-scale", type=float, default=150.0,
+                        help="Gradient contribution scale for costmap generation (default: 150)")
+    parser.add_argument("--stability-scale", type=float, default=90.0,
+                        help="Laplacian / stability contribution scale (default: 90)")
     return parser.parse_args()
 
 def main():
@@ -246,7 +500,14 @@ def main():
         world_name=args.world_name,
         output_world_path=args.output,
         density=args.density,
-        collidable_ratio=args.collidable_ratio
+        collidable_ratio=args.collidable_ratio,
+        generate_heightmap=not args.skip_heightmap,
+        heightmap_resolution=args.heightmap_resolution,
+        heightmap_output_path=args.heightmap_output,
+        generate_costmap=(not args.skip_heightmap) and (not args.skip_costmap),
+        costmap_output_path=args.costmap_output,
+        gradient_scale=args.gradient_scale,
+        stability_scale=args.stability_scale,
     )
 
 if __name__ == '__main__':

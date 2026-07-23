@@ -4,7 +4,7 @@ ROAR Rock Generator — Heightmap-based obstacle placement.
 
 Workflow:
   1. Loads a pre-baked terrain heightmap (.npz) produced by
-     heightmap_tools/generate_heightmap.py.
+     rock_generator/maps_tools/heightmap/heightmap_generator.py.
   2. Samples (X, Y) candidates randomly within the terrain bounds.
   3. Queries the heightmap for the real ground Z at each candidate.
   4. Rejects candidates on flat/void areas (Z < min_terrain_height).
@@ -52,7 +52,7 @@ class HeightmapSampler:
         if not os.path.isfile(npz_path):
             raise FileNotFoundError(
                 f"Heightmap not found: {npz_path}\n"
-                "Run heightmap_tools/generate_heightmap.py first to generate it."
+                "Run rock_generator/maps_tools/heightmap/heightmap_generator.py first to generate it."
             )
         with np.load(npz_path) as data:
             self.xs = data["xs"].astype(np.float64)   # shape (cols,)
@@ -206,7 +206,7 @@ def get_package_src_dir():
 def get_heightmap_path():
     """Locate marsyard_heightmap.npz dynamically inside the package."""
     pkg_src = get_package_src_dir()
-    candidate = os.path.join(pkg_src, "heightmap_tools", "marsyard_heightmap.npz")
+    candidate = os.path.join(pkg_src, "rock_generator", "maps_tools", "heightmap", "data", "marsyard_heightmap.npz")
     if os.path.isfile(candidate):
         return candidate
 
@@ -214,7 +214,7 @@ def get_heightmap_path():
     try:
         from ament_index_python.packages import get_package_share_directory
         share = get_package_share_directory("rock_generator")
-        candidate = os.path.join(share, "heightmap_tools", "marsyard_heightmap.npz")
+        candidate = os.path.join(share, "rock_generator", "maps_tools", "heightmap", "data", "marsyard_heightmap.npz")
         if os.path.isfile(candidate):
             return candidate
     except Exception:
@@ -267,7 +267,7 @@ def generate_obstacle_data(
     if heightmap_path is None:
         raise FileNotFoundError(
             "Could not find marsyard_heightmap.npz. "
-            "Run heightmap_tools/generate_heightmap.py first."
+            "Run rock_generator/maps_tools/heightmap/heightmap_generator.py first."
         )
 
     sampler = HeightmapSampler(heightmap_path, min_terrain_height=min_terrain_height,

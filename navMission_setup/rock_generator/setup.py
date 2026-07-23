@@ -11,7 +11,6 @@ def get_data_files():
         ('share/' + package_name + '/launch', glob('launch/*.launch.py')),
         ('share/' + package_name + '/obs_data', glob('obs_data/*') if glob('obs_data/*') else []),
         ('share/' + package_name + '/Gen_worlds', glob('Gen_worlds/*') if glob('Gen_worlds/*') else []),
-        ('share/' + package_name + '/heightmap_tools', glob('heightmap_tools/*') if glob('heightmap_tools/*') else []),
     ]
     
     # Recursively add rocks_ws directory files
@@ -33,6 +32,14 @@ setup(
     name=package_name,
     version='1.0.0',
     packages=find_packages(exclude=['test']),
+    include_package_data=True,
+    package_data={
+        "rock_generator": [
+            "maps_tools/heightmap/data/*.npz",
+            "maps_tools/heightmap/data/*.png",
+            "maps_tools/heightmap/*.md",
+        ],
+    },
     data_files=get_data_files(),
     install_requires=['setuptools', 'numpy', 'pillow'],
     zip_safe=True,
@@ -47,6 +54,8 @@ setup(
             'generate_world = rock_generator.world_generator:main',
             'spawn_rocks = rock_generator.spawner:main',
             'rock_generator = rock_generator.main:main',
+            'generate_heightmap = rock_generator.maps_tools.heightmap.heightmap_generator:main',
+            'generate_costmap = rock_generator.maps_tools.costmap.costmap_generator:main',
         ],
     },
 )

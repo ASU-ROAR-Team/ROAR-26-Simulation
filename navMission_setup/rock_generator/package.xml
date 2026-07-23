@@ -12,6 +12,7 @@
   <depend>ros_gz_bridge</depend>
   <depend>worlds</depend>
   <depend>marsyard</depend>
+  <exec_depend>ament_index_python</exec_depend>
   <exec_depend>python3-numpy</exec_depend>
   <exec_depend>python3-pil</exec_depend>
 

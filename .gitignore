@@ -13,3 +13,31 @@ log/
 # Gemini configuration
 .gemini/
 .gemini.md
+
+# ROS 2 build outputs
+build/
+install/
+log/
+
+# Python cache
+**/__pycache__/
+*.pyc
+
+# Generated simulation datasets
+marsyards/worlds/generated_worlds/
+
+# Legacy generated worlds and maps
+marsyards/worlds/worlds/w_d*_c*.world
+marsyards/worlds/worlds/heightmaps/
+marsyards/worlds/worlds/costmaps/
+
+# Auto-generated launch files
+marsyards/worlds/launch/w_d*_c*.launch.py
+
+# Generated obstacle datasets
+navMission_setup/rock_generator/obs_data/*.npy
+navMission_setup/rock_generator/obs_data/*_info.txt
+
+# Temporary files
+*.zip
+*.backup
