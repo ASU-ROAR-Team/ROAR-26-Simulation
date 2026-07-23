@@ -116,6 +116,11 @@ def main() -> None:
     parser.add_argument("--heightmap-resolution", type=float, default=0.25)
     parser.add_argument("--gradient-scale", type=float, default=150.0)
     parser.add_argument("--stability-scale", type=float, default=90.0)
+    parser.add_argument(
+        "--run",
+        action="store_true",
+        help="Launch the generated world dataset immediately after generation."
+    )
 
     args = parser.parse_args()
 
@@ -358,6 +363,33 @@ def main() -> None:
             encoding="utf-8",
         )
 
+        # Generate launch file inside outputs/world{index}
+        launch_file = run_dir / f"{run_id}.launch.py"
+        launch_content = f"""import os
+from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+
+def generate_launch_description():
+    pkg_worlds = get_package_share_directory('worlds')
+    world_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        '{run_id}.world'
+    )
+    
+    return LaunchDescription([
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                os.path.join(pkg_worlds, 'launch', 'launch_map.launch.py')
+            ),
+            launch_arguments={{'world': world_path}}.items()
+        )
+    ])
+"""
+        launch_file.write_text(launch_content, encoding="utf-8")
+        print(f"-> Generated local launch file: {launch_file}")
+
     except Exception:
         print()
         print("Pipeline failed.")
@@ -375,6 +407,25 @@ def main() -> None:
     print(f"Costmap         : {master_costmap}")
     print(f"Metadata        : {metadata}")
     print("=" * 78)
+
+    if args.run:
+        import shlex
+        print()
+        print("=" * 78)
+        print(f"Launching Generated World Dataset: {run_id}")
+        print("=" * 78)
+        launch_file = run_dir / f"{run_id}.launch.py"
+        workspace_root = Path(__file__).resolve().parents[2]
+        setup_file = workspace_root / "install" / "setup.bash"
+        if setup_file.exists():
+            launch_command = (
+                "source /opt/ros/humble/setup.bash && "
+                f"source {shlex.quote(str(setup_file))} && "
+                f"ros2 launch {shlex.quote(str(launch_file))}"
+            )
+            subprocess.run(["bash", "-lc", launch_command], check=True)
+        else:
+            print("Workspace setup file was not found, cannot launch.")
 
 
 if __name__ == "__main__":

@@ -29,7 +29,53 @@
     </include>
     <model name="Rock_1">
       <static>true</static>
-      <pose>-2.3257 -6.0644 1.1156 0.0000 0.0000 1.4326</pose>
+      <pose>-4.7782 1.8146 1.1710 0.0000 0.0000 -0.4759</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_2">
+      <static>true</static>
+      <pose>2.8355 -5.4663 0.6614 0.0000 0.0000 0.0736</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_3">
+      <static>true</static>
+      <pose>-2.4325 7.5645 1.1289 0.0000 0.0000 1.8244</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_4">
+      <static>true</static>
+      <pose>-2.6782 -8.6233 1.2984 0.0000 0.0000 -0.2556</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -38,77 +84,31 @@
             </mesh>
           </geometry>
         </visual>
-      </link>
-    </model>
-    <model name="Rock_2">
-      <static>true</static>
-      <pose>-4.2965 -10.8368 1.5271 0.0000 0.0000 0.6977</pose>
-      <link name="link">
-        <visual name="visual">
-          <geometry>
-            <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
-            </mesh>
-          </geometry>
-        </visual>
-      </link>
-    </model>
-    <model name="Rock_3">
-      <static>true</static>
-      <pose>10.9214 4.3929 1.3632 0.0000 0.0000 2.1054</pose>
-      <link name="link">
-        <visual name="visual">
-          <geometry>
-            <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
-            </mesh>
-          </geometry>
-        </visual>
         <collision name="collision">
           <geometry>
             <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
             </mesh>
           </geometry>
         </collision>
-      </link>
-    </model>
-    <model name="Rock_4">
-      <static>true</static>
-      <pose>-6.8173 2.5778 1.1741 0.0000 0.0000 -1.8652</pose>
-      <link name="link">
-        <visual name="visual">
-          <geometry>
-            <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
-            </mesh>
-          </geometry>
-        </visual>
       </link>
     </model>
     <model name="Rock_5">
       <static>true</static>
-      <pose>-11.8040 -8.3064 0.8185 0.0000 0.0000 0.0487</pose>
+      <pose>-6.4621 -0.3522 1.3447 0.0000 0.0000 0.7519</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
             </mesh>
           </geometry>
         </visual>
-        <collision name="collision">
-          <geometry>
-            <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
-            </mesh>
-          </geometry>
-        </collision>
       </link>
     </model>
     <model name="Rock_6">
       <static>true</static>
-      <pose>-2.2264 -1.1645 1.1540 0.0000 0.0000 -0.2265</pose>
+      <pose>5.1223 1.2279 1.0966 0.0000 0.0000 -0.5290</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -117,30 +117,23 @@
             </mesh>
           </geometry>
         </visual>
-        <collision name="collision">
-          <geometry>
-            <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
-            </mesh>
-          </geometry>
-        </collision>
       </link>
     </model>
     <model name="Rock_7">
       <static>true</static>
-      <pose>7.1666 6.8113 1.6707 0.0000 0.0000 2.7918</pose>
+      <pose>-9.4585 0.0377 0.7981 0.0000 0.0000 -2.0379</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name="collision">
           <geometry>
             <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
             </mesh>
           </geometry>
         </collision>
@@ -148,19 +141,19 @@
     </model>
     <model name="Rock_8">
       <static>true</static>
-      <pose>-7.1478 -8.1105 0.7560 0.0000 0.0000 0.7775</pose>
+      <pose>-4.9092 -8.2650 0.9369 0.0000 0.0000 2.4426</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name="collision">
           <geometry>
             <mesh>
-              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
             </mesh>
           </geometry>
         </collision>

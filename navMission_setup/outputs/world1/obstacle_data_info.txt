@@ -7,13 +7,13 @@ Collidable Ratio: 0.5
 Spacing Min     : 1.0 m
 Min Terrain Z   : 0.15 m
 Deadends        : False
-Timestamped File: obstacle_data_20260723_235042.npy
+Timestamped File: obstacle_data_20260724_000936.npy
 
-[  1] Rock_1       | Model #4 | Pos: ( -2.326,  -6.064,  1.116) | Collidable: False
-[  2] Rock_2       | Model #9 | Pos: ( -4.296, -10.837,  1.527) | Collidable: False
-[  3] Rock_3       | Model #9 | Pos: ( 10.921,   4.393,  1.363) | Collidable: True
-[  4] Rock_4       | Model #6 | Pos: ( -6.817,   2.578,  1.174) | Collidable: False
-[  5] Rock_5       | Model #6 | Pos: (-11.804,  -8.306,  0.818) | Collidable: True
-[  6] Rock_6       | Model #5 | Pos: ( -2.226,  -1.165,  1.154) | Collidable: True
-[  7] Rock_7       | Model #7 | Pos: (  7.167,   6.811,  1.671) | Collidable: True
-[  8] Rock_8       | Model #6 | Pos: ( -7.148,  -8.111,  0.756) | Collidable: True
+[  1] Rock_1       | Model #7 | Pos: ( -4.778,   1.815,  1.171) | Collidable: False
+[  2] Rock_2       | Model #6 | Pos: (  2.836,  -5.466,  0.661) | Collidable: False
+[  3] Rock_3       | Model #6 | Pos: ( -2.432,   7.564,  1.129) | Collidable: True
+[  4] Rock_4       | Model #4 | Pos: ( -2.678,  -8.623,  1.298) | Collidable: True
+[  5] Rock_5       | Model #3 | Pos: ( -6.462,  -0.352,  1.345) | Collidable: False
+[  6] Rock_6       | Model #5 | Pos: (  5.122,   1.228,  1.097) | Collidable: False
+[  7] Rock_7       | Model #8 | Pos: ( -9.458,   0.038,  0.798) | Collidable: True
+[  8] Rock_8       | Model #9 | Pos: ( -4.909,  -8.265,  0.937) | Collidable: True
