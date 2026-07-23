@@ -20,7 +20,11 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(
                 os.path.join(get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
             ),
-            launch_arguments={'gz_args': '-r empty.sdf'}.items()
+            launch_arguments={
+                'gz_args': '-r ' + os.path.join(
+                    get_package_share_directory('erc_panel_sim'), 'worlds', 'panel_world.sdf'
+                )
+            }.items()
         ),
         # 2. Panel State Publisher — RViz uses this
         Node(

@@ -19,9 +19,11 @@
     <material name="dark_grey"/>
   </visual>
   <collision>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <!-- Box approximation of LED body housing (27.2×16.2×11.55 mm), centred at mesh centroid -->
+    <!-- mesh centroid at z=0.01607 m above origin -->
+    <origin xyz="0.0 0.0 0.01607" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find led_indicator_description)/meshes/led_base_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.0272 0.0162 0.0115"/>
     </geometry>
   </collision>
 </link>
@@ -40,9 +42,11 @@
     <material name="green"/>
   </visual>
   <collision>
-    <origin xyz="-0.0 0.0 -0.007566" rpy="0 0 0"/>
+    <!-- Box approximation of LED lens cap (27.2×12.8×9.65 mm) -->
+    <!-- visual offset (0,0,-0.007566) + mesh centroid (0,0,0.01623) = (0,0,0.008664) -->
+    <origin xyz="0.0 0.0 0.008664" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find led_indicator_description)/meshes/led_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.0272 0.0128 0.0096"/>
     </geometry>
   </collision>
 </link>

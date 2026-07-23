@@ -20,9 +20,10 @@
     <material name="dark_grey"/>
   </visual>
   <collision>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <!-- Box approximation of electromagnet bracket (24.5×140×30 mm), centred at mesh centroid -->
+    <origin xyz="0.0 0.0 0.01500" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find electromagnet_description)/meshes/magnet_base_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.02452 0.14000 0.03000"/>
     </geometry>
   </collision>
 </link>
@@ -41,9 +42,11 @@
     <material name="silver"/>
   </visual>
   <collision>
-    <origin xyz="-0.0 -0.0 -0.03" rpy="0 0 0"/>
+    <!-- Box approximation of magnet disc (51.8×230×20 mm) -->
+    <!-- visual offset (0,0,-0.03) + mesh centroid (0,0,0.02) = (0,0,-0.01) -->
+    <origin xyz="0.0 0.0 -0.01" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find electromagnet_description)/meshes/magnet_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.05177 0.23000 0.02000"/>
     </geometry>
   </collision>
 </link>

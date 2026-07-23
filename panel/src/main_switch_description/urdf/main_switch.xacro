@@ -21,9 +21,10 @@
     <material name="dark_grey"/>
   </visual>
   <collision>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <!-- Box approximation of main switch body (71.5×74×91 mm), centred at mesh centroid -->
+    <origin xyz="-0.00326 0.01492 0.00349" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find main_switch_description)/meshes/main_base_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.0715 0.0740 0.0911"/>
     </geometry>
   </collision>
 </link>
@@ -42,9 +43,12 @@
     <material name="dark_grey"/>
   </visual>
   <collision>
-    <origin xyz="0.023986 0.010731 -0.00361" rpy="0 0 0"/>
+    <!-- Box approximation of main switch lever (16.5×19.4×17.3 mm) -->
+    <!-- visual offset (0.023986, 0.010731, -0.00361) + mesh centroid (0.02399, -0.01875, -0.00093) -->
+    <!-- combined: (0.02399+0.023986, 0.010731-0.01875, -0.00361-0.00093) = (0.04797, -0.00802, -0.00454) -->
+    <origin xyz="0.04797 -0.00802 -0.00454" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find main_switch_description)/meshes/main_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.0165 0.0194 0.0173"/>
     </geometry>
   </collision>
 </link>

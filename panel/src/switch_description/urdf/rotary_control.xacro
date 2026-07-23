@@ -21,9 +21,10 @@
       <material name="dark_grey"/>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <!-- Box approximation of switch body (30x52.5x43.8 mm), centered at mesh centroid -->
+      <origin xyz="0.0 -0.01525 0.00109" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="file://$(find switch_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/> <!-- changed the mesh to base_link.stl ashan el mesh sabet -->
+        <box size="0.030 0.0525 0.0438"/>
       </geometry>
     </collision>
   </link>
@@ -42,9 +43,11 @@
       <material name="dark_grey"/>
     </visual>
     <collision>
-      <origin xyz="-0.0 -0.008 -0.0" rpy="0 0 0"/>
+      <!-- Cylinder approximation of rotary knob (r=12mm, l=26mm), axis along X -->
+      <!-- visual offset is -0.008 in Y; knob mesh center is at Y=+0.01525 → combined Y = 0.00725 -->
+      <origin xyz="0.0 0.00725 -0.001" rpy="0 1.5708 0"/>
       <geometry>
-        <mesh filename="file://$(find switch_description)/meshes/knob_link_1_1.stl" scale="0.001 0.001 0.001"/> <!-- changed the mesh to knob_link_1_1.stl ashan el mesh sabet -->
+        <cylinder radius="0.012" length="0.026"/>
       </geometry>
     </collision>
   </link>

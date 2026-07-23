@@ -19,9 +19,10 @@
     <material name="dark_grey"/>
   </visual>
   <collision>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <!-- Box approximation of slab holder (40.25×200×105 mm), centred at mesh centroid -->
+    <origin xyz="0.00095 -0.00062 0.05056" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find slab_description)/meshes/slab_base_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.04025 0.20000 0.10500"/>
     </geometry>
   </collision>
 </link>

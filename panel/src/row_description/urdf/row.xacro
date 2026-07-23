@@ -21,9 +21,10 @@
     <material name="dark_grey"/>
   </visual>
   <collision>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <!-- Box approximation of toggle-switch base (20.4×68.8×85.6 mm), centred at mesh centroid -->
+    <origin xyz="0.00006 -0.01561 -0.00182" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find row_description)/meshes/row_base_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.0204 0.0688 0.0856"/>
     </geometry>
   </collision>
 </link>
@@ -42,9 +43,12 @@
     <material name="dark_grey"/>
   </visual>
   <collision>
-    <origin xyz="-5.6e-05 -0.017761 0.008932" rpy="0 0 0"/>
+    <!-- Box approximation of toggle lever (17.1×6.9×14.7 mm) -->
+    <!-- visual offset (-5.6e-05, -0.017761, 0.008932) + mesh centroid (0.00006, 0.01847, -0.01087) -->
+    <!-- combined Y: -0.017761 + 0.01847 = 0.000709  Z: 0.008932 - 0.01087 = -0.001938 -->
+    <origin xyz="0.0 0.000709 -0.001938" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find row_description)/meshes/row_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.0171 0.0069 0.0147"/>
     </geometry>
   </collision>
 </link>

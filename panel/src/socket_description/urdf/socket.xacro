@@ -20,9 +20,10 @@
     <material name="dark_grey"/>
   </visual>
   <collision>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <!-- Box approximation of IEC socket body (49×22×26.5 mm), centred at mesh centroid -->
+    <origin xyz="0.00017 0.00032 -0.00663" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="file://$(find socket_description)/meshes/socket_base_link.stl" scale="0.001 0.001 0.001"/>
+      <box size="0.0490 0.0220 0.0265"/>
     </geometry>
   </collision>
 </link>
