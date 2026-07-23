@@ -28,6 +28,7 @@ diff_drive_controller:
 
     base_frame_id: base_footprint
 
+
     wheel_separation: 0.61  # Distance between left and right wheels (meters)
     wheel_radius: 0.1       # Radius of your wheels (meters)
 

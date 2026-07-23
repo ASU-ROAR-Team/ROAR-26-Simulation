@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="roar_rover">
 
-  <xacro:include filename="$(find roar_rover_noise)/urdf/base/rover_control.xacro" />
+  <xacro:include filename="$(find roar_simulation_full)/urdf/base/rover_control.xacro" />
 
   <xacro:macro name="rover_base">
 
@@ -10,7 +10,7 @@
     <joint name="base_footprint_joint" type="fixed">
       <parent link="base_footprint"/>
       <child link="base_link"/>
-      <origin xyz="0 0 0" rpy="0 0 1.57079632679"/>
+      <origin xyz="0 0 0" rpy="0 0 -1.57079632679"/>
     </joint>
 
     <link name="base_link">
@@ -22,7 +22,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/base_link_visual.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/base_link_visual.STL" />
         </geometry>
         <material name="light_grey">
           <color rgba="0.52941 0.54901 0.54901 1" />
@@ -31,7 +31,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/base_link_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/base_link_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -45,7 +45,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/rocker_rhs_visual.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/rocker_rhs_visual.STL" />
         </geometry>
         <material name="light_blue">
           <color rgba="0.79215 0.81960 0.93333 1" />
@@ -54,7 +54,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/rocker_rhs_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/rocker_rhs_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -75,7 +75,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/bogie_rhs_visual.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/bogie_rhs_visual.STL" />
         </geometry>
         <material name="light_blue">
           <color rgba="0.79215 0.81960 0.93333 1" />
@@ -84,7 +84,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/bogie_rhs_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/bogie_rhs_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -105,7 +105,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_rhs_mid.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_rhs_mid.STL" />
         </geometry>
         <material name="dark_grey">
           <color rgba="0.29803 0.29803 0.29803 1" />
@@ -114,7 +114,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_rhs_mid_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_rhs_mid_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -135,7 +135,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_rhs_front.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_rhs_front.STL" />
         </geometry>
         <material name="dark_grey">
           <color rgba="0.29803 0.29803 0.29803 1" />
@@ -144,7 +144,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_rhs_front_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_rhs_front_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -165,7 +165,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_rhs_rear.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_rhs_rear.STL" />
         </geometry>
         <material name="dark_grey">
           <color rgba="0.29803 0.29803 0.29803 1" />
@@ -174,7 +174,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_rhs_rear_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_rhs_rear_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -195,7 +195,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/rocker_lhs_visual.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/rocker_lhs_visual.STL" />
         </geometry>
         <material name="light_blue">
           <color rgba="0.79215 0.81960 0.93333 1" />
@@ -204,7 +204,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/rocker_lhs.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/rocker_lhs.STL" />
         </geometry>
       </collision>
     </link>
@@ -225,7 +225,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/bogie_lhs_visual.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/bogie_lhs_visual.STL" />
         </geometry>
         <material name="light_blue">
           <color rgba="0.79215 0.81960 0.93333 1" />
@@ -234,7 +234,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/bogie_lhs_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/bogie_lhs_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -255,7 +255,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_lhs_mid.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_lhs_mid.STL" />
         </geometry>
         <material name="dark_grey">
           <color rgba="0.29803 0.29803 0.29803 1" />
@@ -264,7 +264,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_lhs_mid_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_lhs_mid_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -285,7 +285,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_lhs_front.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_lhs_front.STL" />
         </geometry>
         <material name="dark_grey">
           <color rgba="0.29803 0.29803 0.29803 1" />
@@ -294,7 +294,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_lhs_front_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_lhs_front_collision.STL" />
         </geometry>
       </collision>
     </link>
@@ -315,7 +315,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_lhs_rear.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_lhs_rear.STL" />
         </geometry>
         <material name="dark_grey">
           <color rgba="0.29803 0.29803 0.29803 1" />
@@ -324,7 +324,7 @@
       <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
-          <mesh filename="file://$(find roar_rover_noise)/meshes/rover/wheel_lhs_rear_collision.STL" />
+          <mesh filename="file://$(find roar_simulation_full)/meshes/rover/wheel_lhs_rear_collision.STL" />
         </geometry>
       </collision>
     </link>
