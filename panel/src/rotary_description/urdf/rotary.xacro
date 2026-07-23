@@ -2,10 +2,10 @@
 <robot name="rotary" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <!-- <xacro:include filename="$(find rotary_description)/urdf/rotary_materials.xacro" />  color defined in main xacro now-->
-<xacro:include filename="$(find rotary_description)/urdf/rotary.ros2control" />
 <xacro:include filename="$(find rotary_description)/urdf/rotary.gazebo" />
 
 <xacro:macro name="rotary" params="name parent x y z">
+<xacro:include filename="$(find rotary_description)/urdf/rotary.ros2control" />
 
 <link name="${name}_base_link">
   <inertial>

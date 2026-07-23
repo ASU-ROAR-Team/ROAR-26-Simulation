@@ -2,10 +2,10 @@
 <robot name="main_switch" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <!-- <xacro:include filename="$(find main_switch_description)/urdf/materials.xacro" /> -->
-<xacro:include filename="$(find main_switch_description)/urdf/main_switch.ros2control" />
 <xacro:include filename="$(find main_switch_description)/urdf/main_switch.gazebo" />
 
 <xacro:macro name="main_switch" params="name parent x y z"> 
+<xacro:include filename="$(find main_switch_description)/urdf/main_switch.ros2control" /> 
 
 <link name="${name}_link">
   <inertial>

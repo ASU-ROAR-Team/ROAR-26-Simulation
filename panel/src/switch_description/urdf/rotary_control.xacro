@@ -2,11 +2,11 @@
 <robot name="switch" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <!-- <xacro:include filename="$(find switch_description)/urdf/switch_materials.xacro" />  color defined in main xacro now-->
-<xacro:include filename="$(find switch_description)/urdf/switch.ros2control" />
 <xacro:include filename="$(find switch_description)/urdf/switch.gazebo" />
 
 <!-- added the next line to define {name} and be able to call it multiple times in the main urdf file -->
 <xacro:macro name="rotary_switch" params="name parent x y z"> 
+  <xacro:include filename="$(find switch_description)/urdf/switch.ros2control" /> 
   <link name="${name}_link">
     <inertial>
       <origin xyz="6.366006894442245e-09 -0.01824355119659464 0.0004779176478562203" rpy="0 0 0"/>

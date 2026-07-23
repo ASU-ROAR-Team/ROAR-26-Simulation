@@ -11,4 +11,10 @@
   <gravity>true</gravity>
 </gazebo>
 
+<gazebo reference="plate_base_link">
+  <plugin filename="libignition-gazebo-magnetable-system.so"
+          name="ignition::gazebo::systems::Magnetable">
+  </plugin>
+</gazebo>
+
 </robot>

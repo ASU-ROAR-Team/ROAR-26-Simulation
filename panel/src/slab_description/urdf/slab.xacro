@@ -2,9 +2,9 @@
 <robot name="slab" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <!--<xacro:include filename="$(find slab_description)/urdf/materials.xacro" />-->
-<xacro:include filename="$(find slab_description)/urdf/slab.ros2control" />
 <xacro:include filename="$(find slab_description)/urdf/slab.gazebo" />
 <xacro:macro name="slab" params="name parent x y z">
+<xacro:include filename="$(find slab_description)/urdf/slab.ros2control" />
 <link name="${name}_link">
   <inertial>
     <origin xyz="0.0010048686400626185 -0.0006186790953504218 0.029978908553673085" rpy="0 0 0"/>
