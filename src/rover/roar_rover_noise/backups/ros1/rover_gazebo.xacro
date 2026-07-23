@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    This file contains all Gazebo-specific settings for the ROAR rover platform.
+    - It is defined as a macro for easy inclusion.
+    - It contains the essential, robot-wide 'gazebo_ros_control' plugin.
+    - It includes all sensor plugins (IMU, GPS, Magnetometer, Camera).
+    - It includes the ground truth odometry plugin.
+  -->
+
+  <xacro:macro name="rover_gazebo">
+
+    <!-- ============================================================================= -->
+    <!-- CONTROL PLUGIN -->
+    <!-- ============================================================================= -->
+
+    <!-- This is the single, robot-wide Gazebo plugin for ros_control.
+         It reads all <transmission> tags from the entire robot's URDF (both rover and arm)
+         and creates the necessary simulation interfaces for them.
+         DO NOT add another instance of this plugin in any other file. -->
+    <gazebo>
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        <robotNamespace>/</robotNamespace>
+      </plugin>
+    </gazebo>
+
+    <!-- ============================================================================= -->
+    <!-- SENSOR PLUGINS -->
+    <!-- ============================================================================= -->
+
+    <!-- IMU Sensor Plugin (attaches to base_link) -->
+    <gazebo>
+      <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+        <alwaysOn>true</alwaysOn>
+        <bodyName>base_link</bodyName>
+        <topicName>imu</topicName>
+        <serviceName>imu_service</serviceName>
+        <gaussianNoise>0.0</gaussianNoise>
+        <updateRate>20.0</updateRate>
+      </plugin>
+    </gazebo>
+
+    <!-- GPS Sensor Plugin (attaches to base_link) -->
+    <gazebo>
+      <plugin name="novatel_gps_sim" filename="libhector_gazebo_ros_gps.so">
+        <alwaysOn>1</alwaysOn>
+        <updateRate>1.0</updateRate>
+        <bodyName>base_link</bodyName>
+        <topicName>gps</topicName>
+        <velocityTopicName>fix_velocity</velocityTopicName>
+        <drift>1.0 1.0 1.0</drift>
+        <gaussianNoise>0.1 0.1 0.1</gaussianNoise>
+        <velocityDrift>0 0 0</velocityDrift>
+        <velocityGaussianNoise>0.1 0.1 0.1</velocityGaussianNoise>
+      </plugin>
+    </gazebo>
+    
+    <!-- Magnetometer Sensor Plugin (attaches to base_link) -->
+    <gazebo>
+      <plugin name="magnetometer" filename="libhector_gazebo_ros_magnetic.so">
+        <updateRate>20.0</updateRate>
+        <bodyName>base_link</bodyName> <!-- Corrected from 'bodyname' in original URDF -->
+        <topicName>magnetometer</topicName>
+        <referenceHeading>0.0</referenceHeading>
+        <declination>0.1989972053</declination>
+        <inclination>-1.1955610096</inclination>
+        <offset>0 0 0</offset>
+        <driftFrequency>0 0 0</driftFrequency>
+        <gaussianNoise>0 0 0</gaussianNoise>
+      </plugin>
+    </gazebo> 
+
+    <!-- Depth Camera Sensor Plugin
+         NOTE: This plugin references 'camera_link'. That link must be defined
+         (e.g., in a separate sensors.xacro file) before this macro is called. -->
+    <gazebo reference="camera_link">
+      <sensor type="depth" name="camera">
+        <pose>0 0 0 0 0 0</pose>
+        <update_rate>15.0</update_rate>
+        <camera name="camera">
+          <horizontal_fov>1.7633</horizontal_fov>
+          <image>
+            <width>1280</width>
+            <height>720</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.02</near>
+            <far>300</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.007</stddev>
+          </noise>
+        </camera>
+        <plugin name="camera_plugin" filename="libgazebo_ros_depth_camera.so">
+          <always_on>true</always_on>
+          <update_rate>0.0</update_rate>
+          <frameName>camera_depth_optical_frame</frameName>
+          <pointCloudCutoff>0.3</pointCloudCutoff>
+          <pointCloudCutoffMax>20</pointCloudCutoffMax>
+          <imageTopicName>/camera/color/image_raw</imageTopicName>
+          <cameraInfoTopicName>/camera/color/camera_info</cameraInfoTopicName>
+          <depthImageTopicName>/camera/depth/image_raw</depthImageTopicName>
+          <depthImageCameraInfoTopicName>/camera/depth/camera_info</depthImageCameraInfoTopicName>
+          <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
+          <distortionK1>-0.040993299</distortionK1>
+          <distortionK2>0.009593590</distortionK2>
+          <distortionT1>-0.004429849</distortionT1>
+          <distortionT2>0.000192024</distortionT2>
+          <distortionK3>-0.000320880</distortionK3>
+          <CxPrime>659.3049926757812</CxPrime>
+          <Cx>659.3049926757812</Cx>
+          <Cy>371.39849853515625</Cy>
+          <hackBaseline>0.12</hackBaseline>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+    <!-- ============================================================================= -->
+    <!-- UTILITY PLUGINS -->
+    <!-- ============================================================================= -->
+
+    <!-- Ground Truth Odometry Plugin (P3D) -->
+    <gazebo>
+      <plugin name="ground_truth_odometry" filename="libgazebo_ros_p3d.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>50.0</updateRate>
+        <bodyName>base_link</bodyName>
+        <topicName>ground_truth/state</topicName>
+        <gaussianNoise>0.0</gaussianNoise>
+        <frameName>world</frameName>
+        <publishTransform>true</publishTransform>
+        <xyzOffsets>0 0 0</xyzOffsets>
+        <rpyOffsets>0 0 0</rpyOffsets>
+      </plugin>
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

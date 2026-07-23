@@ -1,0 +1,58 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 50
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    diff_drive_controller:
+      type: diff_drive_controller/DiffDriveController
+
+    # Arm position controller — activates the arm ros2_control hardware interface.
+    # Without this entry, the arm joints are never claimed, joint_state_broadcaster
+    # never publishes them, and robot_state_publisher cannot compute arm TF.
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+diff_drive_controller:
+  ros__parameters:
+    left_wheel_names:
+      - wheel_lhs_front_joint
+      - wheel_lhs_mid_joint
+      - wheel_lhs_rear_joint
+    right_wheel_names:
+      - wheel_rhs_front_joint
+      - wheel_rhs_mid_joint
+      - wheel_rhs_rear_joint
+
+    base_frame_id: base_footprint
+
+
+    wheel_separation: 0.61  # Distance between left and right wheels (meters)
+    wheel_radius: 0.1       # Radius of your wheels (meters)
+
+    use_stamped_vel: false  # Allows standard Twist messages instead of TwistStamped
+
+    linear.x.has_velocity_limits: true
+    linear.x.max_velocity: 1.0
+    angular.z.has_velocity_limits: true
+    angular.z.max_velocity: 2.0
+
+arm_controller:
+  ros__parameters:
+    joints:
+      - arm_joint_0
+      - arm_joint_1
+      - arm_joint_2
+      - arm_joint_3
+      - arm_joint_4
+      - arm_joint_5
+      - arm_left_gripper
+      - arm_right_gripper
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+    # Hold initial pose at zero (or whatever the URDF initial_value sets)
+    allow_partial_joints_goal: true
