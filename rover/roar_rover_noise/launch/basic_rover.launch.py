@@ -126,7 +126,7 @@ def generate_launch_description():
             '/zed2i/depth@sensor_msgs/msg/Image[ignition.msgs.Image',
             '/zed2i/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
             '/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
-            '/world/rover_world/pose/info@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
+            '/world/marsyard/pose/info@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
         ],
         output='screen',
         parameters=[{'use_sim_time': use_sim_time}]
