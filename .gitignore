@@ -58,3 +58,27 @@ navMission_setup/setup/world_setup/*/outputs/*
 !navMission_setup/setup/world_setup/costMap_gen/outputs/csv/.gitkeep
 !navMission_setup/setup/outputs/.gitkeep
 !navMission_setup/setup/waypoints_setup/.gitkeep
+
+# Navigation mission generated master outputs
+navMission_setup/outputs/world_*/
+
+# Manual stage inputs and outputs
+navMission_setup/world_setup/*/inputs/*
+navMission_setup/world_setup/*/outputs/*
+
+# Preserve empty pipeline folders
+!navMission_setup/outputs/.gitkeep
+!navMission_setup/world_setup/*/inputs/.gitkeep
+!navMission_setup/world_setup/*/outputs/.gitkeep
+!navMission_setup/world_setup/costMap_gen/outputs/csv/
+!navMission_setup/world_setup/costMap_gen/outputs/csv/.gitkeep
+!navMission_setup/waypoints_setup/.gitkeep
+
+# Python generated cache
+**/__pycache__/
+*.pyc
+
+# Archived rock generator runtime outputs
+history/rock_generator/obs_data/*.npy
+history/rock_generator/obs_data/*_info.txt
+!history/rock_generator/obs_data/.gitkeep

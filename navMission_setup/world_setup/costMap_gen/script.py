@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-WORKSPACE_ROOT = Path(__file__).resolve().parents[4]
+WORKSPACE_ROOT = Path(__file__).resolve().parents[3]
 
 DEFAULT_INPUT_DIR = SCRIPT_DIR / "inputs"
 DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "outputs"
