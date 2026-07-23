@@ -28,17 +28,17 @@ class ControlApp(Tk, object):
         
     def keydown(self, event: Event) -> None:
         if event.keysym == "Up":
-            self.ros_node.publish_velocities(self.linear_speed, 0.0)
+            self.ros_node.update_velocities(self.linear_speed, 0.0)
         elif event.keysym == "Down":
-            self.ros_node.publish_velocities(-self.linear_speed, 0.0)
+            self.ros_node.update_velocities(-self.linear_speed, 0.0)
         elif event.keysym == "Left":
-            self.ros_node.publish_velocities(0.0, self.angular_speed)
+            self.ros_node.update_velocities(0.0, self.angular_speed)
         elif event.keysym == "Right":
-            self.ros_node.publish_velocities(0.0, -self.angular_speed)
+            self.ros_node.update_velocities(0.0, -self.angular_speed)
     
     def keyup(self, event: Event) -> None:
         if event.keysym in ["Up", "Down", "Left", "Right"]:
-            self.ros_node.publish_velocities(0.0, 0.0)
+            self.ros_node.update_velocities(0.0, 0.0)
 
 class TeleopNode(Node):
     def __init__(self):
@@ -49,12 +49,23 @@ class TeleopNode(Node):
         self.cmd_vel_pub_2 = self.create_publisher(Twist, '/diff_drive_controller/cmd_vel', 10)
         self.cmd_vel_pub_3 = self.create_publisher(Twist, '/cmd_vel', 10)
         
+        self.current_linear_x = 0.0
+        self.current_angular_z = 0.0
+        
+        # Publish at 10Hz to keep the controller alive
+        self.timer = self.create_timer(0.1, self.publish_velocities)
+        
         self.get_logger().info('Teleop node started. Select the GUI window and use arrow keys!')
         
-    def publish_velocities(self, linear_x, angular_z):
+    def update_velocities(self, linear_x, angular_z):
+        self.current_linear_x = float(linear_x)
+        self.current_angular_z = float(angular_z)
+        self.publish_velocities() # Publish immediately for low latency
+
+    def publish_velocities(self):
         msg = Twist()
-        msg.linear.x = float(linear_x)
-        msg.angular.z = float(angular_z)
+        msg.linear.x = self.current_linear_x
+        msg.angular.z = self.current_angular_z
         self.cmd_vel_pub_1.publish(msg)
         self.cmd_vel_pub_2.publish(msg)
         self.cmd_vel_pub_3.publish(msg)
