@@ -41,3 +41,20 @@ navMission_setup/rock_generator/obs_data/*_info.txt
 # Temporary files
 *.zip
 *.backup
+
+# Python cache
+**/__pycache__/
+*.pyc
+
+# New world pipeline generated outputs
+navMission_setup/setup/outputs/world_*/
+navMission_setup/setup/world_setup/*/inputs/*
+navMission_setup/setup/world_setup/*/outputs/*
+
+# Keep empty structure folders
+!navMission_setup/setup/world_setup/*/inputs/.gitkeep
+!navMission_setup/setup/world_setup/*/outputs/.gitkeep
+!navMission_setup/setup/world_setup/costMap_gen/outputs/csv/
+!navMission_setup/setup/world_setup/costMap_gen/outputs/csv/.gitkeep
+!navMission_setup/setup/outputs/.gitkeep
+!navMission_setup/setup/waypoints_setup/.gitkeep
