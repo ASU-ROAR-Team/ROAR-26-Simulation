@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    This file contains all Gazebo-specific settings for the robotic arm.
+    - It is defined as a macro to be easily included.
+    - It uses the 'prefix' parameter to correctly reference the arm's links.
+    - It includes self-collision properties and the grasp-fix plugin for the gripper.
+  -->
+
+  <xacro:macro name="arm_gazebo" params="prefix">
+
+    <!-- ============================================================================= -->
+    <!-- SELF-COLLISION PROPERTIES -->
+    <!-- ============================================================================= -->
+    <!-- These tags enable self-collision checking for each link of the arm in Gazebo. -->
+
+    <gazebo reference="${prefix}base_arm">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+    <gazebo reference="${prefix}link_1">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+    <gazebo reference="${prefix}link_2">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+    <gazebo reference="${prefix}link_3">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+    <gazebo reference="${prefix}link_4">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+    <gazebo reference="${prefix}link_5">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+    <gazebo reference="${prefix}link_6">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+    <gazebo reference="${prefix}Right_ee">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+    
+    <gazebo reference="${prefix}Left_ee">
+      <selfCollide>true</selfCollide>
+    </gazebo>
+
+    <!-- ============================================================================= -->
+    <!-- GAZEBO PLUGINS -->
+    <!-- ============================================================================= -->
+
+    <!-- Gazebo Grasp-Fix Plugin for the End-Effector -->
+    <!-- This plugin helps simulate a stable grasp by creating a temporary fixed joint
+         once an object is successfully gripped. -->
+    <gazebo>
+      <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
+        <arm>
+          <arm_name>/</arm_name>
+          <palm_link>${prefix}link_5</palm_link>
+          <gripper_link>${prefix}Right_ee</gripper_link>
+          <gripper_link>${prefix}Left_ee</gripper_link>
+        </arm>
+        <forces_angle_tolerance>90</forces_angle_tolerance>
+        <update_rate>10</update_rate>
+        <grip_count_threshold>3</grip_count_threshold>
+        <max_grip_count>10</max_grip_count>
+        <release_tolerance>0.004</release_tolerance>
+        <disable_collisions_on_attach>true</disable_collisions_on_attach>
+        <contact_topic>__default_topic__</contact_topic>
+      </plugin> 
+    </gazebo>
+
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,11 @@
+# Blender 4.5.1 LTS MTL File: 'namaqualand_boulder_02_4k.blend'
+# www.blender.org
+
+newmtl namaqualand_boulder_02
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd rock_2_diffuse.jpg
