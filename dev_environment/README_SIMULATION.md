@@ -23,7 +23,7 @@ bash launch_test.sh clean world2 rviz
 bash launch_test.sh clean world3 rviz
 
 
-bash launch_test.sh noise world1 rviz
+hwash launch_test.sh noise world1 rviz
 bash launch_test.sh noise world2 rviz
 bash launch_test.sh noise world3 rviz
 

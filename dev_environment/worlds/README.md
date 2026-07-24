@@ -25,11 +25,11 @@ You must inject the `PosePublisher` plugin **inside** the `<world ...>` tags. Pl
 ```xml
     <!-- Required for TF Ground Truth (Sun Glare & Degradation Nodes) -->
     <plugin filename="ignition-gazebo-pose-publisher-system" name="ignition::gazebo::systems::PosePublisher">
-      <publish_link_pose>true</publish_link_pose>
+      <publish_link_pose>false</publish_link_pose>
       <publish_visual_pose>false</publish_visual_pose>
       <publish_collision_pose>false</publish_collision_pose>
       <publish_sensor_pose>true</publish_sensor_pose>
-      <publish_nested_model_pose>true</publish_nested_model_pose>
+      <publish_nested_model_pose>false</publish_nested_model_pose>
       <use_pose_vector_msg>true</use_pose_vector_msg>
       <static_publisher>false</static_publisher>
       <static_update_frequency>1</static_update_frequency>
