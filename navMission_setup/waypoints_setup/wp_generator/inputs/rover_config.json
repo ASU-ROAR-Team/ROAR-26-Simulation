@@ -1,0 +1,6 @@
+{
+    "rover_length_m": 1.2,
+    "rover_width_m": 0.8,
+    "clearance_margin_m": 0.3,
+    "grid_resolution_m": 0.05
+}
