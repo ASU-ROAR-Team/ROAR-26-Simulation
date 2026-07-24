@@ -89,6 +89,7 @@ class ZedDegradationNode(Node):
 
     def get_sun_pixel(self, header):
         if self.fx is None or self.gt_sun is None or self.gt_rover is None:
+            self.get_logger().info(f"DEBUG None check - fx: {self.fx is None}, gt_sun: {self.gt_sun is None}, gt_rover: {self.gt_rover is None}")
             return None, None
             
         try:
@@ -100,30 +101,39 @@ class ZedDegradationNode(Node):
             # 2. Math Ground Truth: World -> Sun
             p_WS = np.array([self.gt_sun.translation.x, self.gt_sun.translation.y, self.gt_sun.translation.z])
             
-            # 3. Calculate Sun relative to Rover (base_link physical)
+            # 3. Calculate Sun relative to Rover (base_footprint physical)
             p_RS = rot_WR.inv().apply(p_WS - t_WR)
             
             sun_in_base = PointStamped()
-            sun_in_base.header.frame_id = 'base_link'
+            sun_in_base.header.frame_id = 'base_footprint'
             sun_in_base.point.x = p_RS[0]
             sun_in_base.point.y = p_RS[1]
             sun_in_base.point.z = p_RS[2]
             
-            # 4. Use static TF tree to map from base_link to camera lens
+            # 4. Use static TF tree to map from base_footprint to camera lens
             transform = self.tf_buffer.lookup_transform(
                 'zed2i_depth_optical_frame', 
-                'base_link',
+                'base_footprint',
                 rclpy.time.Time() 
             )
             
             from tf2_geometry_msgs import do_transform_point
             sun_point_cam = do_transform_point(sun_in_base, transform)
             
+            # UNCONDITIONAL DEBUG
+            print(f"DEBUG: Sun in cam frame: x={sun_point_cam.point.x:.2f}, y={sun_point_cam.point.y:.2f}, z={sun_point_cam.point.z:.2f}")
+
             if sun_point_cam.point.z > 0.0:
                 u = (self.fx * (sun_point_cam.point.x / sun_point_cam.point.z)) + self.cx
                 v = (self.fy * (sun_point_cam.point.y / sun_point_cam.point.z)) + self.cy
+                # DEBUG
+                self.get_logger().info(f"Sun is at u={u}, v={v}, z={sun_point_cam.point.z}")
                 return u, v
+            else:
+                self.get_logger().info(f"Sun is BEHIND camera! z={sun_point_cam.point.z}")
         except Exception as tf_ex:
+            # DEBUG
+            self.get_logger().info(f"TF Exception: {tf_ex}")
             pass
             
         return None, None
@@ -147,7 +157,7 @@ class ZedDegradationNode(Node):
             u, v = self.get_sun_pixel(rgb_msg.header)
             
             if u is not None and v is not None:
-                glare_radius = 350       
+                glare_radius = 150       
                 if -glare_radius < u < w + glare_radius and -glare_radius < v < h + glare_radius:
                     Y, X = np.ogrid[:h, :w]
                     dist_from_sun = np.sqrt((X - u)**2 + (Y - v)**2)
@@ -192,7 +202,7 @@ class ZedDegradationNode(Node):
             cv_depth[dust_mask_depth] = 0.4 
 
             if u is not None and v is not None:
-                glare_radius_depth = 180       
+                glare_radius_depth = 80       
                 if -glare_radius_depth < u < w + glare_radius_depth and -glare_radius_depth < v < h + glare_radius_depth:
                     Y, X = np.ogrid[:h, :w]
                     dist_from_sun = np.sqrt((X - u)**2 + (Y - v)**2)

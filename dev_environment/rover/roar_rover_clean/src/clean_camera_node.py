@@ -57,6 +57,10 @@ class CleanCameraNode(Node):
             self.Y_factor = (V - self.cy) / self.fy
 
     def sync_callback(self, depth_msg: Image, rgb_msg: Image):
+        # Fix the frame_id before passing through or generating PointCloud
+        depth_msg.header.frame_id = 'zed2i_depth_optical_frame'
+        rgb_msg.header.frame_id = 'zed2i_depth_optical_frame'
+        
         # Pass through the images
         self.depth_pub.publish(depth_msg)
         self.rgb_pub.publish(rgb_msg)

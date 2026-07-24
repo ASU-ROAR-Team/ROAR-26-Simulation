@@ -88,7 +88,7 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
-        parameters=[robot_description, {'use_sim_time': use_sim_time}]
+        parameters=[robot_description, {'use_sim_time': use_sim_time, 'publish_frequency': 50.0}]
     )
 
     # ── 8. Spawn Robot ────────────────────────────────────────────────────────
@@ -108,7 +108,7 @@ def generate_launch_description():
         executable='create',
         arguments=['-file', sun_marker_file,
                    '-name', 'sun_marker', 
-                   '-x', '0.0', '-y', '10.0', '-z', '2.0'],
+                   '-x', '20.0', '-y', '20.0', '-z', '15.0'],
         output='screen',
         parameters=[{'use_sim_time': use_sim_time}]
     )
