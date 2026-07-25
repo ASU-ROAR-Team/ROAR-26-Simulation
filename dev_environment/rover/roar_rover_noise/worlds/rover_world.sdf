@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.8">
-  <world name="rover_world">
+  <world name="marsyard">
     
     <!-- ESSENTIAL GAZEBO PLUGINS -->
     <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics"/>

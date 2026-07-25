@@ -42,7 +42,7 @@ class ZedDegradationNode(Node):
         
         self.gt_sub = self.create_subscription(
             TFMessage,
-            '/world/rover_world/pose/info',
+            '/world/marsyard/pose/info',
             self.gt_callback,
             10
         )
