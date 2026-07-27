@@ -1,6 +1,6 @@
 {
     "generator_version": "2.0.0",
-    "timestamp": "2026-07-27T11:27:19.609526",
+    "timestamp": "2026-07-27T11:48:29.104626",
     "wp_count": 10,
     "difficulty_stats": {
         "min": 197.0,
@@ -24,8 +24,6 @@
         "seed": 42,
         "boundary_margin_ratio": 0.05,
         "min_spacing_ratio": 0.1,
-        "max_spacing_ratio": 0.35,
-        "max_cost_ratio": 1,
-        "max_cost_threshold": 100.0
+        "max_spacing_ratio": 0.35
     }
 }

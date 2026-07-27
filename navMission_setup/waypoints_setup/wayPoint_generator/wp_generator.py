@@ -54,8 +54,6 @@ class Constraints:
     boundary_margin_ratio: Optional[float] = 0.05      # 5% of map size
     min_spacing_ratio: Optional[float] = 0.10            # 10% of map diagonal
     max_spacing_ratio: Optional[float] = 0.40            # 40% of map diagonal
-    max_cost_ratio: Optional[float] = 0.6              # UNUSED as of this edit — cost filtering removed
-    max_cost_threshold: Optional[float] = 0.0           # UNUSED as of this edit — cost filtering removed
 
 
 # ==========================================
@@ -96,23 +94,11 @@ class InputLoader:
         boundary_ratio = getattr(constraints, "boundary_margin_ratio", 0.05)
         min_ratio = getattr(constraints, "min_spacing_ratio", 0.10)
         max_ratio = getattr(constraints, "max_spacing_ratio", 0.40)
-        max_cost_ratio = getattr(constraints, "max_cost_ratio", 0.6)
 
         # Calculate bounds dynamically based on map size and ratios
         constraints.boundary_margin_cells = max(1, int(min(h, w) * boundary_ratio))
         constraints.min_spacing_cells = max(1.0, map_diag * min_ratio)
         constraints.max_spacing_cells = max(2.0, map_diag * max_ratio)
-
-        # NOTE: cost threshold is computed here but no longer consumed anywhere —
-        # CandidateFilter now filters on obstacle clearance only. Left in place
-        # in case cost-based filtering is reintroduced later.
-        valid_costs = costmap[costmap >= 0]
-        if valid_costs.size > 0:
-            cost_min, cost_max = float(valid_costs.min()), float(valid_costs.max())
-            constraints.max_cost_threshold = cost_min + max_cost_ratio * (cost_max - cost_min)
-        else:
-            constraints.max_cost_threshold = 0.0
-            logging.warning("No valid (non-negative) cost values found in costmap.")
 
         # 4. Load & Rasterize Obstacles
         obstacle_path = base_path / "obstacle_data.npy"
@@ -430,6 +416,10 @@ class Exporter:
         out_path = Path(outputs_dir)
         out_path.mkdir(parents=True, exist_ok=True)
 
+        # 0. Clear stale waypoint files from any previous run
+        for old_file in out_path.glob("wp*_*.npy"):
+            old_file.unlink()
+
         # 1. Save one .npy per waypoint set: wp{index}_{score}.npy
         for i, (wp_set, score) in enumerate(zip(waypoints, scores)):
             filename = f"wp{i:02d}_{int(round(score))}.npy"
@@ -455,6 +445,8 @@ class Exporter:
             json.dump(metadata, f, indent=4)
 
         logging.info(f"Successfully exported {len(waypoints)} waypoint files to '{out_path.resolve()}'")
+
+
 # ==========================================
 # INTERFACE / PIPELINE ORCHESTRATOR
 # ==========================================

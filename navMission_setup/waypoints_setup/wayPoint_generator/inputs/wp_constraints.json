@@ -1,6 +1,5 @@
 {
     "candidate_count": 500,
-    "max_cost_ratio": 1,
     "min_spacing_cells": 10.0,
     "max_spacing_cells": 50.0,
     "boundary_margin_cells": 5,
