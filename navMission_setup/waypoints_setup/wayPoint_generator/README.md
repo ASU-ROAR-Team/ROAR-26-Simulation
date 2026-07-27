@@ -1,4 +1,8 @@
-# Waypoint Generator Pipeline (`wp_generator`)
+# Waypoint Generator Pipeline (`wayPoint_generator`)
+
+## TO DO
+1- get actual rover dimensions
+2- adjust max cost ratio wp_constaints on the right costmap
 
 ## 🤖 Overview
 The **Waypoint Generator** is a robust procedural mission-planning module designed for the **ROAR-26 Simulation Pipeline**  It ingests environment costmaps and raw obstacle streams, samples collision-free spatial coordinates, builds multi-point mission paths, evaluates their traversal difficulty, and exports structured trajectory sets ready for ROS 2 and Nav2 integration.
@@ -8,7 +12,7 @@ The **Waypoint Generator** is a robust procedural mission-planning module design
 ## 📂 Project Architecture & File Structure
 
 ```text
-wp_generator/
+wayPoint_generator/
 ├── inputs/
 │   ├── costmap.npz             # 2D environmental cost grid matrix
 │   ├── obstacle_data.npy       # Raw obstacle dictionaries (coordinates & flags)
@@ -20,12 +24,12 @@ wp_generator/
 │   └── missions.npy            # 3D array of exported trajectories shape (10, 5, 2)
 ├── read_outputs.py             # CLI utility script to parse and print binary outputs
 ├── visualize_missions.py       # Interactive Matplotlib UI window to flip through missions
-└── wp_generator.py             # Core pipeline execution script
+└── wayPoint_generator.py             # Core pipeline execution script
 
 ```
 ### File Responsibilities:
 
-* **`wp_generator.py`**: The core execution engine. Handles input loading, dynamic ratio mapping, Poisson Disk Sampling, path building, constraint validation, difficulty scoring, and file exports.
+* **`wayPoint_generator.py`**: The core execution engine. Handles input loading, dynamic ratio mapping, Poisson Disk Sampling, path building, constraint validation, difficulty scoring, and file exports.
 * **`inputs/costmap.npz`**: Stores the navigational cost grid representing safe vs. hazardous terrain.
 * **`inputs/obstacle_data.npy`**: Contains raw object logs (rocks, obstacles) including spatial coordinates and behavior flags.
 * **`inputs/rover_config.json`**: Defines the rover’s physical footprint parameters (`rover_length_m`, `rover_width_m`, clearance margins, etc.).
@@ -44,7 +48,7 @@ wp_generator/
 * **Spatial Footprints (`rock_radius_cells`):** Obstacles are stamped onto the costmap using a programmatic radius footprint:
 ```python
 rock_radius_cells = max(1, int(round(0.5 / res)))
-#in wp_generator line 121
+#in wayPoint_generator line 121
 ```
 * *What it does:* It takes a flat radius value (e.g., `0.5` meters) and divides it by your grid resolution (`res`) to calculate how many grid cells the obstacle occupies.
 * *How to edit:* You can modify the `0.5` value to a larger or smaller meter scale, or update this block to dynamically query physical `.stl` mesh bounding extents (`mesh.extents`) for precise rock scaling.

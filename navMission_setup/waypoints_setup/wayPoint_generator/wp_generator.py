@@ -42,12 +42,11 @@ class RoverConfig:
 @dataclass
 class Constraints:
     candidate_count: int
-    max_cost_threshold: float
     min_spacing_cells: float
     max_spacing_cells: float
     boundary_margin_cells: int
     duplicate_distance_threshold: float
-    target_mission_count: int
+    target_wp_count: int
     max_attempts: int
     seed: Optional[int]
     weights: dict
@@ -55,6 +54,8 @@ class Constraints:
     boundary_margin_ratio: Optional[float] = 0.05      # 5% of map size
     min_spacing_ratio: Optional[float] = 0.10            # 10% of map diagonal
     max_spacing_ratio: Optional[float] = 0.40            # 40% of map diagonal
+    max_cost_ratio: Optional[float] = 0.6              # fraction of valid cost range considered traversable
+    max_cost_threshold: Optional[float] = 0.0           # placeholder, computed at load time from max_cost_ratio
 
 
 # ==========================================
@@ -95,11 +96,21 @@ class InputLoader:
         boundary_ratio = getattr(constraints, "boundary_margin_ratio", 0.05)
         min_ratio = getattr(constraints, "min_spacing_ratio", 0.10)
         max_ratio = getattr(constraints, "max_spacing_ratio", 0.40)
+        max_cost_ratio = getattr(constraints, "max_cost_ratio", 0.6)
 
         # Calculate bounds dynamically based on map size and ratios
         constraints.boundary_margin_cells = max(1, int(min(h, w) * boundary_ratio))
         constraints.min_spacing_cells = max(1.0, map_diag * min_ratio)
         constraints.max_spacing_cells = max(2.0, map_diag * max_ratio)
+
+        # Compute adaptive cost threshold, excluding negative "unknown" sentinel cells
+        valid_costs = costmap[costmap >= 0]
+        if valid_costs.size > 0:
+            cost_min, cost_max = float(valid_costs.min()), float(valid_costs.max())
+            constraints.max_cost_threshold = cost_min + max_cost_ratio * (cost_max - cost_min)
+        else:
+            constraints.max_cost_threshold = 0.0
+            logging.warning("No valid (non-negative) cost values found in costmap.")
 
         # 4. Load & Rasterize Obstacles
         obstacle_path = base_path / "obstacle_data.npy"
@@ -246,8 +257,8 @@ class CandidateFilter:
         x = candidates[:, 0]
         y = candidates[:, 1]
 
-        # O(1) Lookups
-        cost_valid = self.costmap[y, x] <= self.max_cost
+        # O(1) Lookups — exclude negative "unknown" sentinel cells as well as over-threshold cost
+        cost_valid = (self.costmap[y, x] <= self.max_cost) & (self.costmap[y, x] >= 0)
         
         # Dynamically scale clearance bounds to prevent map geometry wipeouts
         max_possible_clearance = float(np.max(self.clearance_map)) if self.clearance_map.size > 0 else 0.0
@@ -265,34 +276,34 @@ class CandidateFilter:
 
 
 # ==========================================
-# STEP 4: INCREMENTAL MISSION BUILDER
+# STEP 4: INCREMENTAL WAYPOINT BUILDER
 # ==========================================
-class MissionBuilder:
-    """Builds 5-point missions incrementally using valid spatial step ranges."""
+class waypointBuilder:
+    """Builds 5-point waypoints incrementally using valid spatial step ranges."""
 
     def __init__(self, min_spacing: float, max_spacing: float, seed: Optional[int] = None):
         self.min_spacing = min_spacing
         self.max_spacing = max_spacing
         self.rng = np.random.default_rng(seed)
 
-    def build_missions(self, candidates: np.ndarray, target_count: int, max_attempts: int) -> np.ndarray:
+    def build_waypoints(self, candidates: np.ndarray, target_count: int, max_attempts: int) -> np.ndarray:
         if len(candidates) < 5:
-            logging.warning("Fewer than 5 candidates available. Cannot build 5-point missions.")
+            logging.warning("Fewer than 5 candidates available. Cannot build 5-point waypoints.")
             return np.array([])
 
-        missions = []
+        waypoints = []
         num_candidates = len(candidates)
         attempts = 0
 
-        while len(missions) < target_count and attempts < max_attempts:
+        while len(waypoints) < target_count and attempts < max_attempts:
             attempts += 1
             start_idx = self.rng.integers(0, num_candidates)
-            mission = [candidates[start_idx]]
+            wp = [candidates[start_idx]]
             visited_indices = {start_idx}
             
             success = True
             for _ in range(4):  # Select WP1, WP2, WP3, WP4
-                curr_pt = mission[-1]
+                curr_pt = wp[-1]
                 
                 # Compute distance from current point to all candidates
                 dists = np.linalg.norm(candidates - curr_pt, axis=1)
@@ -301,7 +312,7 @@ class MissionBuilder:
                 valid_mask = (dists >= self.min_spacing) & (dists <= self.max_spacing)
                 valid_indices = np.where(valid_mask)[0]
                 
-                # Filter out already used points in this mission
+                # Filter out already used points in this wp
                 unvisited_indices = [idx for idx in valid_indices if idx not in visited_indices]
 
                 if not unvisited_indices:
@@ -310,34 +321,34 @@ class MissionBuilder:
 
                 next_idx = self.rng.choice(unvisited_indices)
                 visited_indices.add(next_idx)
-                mission.append(candidates[next_idx])
+                wp.append(candidates[next_idx])
 
             if success:
-                missions.append(mission)
+                waypoints.append(wp)
 
-        return np.array(missions, dtype=np.int32)
+        return np.array(waypoints, dtype=np.int32)
 
 
 # ==========================================
-# STEP 5: MISSION VALIDATOR (QUALITY GATE)
+# STEP 5: waypoint VALIDATOR (QUALITY GATE)
 # ==========================================
-class MissionValidator:
+class waypointValidator:
     """Ensures paths avoid self-intersection and satisfy non-consecutive minimum spacing."""
 
     @staticmethod
-    def validate(missions: np.ndarray, min_spacing: float) -> np.ndarray:
-        if len(missions) == 0:
-            return missions
+    def validate(waypoints: np.ndarray, min_spacing: float) -> np.ndarray:
+        if len(waypoints) == 0:
+            return waypoints
 
-        valid_missions = []
+        valid_waypoints = []
         half_spacing = min_spacing * 0.5
 
-        for mission in missions:
+        for wp in waypoints:
             # Non-consecutive waypoint distance check
             is_valid = True
-            for i in range(len(mission)):
-                for j in range(i + 2, len(mission)):
-                    dist = np.linalg.norm(mission[i] - mission[j])
+            for i in range(len(wp)):
+                for j in range(i + 2, len(wp)):
+                    dist = np.linalg.norm(wp[i] - wp[j])
                     if dist < half_spacing:
                         is_valid = False
                         break
@@ -345,86 +356,67 @@ class MissionValidator:
                     break
 
             if is_valid:
-                valid_missions.append(mission)
+                valid_waypoints.append(wp)
 
-        return np.array(valid_missions, dtype=np.int32)
+        return np.array(valid_waypoints, dtype=np.int32)
 
 
 # ==========================================
 # STEP 6: SIMILARITY FILTER (SPATIAL HASHING)
 # ==========================================
 class SimilarityFilter:
-    """Removes redundant missions using fast coordinate bucket hashing."""
+    """Removes redundant waypoints using fast coordinate bucket hashing."""
 
     @staticmethod
-    def deduplicate(missions: np.ndarray, spatial_threshold: float) -> np.ndarray:
-        if len(missions) == 0:
-            return missions
+    def deduplicate(waypoints: np.ndarray, spatial_threshold: float) -> np.ndarray:
+        if len(waypoints) == 0:
+            return waypoints
 
-        unique_missions = []
+        unique_waypoints = []
         seen_hashes: Set[Tuple[Tuple[int, int], ...]] = set()
 
-        for mission in missions:
+        for wp in waypoints:
             # Quantize coordinates to discrete spatial buckets based on threshold
             quantized = tuple(
                 (int(pt[0] // spatial_threshold), int(pt[1] // spatial_threshold))
-                for pt in mission
+                for pt in wp
             )
             
             if quantized not in seen_hashes:
                 seen_hashes.add(quantized)
-                unique_missions.append(mission)
+                unique_waypoints.append(wp)
 
-        return np.array(unique_missions, dtype=np.int32)
+        return np.array(unique_waypoints, dtype=np.int32)
 
 
 # ==========================================
 # STEP 7: MULTI-FACTOR DIFFICULTY RANKER
 # ==========================================
 class DifficultyRanker:
-    """Ranks missions from easiest to hardest based on multi-metric cost function."""
+    """Ranks waypoints from easiest to hardest based on multi-metric cost function."""
 
     @staticmethod
-    def rank(missions: np.ndarray, costmap: np.ndarray, weights: dict) -> Tuple[np.ndarray, np.ndarray]:
-        if len(missions) == 0:
-            return missions, np.array([])
+    def rank(waypoints: np.ndarray, costmap: np.ndarray, weights: dict) -> Tuple[np.ndarray, np.ndarray]:
+        if len(waypoints) == 0:
+            return waypoints, np.array([])
 
         scores = []
-        for mission in missions:
+        for wp in waypoints:
             # 1. Terrain Costs along Waypoints
-            x_coords, y_coords = mission[:, 0], mission[:, 1]
+            x_coords, y_coords = wp[:, 0], wp[:, 1]
             wp_costs = costmap[y_coords, x_coords]
             avg_cost = float(np.mean(wp_costs))
             max_cost = float(np.max(wp_costs))
 
-            # 2. Total Path Length
-            diffs = np.diff(mission, axis=0)
-            segment_lengths = np.linalg.norm(diffs, axis=1)
-            total_length = float(np.sum(segment_lengths))
-
-            # 3. Path Curvature / Turn Angles
-            turn_penalty = 0.0
-            for i in range(len(diffs) - 1):
-                v1 = diffs[i]
-                v2 = diffs[i + 1]
-                cos_angle = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2) + 1e-6)
-                angle = math.acos(np.clip(cos_angle, -1.0, 1.0))
-                turn_penalty += angle
-
-            # Combined weighted score calculation
-            score = (
-                weights.get("avg_cost", 0.4) * (avg_cost * 100) +
-                weights.get("max_cost", 0.3) * (max_cost * 100) +
-                weights.get("length", 0.15) * (total_length / 10.0) +
-                weights.get("turn_angle", 0.15) * math.degrees(turn_penalty)
-            )
+            # Combined score calculation
+            score = (avg_cost + max_cost) / 2
             scores.append(score)
 
         scores_arr = np.array(scores, dtype=np.float32)
         
         # Sort ascending (Easiest -> Hardest)
         sort_indices = np.argsort(scores_arr)
-        return missions[sort_indices], scores_arr[sort_indices]
+        return waypoints[sort_indices], scores_arr[sort_indices]
 
 
 # ==========================================
@@ -435,7 +427,7 @@ class Exporter:
 
     @staticmethod
     def export(
-        missions: np.ndarray,
+        waypoints: np.ndarray,
         scores: np.ndarray,
         rover_cfg: RoverConfig,
         constraints: Constraints,
@@ -445,14 +437,13 @@ class Exporter:
         out_path.mkdir(parents=True, exist_ok=True)
 
         # 1. Save Numpy Binaries
-        np.save(out_path / "missions.npy", missions)
-        np.save(out_path / "difficulty.npy", scores)
+        np.save(out_path / "waypoints.npy", waypoints)
 
         # 2. Export Metadata JSON
         metadata = {
             "generator_version": "2.0.0",
             "timestamp": datetime.now().isoformat(),
-            "mission_count": len(missions),
+            "wp_count": len(waypoints),
             "difficulty_stats": {
                 "min": float(np.min(scores)) if len(scores) > 0 else 0.0,
                 "max": float(np.max(scores)) if len(scores) > 0 else 0.0,
@@ -467,7 +458,7 @@ class Exporter:
         with open(out_path / "generation_log.json", "w") as f:
             json.dump(metadata, f, indent=4)
 
-        logging.info(f"Successfully exported {len(missions)} missions to '{out_path.resolve()}'")
+        logging.info(f"Successfully exported {len(waypoints)} waypoints to '{out_path.resolve()}'")
 
 
 # ==========================================
@@ -504,39 +495,39 @@ def run_generator():
         Exporter.export(np.array([]), np.array([]), rover_cfg, constraints, "outputs")
         return
 
-    # Step 4: Incremental Mission Builder
-    builder = MissionBuilder(
+    # Step 4: Incremental waypoint Builder
+    builder = waypointBuilder(
         min_spacing=constraints.min_spacing_cells,
         max_spacing=constraints.max_spacing_cells,
         seed=constraints.seed
     )
-    raw_missions = builder.build_missions(
+    raw_waypoints = builder.build_waypoints(
         valid_candidates,
-        target_count=constraints.target_mission_count * 2,  # Over-generate for filtering
+        target_count=constraints.target_wp_count * 2,  # Over-generate for filtering
         max_attempts=constraints.max_attempts
     )
-    logging.info(f"Built {len(raw_missions)} valid 5-point mission paths.")
+    logging.info(f"Built {len(raw_waypoints)} valid 5-point wp paths.")
 
-    # Step 5: Mission Quality Validation
-    validated_missions = MissionValidator.validate(raw_missions, constraints.min_spacing_cells)
-    logging.info(f"Validated missions: {len(validated_missions)} passed path constraints.")
+    # Step 5: waypoint Quality Validation
+    validated_waypoints = waypointValidator.validate(raw_waypoints, constraints.min_spacing_cells)
+    logging.info(f"Validated waypoints: {len(validated_waypoints)} passed path constraints.")
 
     # Step 6: Similarity Deduplication
-    unique_missions = SimilarityFilter.deduplicate(
-        validated_missions,
+    unique_waypoints = SimilarityFilter.deduplicate(
+        validated_waypoints,
         spatial_threshold=constraints.duplicate_distance_threshold
     )
-    logging.info(f"Deduplicated missions: {len(unique_missions)} unique trajectories remain.")
+    logging.info(f"Deduplicated waypoints: {len(unique_waypoints)} unique trajectories remain.")
 
     # Step 7: Multi-Factor Difficulty Ranking
-    ranked_missions, scores = DifficultyRanker.rank(unique_missions, costmap, constraints.weights)
+    ranked_waypoints, scores = DifficultyRanker.rank(unique_waypoints, costmap, constraints.weights)
 
     # Truncate to final requested target count
-    final_missions = ranked_missions[:constraints.target_mission_count]
-    final_scores = scores[:constraints.target_mission_count]
+    final_waypoints = ranked_waypoints[:constraints.target_wp_count]
+    final_scores = scores[:constraints.target_wp_count]
 
     # Step 8: Export Artifacts
-    Exporter.export(final_missions, final_scores, rover_cfg, constraints, "outputs")
+    Exporter.export(final_waypoints, final_scores, rover_cfg, constraints, "outputs")
 
     elapsed = time.time() - start_time
     logging.info(f"--- Pipeline Finished in {elapsed:.3f}s ---")

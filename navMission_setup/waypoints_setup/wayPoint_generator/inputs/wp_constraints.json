@@ -1,11 +1,11 @@
 {
     "candidate_count": 500,
-    "max_cost_threshold": 0.8,
+    "max_cost_ratio": 1,
     "min_spacing_cells": 10.0,
     "max_spacing_cells": 50.0,
     "boundary_margin_cells": 5,
     "duplicate_distance_threshold": 3.0,
-    "target_mission_count": 10,
+    "target_wp_count": 10,
     "max_attempts": 1000,
     "seed": 42,
     "boundary_margin_ratio": 0.05,
@@ -13,8 +13,6 @@
     "max_spacing_ratio": 0.35,
     "weights": {
         "avg_cost": 0.4,
-        "max_cost": 0.3,
-        "length": 0.15,
-        "turn_angle": 0.15
+        "max_cost": 0.3
     }
 }
