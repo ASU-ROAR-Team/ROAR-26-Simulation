@@ -54,8 +54,8 @@ class Constraints:
     boundary_margin_ratio: Optional[float] = 0.05      # 5% of map size
     min_spacing_ratio: Optional[float] = 0.10            # 10% of map diagonal
     max_spacing_ratio: Optional[float] = 0.40            # 40% of map diagonal
-    max_cost_ratio: Optional[float] = 0.6              # fraction of valid cost range considered traversable
-    max_cost_threshold: Optional[float] = 0.0           # placeholder, computed at load time from max_cost_ratio
+    max_cost_ratio: Optional[float] = 0.6              # UNUSED as of this edit — cost filtering removed
+    max_cost_threshold: Optional[float] = 0.0           # UNUSED as of this edit — cost filtering removed
 
 
 # ==========================================
@@ -103,7 +103,9 @@ class InputLoader:
         constraints.min_spacing_cells = max(1.0, map_diag * min_ratio)
         constraints.max_spacing_cells = max(2.0, map_diag * max_ratio)
 
-        # Compute adaptive cost threshold, excluding negative "unknown" sentinel cells
+        # NOTE: cost threshold is computed here but no longer consumed anywhere —
+        # CandidateFilter now filters on obstacle clearance only. Left in place
+        # in case cost-based filtering is reintroduced later.
         valid_costs = costmap[costmap >= 0]
         if valid_costs.size > 0:
             cost_min, cost_max = float(valid_costs.min()), float(valid_costs.max())
@@ -236,15 +238,14 @@ class CandidateSampler:
 
 
 # ==========================================
-# STEP 3: CANDIDATE FILTER (O(1) DISTANCE TRANSFORM)
+# STEP 3: CANDIDATE FILTER (OBSTACLE CLEARANCE ONLY)
 # ==========================================
 class CandidateFilter:
-    """Fast candidate filtering using precomputed Euclidean Distance Transform."""
+    """Fast candidate filtering using precomputed Euclidean Distance Transform.
+    Filters purely on the presence of collidable obstacles — costmap values
+    play no role in accept/reject decisions here."""
 
-    def __init__(self, costmap: np.ndarray, obstacles: np.ndarray, max_cost: float):
-        self.costmap = costmap
-        self.max_cost = max_cost
-        
+    def __init__(self, obstacles: np.ndarray):
         # Precompute clearance map ONCE: O(H * W)
         # Free space = 1, Obstacles = 0
         free_space = (obstacles == 0).astype(np.uint8)
@@ -257,22 +258,16 @@ class CandidateFilter:
         x = candidates[:, 0]
         y = candidates[:, 1]
 
-        # O(1) Lookups — exclude negative "unknown" sentinel cells as well as over-threshold cost
-        cost_valid = (self.costmap[y, x] <= self.max_cost) & (self.costmap[y, x] >= 0)
-        
         # Dynamically scale clearance bounds to prevent map geometry wipeouts
         max_possible_clearance = float(np.max(self.clearance_map)) if self.clearance_map.size > 0 else 0.0
         effective_clearance = min(float(required_clearance_cells), max_possible_clearance)
 
         clearance_valid = self.clearance_map[y, x] >= effective_clearance
-        valid_mask = cost_valid & clearance_valid
 
-        # Fallback if map is completely smaller than rover clearance requirements
-        if not np.any(valid_mask):
-            logging.warning(f"Clearance requirement ({required_clearance_cells}) exceeds available map clearance ({max_possible_clearance:.1f}). Falling back to costmap threshold filtering.")
-            valid_mask = cost_valid
+        if not np.any(clearance_valid):
+            logging.warning(f"Clearance requirement ({required_clearance_cells}) exceeds available map clearance ({max_possible_clearance:.1f}). No candidates passed.")
 
-        return candidates[valid_mask]
+        return candidates[clearance_valid]
 
 
 # ==========================================
@@ -390,10 +385,11 @@ class SimilarityFilter:
 
 
 # ==========================================
-# STEP 7: MULTI-FACTOR DIFFICULTY RANKER
+# STEP 7: DIFFICULTY RANKER (SUM OF PATH COSTS)
 # ==========================================
 class DifficultyRanker:
-    """Ranks waypoints from easiest to hardest based on multi-metric cost function."""
+    """Ranks waypoints from easiest to hardest. Difficulty score is the exact
+    sum of costmap values at the starting point plus wp1, wp2, wp3, wp4."""
 
     @staticmethod
     def rank(waypoints: np.ndarray, costmap: np.ndarray, weights: dict) -> Tuple[np.ndarray, np.ndarray]:
@@ -402,14 +398,12 @@ class DifficultyRanker:
 
         scores = []
         for wp in waypoints:
-            # 1. Terrain Costs along Waypoints
+            # Terrain costs at start + wp1 + wp2 + wp3 + wp4
             x_coords, y_coords = wp[:, 0], wp[:, 1]
             wp_costs = costmap[y_coords, x_coords]
-            avg_cost = float(np.mean(wp_costs))
-            max_cost = float(np.max(wp_costs))
 
-            # Combined score calculation
-            score = (avg_cost + max_cost) / 2
+            # Difficulty = exact sum of all 5 point costs
+            score = float(np.sum(wp_costs))
             scores.append(score)
 
         scores_arr = np.array(scores, dtype=np.float32)
@@ -436,8 +430,10 @@ class Exporter:
         out_path = Path(outputs_dir)
         out_path.mkdir(parents=True, exist_ok=True)
 
-        # 1. Save Numpy Binaries
-        np.save(out_path / "waypoints.npy", waypoints)
+        # 1. Save one .npy per waypoint set: wp{index}_{score}.npy
+        for i, (wp_set, score) in enumerate(zip(waypoints, scores)):
+            filename = f"wp{i:02d}_{int(round(score))}.npy"
+            np.save(out_path / filename, wp_set)
 
         # 2. Export Metadata JSON
         metadata = {
@@ -458,9 +454,7 @@ class Exporter:
         with open(out_path / "generation_log.json", "w") as f:
             json.dump(metadata, f, indent=4)
 
-        logging.info(f"Successfully exported {len(waypoints)} waypoints to '{out_path.resolve()}'")
-
-
+        logging.info(f"Successfully exported {len(waypoints)} waypoint files to '{out_path.resolve()}'")
 # ==========================================
 # INTERFACE / PIPELINE ORCHESTRATOR
 # ==========================================
@@ -484,10 +478,10 @@ def run_generator():
     )
     logging.info(f"Generated {len(raw_candidates)} spatial candidate points via Poisson Disk Sampling.")
 
-    # Step 3: Filter Candidates (O(1) Distance Transform)
-    candidate_filter = CandidateFilter(costmap, obstacles, constraints.max_cost_threshold)
+    # Step 3: Filter Candidates (Obstacle Clearance Only)
+    candidate_filter = CandidateFilter(obstacles)
     valid_candidates = candidate_filter.filter(raw_candidates, rover_cfg.clearance_radius_cells)
-    logging.info(f"Filtered candidates: {len(valid_candidates)} passed cost & clearance checks.")
+    logging.info(f"Filtered candidates: {len(valid_candidates)} passed clearance check.")
 
     # Graceful exit instead of crash if map lacks space
     if len(valid_candidates) < 5:
@@ -519,7 +513,7 @@ def run_generator():
     )
     logging.info(f"Deduplicated waypoints: {len(unique_waypoints)} unique trajectories remain.")
 
-    # Step 7: Multi-Factor Difficulty Ranking
+    # Step 7: Difficulty Ranking (sum of path costs)
     ranked_waypoints, scores = DifficultyRanker.rank(unique_waypoints, costmap, constraints.weights)
 
     # Truncate to final requested target count
