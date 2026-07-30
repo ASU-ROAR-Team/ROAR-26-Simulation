@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 import re
 import signal
+import json
 from pathlib import Path
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
@@ -11,28 +12,64 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 def plot_interactive_waypoints():
     # Let Ctrl+C in the terminal close the window normally
     signal.signal(signal.SIGINT, signal.SIG_DFL)
+    
+    # Ask for map index (e.g., 1, 2, 3, 4)
+    try:
+        index = int(input("Enter mission/map index (e.g., 1, 2, 3, 4): "))
+    except ValueError:
+        print("Invalid input. Defaulting to index 1.")
+        index = 1
 
-    # Load the map
-    with np.load("inputs/costmap.npz") as data:
+    # Load the correct map using an f-string
+    costmap_path = Path(f"inputs/costmap_{index}.npz")
+    if not costmap_path.exists():
+        alt_paths = list(Path("inputs").glob(f"*{index}*.npz"))
+        if alt_paths:
+            costmap_path = alt_paths[0]
+        else:
+            print(f"Error: Could not find costmap for index {index} in inputs/")
+            return
+
+    with np.load(costmap_path) as data:
         costmap = data["total"].astype(np.float32)
 
-    # Find and sort all waypoint files by their index (wp00, wp01, ...)
     out_path = Path("outputs")
+    
+    # Load generation log to extract precise per-map scores if available
+    log_path = out_path / "generation_log.json"
+    map_scores_lookup = {}
+    if log_path.exists():
+        with open(log_path, "r") as f:
+            log_data = json.load(f)
+            map_name = f"map_{index}"
+            for item in log_data.get("waypoint_breakdown", []):
+                wp_id = item["id"]
+                if "scores" in item and map_name in item["scores"]:
+                    map_scores_lookup[wp_id] = item["scores"][map_name]
+
+    # Find and sort all waypoint files matching exporter naming format
     wp_files = sorted(
-        out_path.glob("wp*_*.npy"),
+        out_path.glob("wp*.npy"),
         key=lambda p: int(re.match(r"wp(\d+)_", p.name).group(1))
     )
 
     if len(wp_files) == 0:
-        print("No waypoints found to plot.")
+        print("No waypoints found to plot in outputs/.")
         return
 
-    # Load each set and its score into memory once
+    # Load each set and assign its score into memory
     waypoints = []
     scores = []
     for wp_file in wp_files:
         match = re.match(r"wp(\d+)_(\d+)\.npy", wp_file.name)
-        scores.append(int(match.group(2)))
+        wp_id = f"wp{int(match.group(1)):02d}"
+        
+        # Use specific map score if available, otherwise fallback to filename average score
+        if wp_id in map_scores_lookup:
+            scores.append(round(map_scores_lookup[wp_id], 1))
+        else:
+            scores.append(int(match.group(2)))
+            
         waypoints.append(np.load(wp_file))
 
     # Set up figure with extra space at the bottom for interactive buttons
@@ -40,11 +77,11 @@ def plot_interactive_waypoints():
     plt.subplots_adjust(bottom=0.2)
 
     # State tracking
-    current_idx = [0]  # Mutable container for index tracking
+    current_idx = [0]
 
     # Render base costmap
     ax.imshow(costmap, cmap='inferno', origin='lower')
-    ax.set_title(f"WP{current_idx[0]:02d} / {len(waypoints) - 1} | Score: {scores[current_idx[0]]}")
+    ax.set_title(f"Map {index} | WP{current_idx[0]:02d} / {len(waypoints) - 1} | Score: {scores[current_idx[0]]}")
 
     # Initialize plot artists for fast updating
     wp_set = waypoints[current_idx[0]]
@@ -56,8 +93,8 @@ def plot_interactive_waypoints():
 
     ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 
-    def update_plot(index):
-        wp_set = waypoints[index]
+    def update_plot(idx):
+        wp_set = waypoints[idx]
         xc, yc = wp_set[:, 0], wp_set[:, 1]
 
         line_plot.set_xdata(xc)
@@ -67,7 +104,7 @@ def plot_interactive_waypoints():
         end_plot.set_xdata([xc[-1]])
         end_plot.set_ydata([yc[-1]])
 
-        ax.set_title(f"WP{index:02d} / {len(waypoints) - 1} | Score: {scores[index]}")
+        ax.set_title(f"Map {index} | WP{idx:02d} / {len(waypoints) - 1} | Score: {scores[idx]}")
         fig.canvas.draw_idle()
 
     def next_wp(event):

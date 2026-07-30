@@ -1,29 +1,147 @@
 {
-    "generator_version": "2.0.0",
-    "timestamp": "2026-07-27T11:48:29.104626",
+    "generator_version": "2.1.0",
+    "timestamp": "2026-07-30T23:44:57.496432",
+    "maps_processed": [
+        "map_1",
+        "map_2",
+        "map_3",
+        "map_4"
+    ],
     "wp_count": 10,
-    "difficulty_stats": {
-        "min": 197.0,
-        "max": 390.0,
-        "mean": 313.70001220703125
+    "difficulty_stats_average": {
+        "min": 278.0,
+        "max": 323.75,
+        "mean": 306.57501220703125
     },
+    "waypoint_breakdown": [
+        {
+            "id": "wp00",
+            "file": "wp00_278.npy",
+            "scores": {
+                "average": 278.0,
+                "map_1": 265.0,
+                "map_2": 265.0,
+                "map_3": 317.0,
+                "map_4": 265.0
+            }
+        },
+        {
+            "id": "wp01",
+            "file": "wp01_278.npy",
+            "scores": {
+                "average": 278.0,
+                "map_1": 265.0,
+                "map_2": 265.0,
+                "map_3": 317.0,
+                "map_4": 265.0
+            }
+        },
+        {
+            "id": "wp02",
+            "file": "wp02_303.npy",
+            "scores": {
+                "average": 302.75,
+                "map_1": 285.0,
+                "map_2": 304.0,
+                "map_3": 337.0,
+                "map_4": 285.0
+            }
+        },
+        {
+            "id": "wp03",
+            "file": "wp03_303.npy",
+            "scores": {
+                "average": 302.75,
+                "map_1": 285.0,
+                "map_2": 304.0,
+                "map_3": 337.0,
+                "map_4": 285.0
+            }
+        },
+        {
+            "id": "wp04",
+            "file": "wp04_303.npy",
+            "scores": {
+                "average": 302.75,
+                "map_1": 285.0,
+                "map_2": 304.0,
+                "map_3": 337.0,
+                "map_4": 285.0
+            }
+        },
+        {
+            "id": "wp05",
+            "file": "wp05_317.npy",
+            "scores": {
+                "average": 317.0,
+                "map_1": 304.0,
+                "map_2": 304.0,
+                "map_3": 356.0,
+                "map_4": 304.0
+            }
+        },
+        {
+            "id": "wp06",
+            "file": "wp06_320.npy",
+            "scores": {
+                "average": 320.0,
+                "map_1": 307.0,
+                "map_2": 307.0,
+                "map_3": 359.0,
+                "map_4": 307.0
+            }
+        },
+        {
+            "id": "wp07",
+            "file": "wp07_320.npy",
+            "scores": {
+                "average": 320.0,
+                "map_1": 307.0,
+                "map_2": 307.0,
+                "map_3": 359.0,
+                "map_4": 307.0
+            }
+        },
+        {
+            "id": "wp08",
+            "file": "wp08_321.npy",
+            "scores": {
+                "average": 320.75,
+                "map_1": 303.0,
+                "map_2": 322.0,
+                "map_3": 355.0,
+                "map_4": 303.0
+            }
+        },
+        {
+            "id": "wp09",
+            "file": "wp09_324.npy",
+            "scores": {
+                "average": 323.75,
+                "map_1": 306.0,
+                "map_2": 325.0,
+                "map_3": 358.0,
+                "map_4": 306.0
+            }
+        }
+    ],
     "rover_config": {
-        "rover_length_m": 0.001,
-        "rover_width_m": 0.0008,
-        "clearance_margin_m": 0.03,
+        "rover_length_m": 1.0,
+        "rover_width_m": 0.8,
+        "clearance_margin_m": 0.15,
         "grid_resolution_m": 0.05
     },
     "constraints": {
         "candidate_count": 500,
-        "min_spacing_cells": 1.2083045973594573,
-        "max_spacing_cells": 4.2290660907581,
-        "boundary_margin_cells": 1,
+        "min_spacing_cells": 36.69396135605967,
+        "max_spacing_cells": 91.73490339014917,
+        "boundary_margin_cells": 2,
         "duplicate_distance_threshold": 3.0,
         "target_wp_count": 10,
         "max_attempts": 1000,
         "seed": 42,
-        "boundary_margin_ratio": 0.05,
-        "min_spacing_ratio": 0.1,
-        "max_spacing_ratio": 0.35
+        "boundary_margin_ratio": 0.02,
+        "min_spacing_ratio": 0.18,
+        "max_spacing_ratio": 0.45
     }
 }

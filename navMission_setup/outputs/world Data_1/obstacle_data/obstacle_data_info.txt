@@ -1,0 +1,19 @@
+Obstacle Data Summary
+World Name      : marsyard.world
+Heightmap       : /home/misara/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_heightmap/marsyard_heightmap.npz
+Total Placed    : 8
+Density         : 0.012 rocks/m²
+Collidable Ratio: 0.5
+Spacing Min     : 1.0 m
+Min Terrain Z   : 0.15 m
+Deadends        : False
+Timestamped File: obstacle_data_20260730_215707.npy
+
+[  1] Rock_1       | Model #7 | Pos: ( 11.021,   9.340,  1.122) | Collidable: False
+[  2] Rock_2       | Model #5 | Pos: (  1.684,  -9.931,  1.508) | Collidable: False
+[  3] Rock_3       | Model #4 | Pos: (-10.010,  -8.885,  0.723) | Collidable: True
+[  4] Rock_4       | Model #6 | Pos: (  4.126,  10.297,  1.254) | Collidable: False
+[  5] Rock_5       | Model #9 | Pos: (  8.786,   1.666,  1.231) | Collidable: False
+[  6] Rock_6       | Model #1 | Pos: (-15.723,  -5.043,  1.072) | Collidable: True
+[  7] Rock_7       | Model #2 | Pos: ( -1.419,  -4.688,  1.424) | Collidable: True
+[  8] Rock_8       | Model #5 | Pos: (  5.970,   9.951,  0.928) | Collidable: False

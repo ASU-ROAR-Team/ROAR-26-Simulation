@@ -7,9 +7,9 @@
     "target_wp_count": 10,
     "max_attempts": 1000,
     "seed": 42,
-    "boundary_margin_ratio": 0.05,
-    "min_spacing_ratio": 0.10,
-    "max_spacing_ratio": 0.35,
+    "boundary_margin_ratio": 0.02,
+    "min_spacing_ratio": 0.18,
+    "max_spacing_ratio": 0.45,
     "weights": {
         "avg_cost": 0.4,
         "max_cost": 0.3

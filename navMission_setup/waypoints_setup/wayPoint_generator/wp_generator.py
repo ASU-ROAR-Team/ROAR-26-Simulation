@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Optional, Tuple, Set
 
 import numpy as np
-from scipy.ndimage import distance_transform_edt
+from scipy.ndimage import distance_transform_edt, label, binary_erosion
 
 # Configure standard logging
 logging.basicConfig(
@@ -55,89 +55,168 @@ class Constraints:
     min_spacing_ratio: Optional[float] = 0.10            # 10% of map diagonal
     max_spacing_ratio: Optional[float] = 0.40            # 40% of map diagonal
 
+# ==========================================
+# HELPER: MASK GENERATION
+# ==========================================
+
+#helps waypoints stay inside irregular map shape
+
+def _compute_valid_map_mask(costmaps: list, boundary_margin_cells: int = 5) -> np.ndarray:
+    """Identifies black padding, removes it, and erodes the valid area 
+        to enforce a strict safety margin away from map edges."""
+    """Identifies -1 padding and erodes the valid area."""
+    if not costmaps:
+        return None
+    h, w = costmaps[0].shape
+    universal_mask = np.ones((h, w), dtype=bool)
+
+    for cmap in costmaps: 
+        # 1. Zero regions touching outer image borders are the black background padding
+        # The costmaps use -1 for padding/unknown space
+        padding_mask = (cmap == -1) | np.isnan(cmap)
+        labeled_array, _ = label(padding_mask)
+        
+        border_labels = set()
+        border_labels.update(labeled_array[0, :])
+        border_labels.update(labeled_array[-1, :])
+        border_labels.update(labeled_array[:, 0])
+        border_labels.update(labeled_array[:, -1])
+        border_labels.discard(0)
+        
+        map_mask = np.ones((h, w), dtype=bool)
+        for lbl in border_labels:
+            map_mask[labeled_array == lbl] = False  
+            
+        universal_mask &= map_mask
+    # 2. Erode the mask inward by the boundary margin so waypoints stay away from edges
+    if boundary_margin_cells > 0:
+        struct = np.ones((3, 3), dtype=bool)
+        universal_mask = binary_erosion(universal_mask, structure=struct, iterations=boundary_margin_cells)
+
+    return universal_mask
+
+
+def enforce_valid_waypoints(waypoints: np.ndarray, valid_mask: np.ndarray) -> np.ndarray:
+    """
+    Ensures every waypoint coordinate strictly lies within the valid map mask.
+    If a waypoint falls outside, it snaps it to the nearest valid pixel inside the mask.
+    """
+    if valid_mask is None or waypoints.size == 0:
+        return waypoints
+
+    h, w = valid_mask.shape
+    cleaned_waypoints = waypoints.copy()
+
+    # Create an invalid distance map to penalize out-of-bounds searching
+    invalid_distances = np.where(valid_mask, 0.0, np.inf)
+    yy, xx = np.indices((h, w))
+
+    # Flatten the first two dimensions to iterate through all individual points easily
+    original_shape = cleaned_waypoints.shape
+    pts = cleaned_waypoints.reshape(-1, 2)
+
+    for i in range(len(pts)):
+        x = int(round(pts[i, 0]))
+        y = int(round(pts[i, 1]))
+
+        # Clip to grid bounds first
+        x_safe = np.clip(x, 0, w - 1)
+        y_safe = np.clip(y, 0, h - 1)
+
+        # If it falls outside the valid mask (e.g. in the black padding)
+        if not valid_mask[y_safe, x_safe]:
+            # Find the closest valid pixel within the mask using the distance map
+            dist_field = np.sqrt((yy - y_safe)**2 + (xx - x_safe)**2) + invalid_distances
+            min_y, min_x = np.unravel_index(np.argmin(dist_field), dist_field.shape)
+            
+            pts[i, 0] = min_x
+            pts[i, 1] = min_y
+
+    return pts.reshape(original_shape)
 
 # ==========================================
-# STEP 1: INPUT HANDLING (STRICT DISK LOAD)
+# STEP 1: INPUT HANDLING (UNIVERSAL MULTI-MAP)
 # ==========================================
 class InputLoader:
-    """Reads input data strictly from disk and dynamically scales spatial bounds."""
+    """Reads all available map inputs and merges obstacles for universal safety."""
 
     @staticmethod
-    def load(inputs_dir: str = "inputs") -> Tuple[np.ndarray, np.ndarray, RoverConfig, Constraints]:
-        base_path = Path(inputs_dir)
-        
-        # 1. Load Costmap
-        costmap_path = base_path / "costmap.npz"
-        assert costmap_path.exists(), f"CRITICAL: Missing required input file {costmap_path}"
-        with np.load(costmap_path) as data:
-            costmap = data["total"].astype(np.float32)
+    def load(inputs_dir: str = "inputs") -> Tuple[list, np.ndarray, RoverConfig, Constraints, list]:
+        # Automatically resolve path relative to this script's directory
+        script_dir = Path(__file__).resolve().parent
+        base_path = script_dir / inputs_dir
 
-        h, w = costmap.shape
-        map_diag = math.sqrt(h**2 + w**2)
-
-        # 2. Load JSON Configs
+        # 1. Load JSON Configs
         rover_file = base_path / "rover_config.json"
-        assert rover_file.exists(), f"CRITICAL: Missing required input file {rover_file}"
+        assert rover_file.exists(), f"CRITICAL: Missing {rover_file}"
         with open(rover_file, "r") as f:
             rover_cfg = RoverConfig(**json.load(f))
 
         constraints_file = base_path / "wp_constraints.json"
-        assert constraints_file.exists(), f"CRITICAL: Missing required input file {constraints_file}"
+        assert constraints_file.exists(), f"CRITICAL: Missing {constraints_file}"
         with open(constraints_file, "r") as f:
             constraints = Constraints(**json.load(f))
 
-        # 3. Dynamic Ratio Calculations & Map Scaling (Purely Percentage-Driven)
-        h, w = costmap.shape
-        map_diag = math.sqrt(h**2 + w**2)
-
-        # Retrieve ratios from config (with clean default fallbacks)
-        boundary_ratio = getattr(constraints, "boundary_margin_ratio", 0.05)
-        min_ratio = getattr(constraints, "min_spacing_ratio", 0.10)
-        max_ratio = getattr(constraints, "max_spacing_ratio", 0.40)
-
-        # Calculate bounds dynamically based on map size and ratios
-        constraints.boundary_margin_cells = max(1, int(min(h, w) * boundary_ratio))
-        constraints.min_spacing_cells = max(1.0, map_diag * min_ratio)
-        constraints.max_spacing_cells = max(2.0, map_diag * max_ratio)
-
-        # 4. Load & Rasterize Obstacles
-        obstacle_path = base_path / "obstacle_data.npy"
-        assert obstacle_path.exists(), f"CRITICAL: Missing required input file {obstacle_path}"
-        obs_raw = np.load(obstacle_path, allow_pickle=True)
+        # 2. Discover Maps & Initialize Master Obstacles
+        costmaps = []
+        map_names = []
+        master_obstacles = None
         
-        if isinstance(obs_raw, np.ndarray) and obs_raw.dtype == object and obs_raw.ndim == 0:
-            obs_raw = obs_raw.item()
+        costmap_files = sorted(list(base_path.glob("costmap_*.npz")))
+        assert len(costmap_files) > 0, "CRITICAL: No costmap files found in inputs directory!"
 
-        if isinstance(obs_raw, np.ndarray) and obs_raw.ndim == 2:
-            obstacles = obs_raw.astype(np.uint8)
-        else:
-            # Rasterize Gazebo world objects
-            res = rover_cfg.grid_resolution_m
-            center_x, center_y = w / 2.0, h / 2.0
-            obstacles = np.zeros((h, w), dtype=np.uint8)
-            grid_y, grid_x = np.ogrid[:h, :w]
+        for cmap_path in costmap_files:
+            idx_str = cmap_path.stem.split('_')[-1]
+            map_name = f"map_{idx_str}"
+            map_names.append(map_name)
 
-            rock_radius_cells = max(1, int(round(0.5 / res)))
-            # Important This line takes a flat 0.5-meter radius and divides it by your grid resolution (res) 
-            # to determine how many cells the obstacle occupies on the costmap, treating every object as a uniform circle 
-            # regardless of its actual shape.
+            # Load Costmap
+            with np.load(cmap_path) as data:
+                cmap = data["total"].astype(np.float32)
+                costmaps.append(cmap)
+
+            h, w = cmap.shape
+
+            # Initialize spatial variables on the first pass
+            if master_obstacles is None:
+                map_diag = math.sqrt(h**2 + w**2)
+                boundary_ratio = getattr(constraints, "boundary_margin_ratio", 0.05)
+                min_ratio = getattr(constraints, "min_spacing_ratio", 0.10)
+                max_ratio = getattr(constraints, "max_spacing_ratio", 0.40)
+
+                constraints.boundary_margin_cells = max(1, int(min(h, w) * boundary_ratio))
+                constraints.min_spacing_cells = max(1.0, map_diag * min_ratio)
+                constraints.max_spacing_cells = max(2.0, map_diag * max_ratio)
+
+                master_obstacles = np.zeros((h, w), dtype=np.uint8)
+                res = rover_cfg.grid_resolution_m
+                center_x, center_y = w / 2.0, h / 2.0
+                rock_radius_cells = max(1, int(round(0.5 / res)))
+                grid_y, grid_x = np.ogrid[:h, :w]
+
+            # 3. Load & Merge Obstacles
+            obs_path = base_path / f"obstacle_data_{idx_str}.npy"
+            assert obs_path.exists(), f"CRITICAL: Missing {obs_path.name} for {cmap_path.name}"
             
-            items = obs_raw.flat if isinstance(obs_raw, np.ndarray) else obs_raw
+            obs_raw = np.load(obs_path, allow_pickle=True)
+            if isinstance(obs_raw, np.ndarray) and obs_raw.dtype == object and obs_raw.ndim == 0:
+                obs_raw = obs_raw.item()
 
-            for obj in items:
-                if isinstance(obj, dict) and obj.get("is_collidable", True):
-                    px = int(round(center_x + obj.get("x", 0.0) / res))
-                    py = int(round(center_y + obj.get("y", 0.0) / res))
-                    if 0 <= px < w and 0 <= py < h:
-                        mask = (grid_x - px)**2 + (grid_y - py)**2 <= rock_radius_cells**2
-                        obstacles[mask] = 1
+            if isinstance(obs_raw, np.ndarray) and obs_raw.ndim == 2:
+                current_obs = obs_raw.astype(np.uint8)
+                master_obstacles = np.maximum(master_obstacles, current_obs) # Merge via logical OR
+            else:
+                items = obs_raw.flat if isinstance(obs_raw, np.ndarray) else obs_raw
+                for obj in items:
+                    # Updated to include BOTH collidable and barrier flags
+                    if isinstance(obj, dict) and (obj.get("is_collidable", True) or obj.get("is_barrier", False)):
+                        px = int(round(center_x + obj.get("x", 0.0) / res))
+                        py = int(round(center_y + obj.get("y", 0.0) / res))
+                        if 0 <= px < w and 0 <= py < h:
+                            mask = (grid_x - px)**2 + (grid_y - py)**2 <= rock_radius_cells**2
+                            master_obstacles[mask] = 1
 
-        assert costmap.shape == obstacles.shape, (
-            f"Dimension Mismatch: Costmap {costmap.shape} vs Obstacles {obstacles.shape}"
-        )
-
-        return costmap, obstacles, rover_cfg, constraints
-
+        return costmaps, master_obstacles, rover_cfg, constraints, map_names
 
 # ==========================================
 # STEP 2: POISSON DISK CANDIDATE SAMPLER
@@ -227,35 +306,55 @@ class CandidateSampler:
 # STEP 3: CANDIDATE FILTER (OBSTACLE CLEARANCE ONLY)
 # ==========================================
 class CandidateFilter:
-    """Fast candidate filtering using precomputed Euclidean Distance Transform.
-    Filters purely on the presence of collidable obstacles — costmap values
-    play no role in accept/reject decisions here."""
+    """Fast candidate filtering using precomputed Euclidean Distance Transform 
+    and a valid map mask to exclude out-of-bounds background padding."""
 
-    def __init__(self, obstacles: np.ndarray):
+    def __init__(self, obstacles: np.ndarray, valid_mask: np.ndarray = None):
         # Precompute clearance map ONCE: O(H * W)
         # Free space = 1, Obstacles = 0
+        #Ensure the filter treats both actual obstacles (> 0 or rocks) and the -1 padding mask as blocked space:
         free_space = (obstacles == 0).astype(np.uint8)
+        if valid_mask is not None:
+            free_space[~valid_mask] = 0
         self.clearance_map = distance_transform_edt(free_space)
+        self.valid_mask = valid_mask
 
     def filter(self, candidates: np.ndarray, required_clearance_cells: int) -> np.ndarray:
         if candidates.size == 0:
             return candidates
 
-        x = candidates[:, 0]
-        y = candidates[:, 1]
+        x = candidates[:, 0].astype(int)
+        y = candidates[:, 1].astype(int)
+        h, w = self.clearance_map.shape
 
-        # Dynamically scale clearance bounds to prevent map geometry wipeouts
+        # 1. Ensure coordinates are within grid bounds
+        in_bounds = (x >= 0) & (x < w) & (y >= 0) & (y < h)
+        
+        # 2. Check valid map boundary mask if provided
+        if self.valid_mask is not None:
+            mask_valid = np.zeros_like(in_bounds, dtype=bool)
+            valid_indices_in_bounds = in_bounds
+            mask_valid[valid_indices_in_bounds] = self.valid_mask[y[valid_indices_in_bounds], x[valid_indices_in_bounds]]
+        else:
+            mask_valid = in_bounds
+
+        # 3. Check clearance requirements
+        safe_x = np.clip(x, 0, w - 1)
+        safe_y = np.clip(y, 0, h - 1)
+
         max_possible_clearance = float(np.max(self.clearance_map)) if self.clearance_map.size > 0 else 0.0
         effective_clearance = min(float(required_clearance_cells), max_possible_clearance)
 
-        clearance_valid = self.clearance_map[y, x] >= effective_clearance
+        clearance_valid = (self.clearance_map[safe_y, safe_x] >= effective_clearance)
 
-        if not np.any(clearance_valid):
-            logging.warning(f"Clearance requirement ({required_clearance_cells}) exceeds available map clearance ({max_possible_clearance:.1f}). No candidates passed.")
+        # Combine all validity checks
+        final_valid = mask_valid & clearance_valid
 
-        return candidates[clearance_valid]
+        if not np.any(final_valid):
+            logging.warning(f"Clearance requirement ({required_clearance_cells}) exceeds available map clearance ({max_possible_clearance:.1f}) or all candidates fell outside valid map bounds.")
 
-
+        return candidates[final_valid]
+    
 # ==========================================
 # STEP 4: INCREMENTAL WAYPOINT BUILDER
 # ==========================================
@@ -371,44 +470,75 @@ class SimilarityFilter:
 
 
 # ==========================================
-# STEP 7: DIFFICULTY RANKER (SUM OF PATH COSTS)
+# STEP 7: DIFFICULTY RANKER (AVERAGE COST)
 # ==========================================
 class DifficultyRanker:
-    """Ranks waypoints from easiest to hardest. Difficulty score is the exact
-    sum of costmap values at the starting point plus wp1, wp2, wp3, wp4."""
+    """Ranks waypoints by evaluating their sum of costs across all provided maps, 
+    sorting by the average cost."""
 
     @staticmethod
-    def rank(waypoints: np.ndarray, costmap: np.ndarray, weights: dict) -> Tuple[np.ndarray, np.ndarray]:
+    def rank(waypoints: np.ndarray, costmaps: list, weights: dict) -> Tuple[np.ndarray, np.ndarray, list]:
         if len(waypoints) == 0:
-            return waypoints, np.array([])
+            return waypoints, np.array([]), []
 
-        scores = []
+        avg_scores = []
+        detailed_scores = []
+
         for wp in waypoints:
-            # Terrain costs at start + wp1 + wp2 + wp3 + wp4
             x_coords, y_coords = wp[:, 0], wp[:, 1]
-            wp_costs = costmap[y_coords, x_coords]
+            
+            wp_map_scores = []
+            for cmap in costmaps:
+                # Sum of terrain costs for this specific map
+                score = float(np.sum(cmap[y_coords, x_coords]))
+                wp_map_scores.append(score)
+                
+            avg_score = float(np.mean(wp_map_scores))
+            avg_scores.append(avg_score)
+            detailed_scores.append(wp_map_scores)
 
-            # Difficulty = exact sum of all 5 point costs
-            score = float(np.sum(wp_costs))
-            scores.append(score)
-
-        scores_arr = np.array(scores, dtype=np.float32)
+        avg_scores_arr = np.array(avg_scores, dtype=np.float32)
         
-        # Sort ascending (Easiest -> Hardest)
-        sort_indices = np.argsort(scores_arr)
-        return waypoints[sort_indices], scores_arr[sort_indices]
+        # Sort ascending (Easiest -> Hardest) based on the Average
+        sort_indices = np.argsort(avg_scores_arr)
+        
+        sorted_waypoints = waypoints[sort_indices]
+        sorted_avg_scores = avg_scores_arr[sort_indices]
+        sorted_detailed = [detailed_scores[i] for i in sort_indices]
+
+        return sorted_waypoints, sorted_avg_scores, sorted_detailed
 
 
 # ==========================================
 # STEP 8: EXPORTER WITH METADATA
 # ==========================================
 class Exporter:
-    """Persists array outputs and JSON metadata logs."""
+    """Persists array outputs and logs detailed multi-map scores."""
+
+    @staticmethod
+    def _make_serializable(val):
+        """Recursively converts numpy data types to native Python types for JSON compatibility."""
+        if isinstance(val, dict):
+            return {str(k): Exporter._make_serializable(v) for k, v in val.items()}
+        elif isinstance(val, list):
+            return [Exporter._make_serializable(v) for v in val]
+        elif isinstance(val, tuple):
+            return [Exporter._make_serializable(v) for v in val]
+        elif isinstance(val, (np.float32, np.float64, np.floating)):
+            return float(val)
+        elif isinstance(val, (np.int32, np.int64, np.integer)):
+            return int(val)
+        elif isinstance(val, np.ndarray):
+            return val.tolist()
+        else:
+            return val
 
     @staticmethod
     def export(
         waypoints: np.ndarray,
-        scores: np.ndarray,
+        avg_scores: np.ndarray,
+        detailed_scores: list,
+        map_names: list,
         rover_cfg: RoverConfig,
         constraints: Constraints,
         outputs_dir: str = "outputs"
@@ -416,108 +546,105 @@ class Exporter:
         out_path = Path(outputs_dir)
         out_path.mkdir(parents=True, exist_ok=True)
 
-        # 0. Clear stale waypoint files from any previous run
         for old_file in out_path.glob("wp*_*.npy"):
             old_file.unlink()
 
-        # 1. Save one .npy per waypoint set: wp{index}_{score}.npy
-        for i, (wp_set, score) in enumerate(zip(waypoints, scores)):
-            filename = f"wp{i:02d}_{int(round(score))}.npy"
+        export_details = []
+        for i, (wp_set, avg, d_scores) in enumerate(zip(waypoints, avg_scores, detailed_scores)):
+            avg_val = float(avg)
+            filename = f"wp{i:02d}_{int(round(avg_val))}.npy"
             np.save(out_path / filename, wp_set)
+            
+            # Map the separate scores to their respective map names for the JSON
+            score_dict = {"average": avg_val}
+            for m_name, s in zip(map_names, d_scores):
+                score_dict[m_name] = float(s)
+                
+            export_details.append({
+                "id": f"wp{i:02d}",
+                "file": filename,
+                "scores": score_dict
+            })
 
-        # 2. Export Metadata JSON
         metadata = {
-            "generator_version": "2.0.0",
+            "generator_version": "2.1.0",
             "timestamp": datetime.now().isoformat(),
-            "wp_count": len(waypoints),
-            "difficulty_stats": {
-                "min": float(np.min(scores)) if len(scores) > 0 else 0.0,
-                "max": float(np.max(scores)) if len(scores) > 0 else 0.0,
-                "mean": float(np.mean(scores)) if len(scores) > 0 else 0.0,
+            "maps_processed": map_names,
+            "wp_count": int(len(waypoints)),
+            "difficulty_stats_average": {
+                "min": float(np.min(avg_scores)) if len(avg_scores) > 0 else 0.0,
+                "max": float(np.max(avg_scores)) if len(avg_scores) > 0 else 0.0,
+                "mean": float(np.mean(avg_scores)) if len(avg_scores) > 0 else 0.0,
             },
+            "waypoint_breakdown": export_details,
             "rover_config": rover_cfg.__dict__,
             "constraints": {
                 k: v for k, v in constraints.__dict__.items() if k != "weights"
             }
         }
 
+        # Ensure complete JSON serialization safety
+        clean_metadata = Exporter._make_serializable(metadata)
+
         with open(out_path / "generation_log.json", "w") as f:
-            json.dump(metadata, f, indent=4)
+            json.dump(clean_metadata, f, indent=4)
 
-        logging.info(f"Successfully exported {len(waypoints)} waypoint files to '{out_path.resolve()}'")
-
-
+        logging.info(f"Successfully exported {len(waypoints)} universal waypoint files to '{out_path.resolve()}'")
+        
 # ==========================================
 # INTERFACE / PIPELINE ORCHESTRATOR
 # ==========================================
 def run_generator():
     start_time = time.time()
-    logging.info("--- Starting Waypoint Generator Pipeline ---")
+    logging.info("--- Starting Universal Waypoint Generator Pipeline ---")
 
-    # Step 1: Load Inputs
-    costmap, obstacles, rover_cfg, constraints = InputLoader.load("inputs")
-    logging.info(f"Loaded Costmap: {costmap.shape} | Rover Clearance: {rover_cfg.clearance_radius_cells} cells")
+    # Step 1: Load Maps
+    costmaps, master_obstacles, rover_cfg, constraints, map_names = InputLoader.load("inputs")
+    logging.info(f"Loaded {len(costmaps)} maps | Master Obstacle Grid: {master_obstacles.shape}")
 
-    # Step 2: Sample Candidates (Poisson Disk)
-    sampler = CandidateSampler(
-        map_shape=costmap.shape,
-        boundary_margin=constraints.boundary_margin_cells,
-        seed=constraints.seed
-    )
-    raw_candidates = sampler.sample_poisson(
-        min_dist=max(1.0, constraints.min_spacing_cells * 0.5), # Force integer boundary safety
-        max_candidates=constraints.candidate_count
-    )
-    logging.info(f"Generated {len(raw_candidates)} spatial candidate points via Poisson Disk Sampling.")
+    # NEW: Generate the valid mask; avoid waypoints out of irrigular map
+    valid_map_mask = _compute_valid_map_mask(costmaps, constraints.boundary_margin_cells)
 
-    # Step 3: Filter Candidates (Obstacle Clearance Only)
-    candidate_filter = CandidateFilter(obstacles)
+    # Step 2: Sample Candidates
+    sampler = CandidateSampler(master_obstacles.shape, constraints.boundary_margin_cells, constraints.seed)
+    raw_candidates = sampler.sample_poisson(max(1.0, constraints.min_spacing_cells * 0.5), constraints.candidate_count)
+    
+    # Step 3: Filter Candidates (Now enforcing the valid_map_mask!)
+    candidate_filter = CandidateFilter(master_obstacles, valid_mask=valid_map_mask)
     valid_candidates = candidate_filter.filter(raw_candidates, rover_cfg.clearance_radius_cells)
-    logging.info(f"Filtered candidates: {len(valid_candidates)} passed clearance check.")
 
-    # Graceful exit instead of crash if map lacks space
     if len(valid_candidates) < 5:
-        logging.error(f"Critical Error: Only {len(valid_candidates)} candidates passed filtering (need >=5). Map bounds may be too small. Aborting generation gracefully.")
-        Exporter.export(np.array([]), np.array([]), rover_cfg, constraints, "outputs")
+        logging.error("Map bounds too constrained across all maps. Aborting gracefully.")
+        Exporter.export(np.array([]), np.array([]), [], map_names, rover_cfg, constraints, "outputs")
         return
 
-    # Step 4: Incremental waypoint Builder
-    builder = waypointBuilder(
-        min_spacing=constraints.min_spacing_cells,
-        max_spacing=constraints.max_spacing_cells,
-        seed=constraints.seed
-    )
-    raw_waypoints = builder.build_waypoints(
-        valid_candidates,
-        target_count=constraints.target_wp_count * 2,  # Over-generate for filtering
-        max_attempts=constraints.max_attempts
-    )
-    logging.info(f"Built {len(raw_waypoints)} valid 5-point wp paths.")
+    # Step 4: Build Waypoints
+    builder = waypointBuilder(constraints.min_spacing_cells, constraints.max_spacing_cells, constraints.seed)
+    raw_waypoints = builder.build_waypoints(valid_candidates, constraints.target_wp_count * 2, constraints.max_attempts)
 
-    # Step 5: waypoint Quality Validation
+    # Step 5: Validate
     validated_waypoints = waypointValidator.validate(raw_waypoints, constraints.min_spacing_cells)
-    logging.info(f"Validated waypoints: {len(validated_waypoints)} passed path constraints.")
 
-    # Step 6: Similarity Deduplication
-    unique_waypoints = SimilarityFilter.deduplicate(
-        validated_waypoints,
-        spatial_threshold=constraints.duplicate_distance_threshold
+    # Step 6: Deduplicate
+    unique_waypoints = SimilarityFilter.deduplicate(validated_waypoints, constraints.duplicate_distance_threshold)
+
+    # NEW: Actively snap stray points securely into valid terrain
+    snapped_waypoints = enforce_valid_waypoints(unique_waypoints, valid_map_mask)
+
+
+    # Step 7: Multi-Map Ranking (scoring the fully enforced and snapped array)
+    ranked_waypoints, avg_scores, detailed_scores = DifficultyRanker.rank(snapped_waypoints, costmaps, constraints.weights)
+    
+    # Step 8: Export
+    Exporter.export(
+        ranked_waypoints[:constraints.target_wp_count], 
+        avg_scores[:constraints.target_wp_count], 
+        detailed_scores[:constraints.target_wp_count], 
+        map_names, rover_cfg, constraints, "outputs"
     )
-    logging.info(f"Deduplicated waypoints: {len(unique_waypoints)} unique trajectories remain.")
-
-    # Step 7: Difficulty Ranking (sum of path costs)
-    ranked_waypoints, scores = DifficultyRanker.rank(unique_waypoints, costmap, constraints.weights)
-
-    # Truncate to final requested target count
-    final_waypoints = ranked_waypoints[:constraints.target_wp_count]
-    final_scores = scores[:constraints.target_wp_count]
-
-    # Step 8: Export Artifacts
-    Exporter.export(final_waypoints, final_scores, rover_cfg, constraints, "outputs")
 
     elapsed = time.time() - start_time
     logging.info(f"--- Pipeline Finished in {elapsed:.3f}s ---")
-
 
 if __name__ == "__main__":
     run_generator()
