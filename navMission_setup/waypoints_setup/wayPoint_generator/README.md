@@ -1,6 +1,5 @@
 # Waypoint Generator Pipeline (`wayPoint_generator`)
 
-## TO DO
 ## 🤖 Overview
 The **Waypoint Generator** is a procedural mission-planning module designed for the **ROAR-26 Simulation Pipeline**. It ingests environment costmaps and raw obstacle streams, samples collision-free spatial coordinates using obstacle clearance only, builds 5-point waypoint sets, scores their difficulty as the exact sum of terrain cost along the path, and exports one file per waypoint set ready for ROS 2 and Nav2 integration.
 
