@@ -1,31 +1,6 @@
 # Waypoint Generator Pipeline (`wayPoint_generator`)
 
 ## TO DO
-1- get actual rover dimensions
-2- Avoid dublicated scores
-## 📝 To-Do: Obstacle Rasterization Update
-
-**Context:**
-In rover simulation environments—especially for structured missions or competition maps—obstacle flags serve distinct purposes:
-* **`is_collidable`:** Denotes a physical object with a defined collision mesh in Gazebo (e.g., rocks, crater edges). If the rover hits it, physics takes over, and the rover crashes.
-* **`is_barrier`:** Used for boundary limits, virtual fences, or "keep-out" zones. While it might lack a heavy physical collision mesh, it represents an area the path planner is strictly forbidden from crossing.
-
-**Current Issue:**
-The script currently only checks for `is_collidable`, originally written with a pure physics focus. By ignoring `is_barrier`, the generator risks placing waypoints inside forbidden boundary zones simply because the boundary doesn't register as a physical "rock."
-
-**Action Required:**
-Update the rasterization logic to treat both flags as strict obstacles in the clearance map.
-
-*Modify `wp_generator.py` (approx. Line 99):*
-
-**Change this:**
-`if isinstance(obj, dict) and obj.get("is_collidable", True):`
-
-**To this:**
-`if isinstance(obj, dict) and (obj.get("is_collidable", True) or obj.get("is_barrier", False)):`
-
-This ensures the master map respects both hard physical obstacles and the geographical limits of the mission.
-
 ## 🤖 Overview
 The **Waypoint Generator** is a procedural mission-planning module designed for the **ROAR-26 Simulation Pipeline**. It ingests environment costmaps and raw obstacle streams, samples collision-free spatial coordinates using obstacle clearance only, builds 5-point waypoint sets, scores their difficulty as the exact sum of terrain cost along the path, and exports one file per waypoint set ready for ROS 2 and Nav2 integration.
 
