@@ -49,11 +49,12 @@ class Constraints:
     target_wp_count: int
     max_attempts: int
     seed: Optional[int]
-    weights: dict
     # Optional ratios (defaults to None for backward compatibility)
     boundary_margin_ratio: Optional[float] = 0.05      # 5% of map size
     min_spacing_ratio: Optional[float] = 0.10            # 10% of map diagonal
     max_spacing_ratio: Optional[float] = 0.40            # 40% of map diagonal
+    max_turn_angle_deg: Optional[float] = 80.0      # NEW
+    min_start_end_dist: Optional[float] = 0.0       # NEW
 
 # ==========================================
 # HELPER: MASK GENERATION
@@ -175,10 +176,24 @@ class InputLoader:
                 cmap = data["total"].astype(np.float32)
                 costmaps.append(cmap)
 
+                # NEW: pull the resolution the costmap was actually generated at
+                stored_resolution = float(data["resolution"]) if "resolution" in data.files else None
+
             h, w = cmap.shape
 
             # Initialize spatial variables on the first pass
             if master_obstacles is None:
+                # NEW: reconcile rover_cfg's resolution with what the costmap was actually built at
+                if stored_resolution is not None and not math.isclose(
+                    stored_resolution, rover_cfg.grid_resolution_m, rel_tol=1e-3
+                ):
+                    logging.warning(
+                        f"grid_resolution_m mismatch: rover_config.json says "
+                        f"{rover_cfg.grid_resolution_m} m/cell, but {cmap_path.name} was generated at "
+                        f"{stored_resolution} m/cell. Using the costmap's stored resolution."
+                    )
+                    rover_cfg.grid_resolution_m = stored_resolution
+
                 map_diag = math.sqrt(h**2 + w**2)
                 boundary_ratio = getattr(constraints, "boundary_margin_ratio", 0.05)
                 min_ratio = getattr(constraints, "min_spacing_ratio", 0.10)
@@ -361,10 +376,14 @@ class CandidateFilter:
 class waypointBuilder:
     """Builds 5-point waypoints incrementally using valid spatial step ranges."""
 
-    def __init__(self, min_spacing: float, max_spacing: float, seed: Optional[int] = None):
+    def __init__(self, min_spacing: float, max_spacing: float, seed: Optional[int] = None,
+                 max_turn_angle_deg: float = 80.0, min_start_end_dist: float = 0.0):  # ← add these two params
         self.min_spacing = min_spacing
         self.max_spacing = max_spacing
         self.rng = np.random.default_rng(seed)
+        self.max_turn_angle_deg = max_turn_angle_deg  #NEW
+        self.min_start_end_dist = min_start_end_dist    #NEW
+        self._cos_limit = math.cos(math.radians(max_turn_angle_deg)) #NEW
 
     def build_waypoints(self, candidates: np.ndarray, target_count: int, max_attempts: int) -> np.ndarray:
         if len(candidates) < 5:
@@ -374,12 +393,15 @@ class waypointBuilder:
         waypoints = []
         num_candidates = len(candidates)
         attempts = 0
+        fail_dead_end = 0        # NEW: counts walks that died from spacing/angle constraints
+        fail_displacement = 0    # NEW: counts walks that finished but were too short start-to-end
 
         while len(waypoints) < target_count and attempts < max_attempts:
             attempts += 1
             start_idx = self.rng.integers(0, num_candidates)
             wp = [candidates[start_idx]]
             visited_indices = {start_idx}
+            prev_vec = None
             
             success = True
             for _ in range(4):  # Select WP1, WP2, WP3, WP4
@@ -395,16 +417,36 @@ class waypointBuilder:
                 # Filter out already used points in this wp
                 unvisited_indices = [idx for idx in valid_indices if idx not in visited_indices]
 
+                # Enforce turn angle constraint if applicable
+                if prev_vec is not None and unvisited_indices:
+                    candidate_vecs = candidates[unvisited_indices] - curr_pt
+                    norms = np.linalg.norm(candidate_vecs, axis=1)
+                    cos_angles = (candidate_vecs @ prev_vec) / (norms * np.linalg.norm(prev_vec))
+                    unvisited_indices = [idx for idx, ca in zip(unvisited_indices, cos_angles) if ca >= self._cos_limit]
+
+                # If no valid candidates remain, break early
                 if not unvisited_indices:
                     success = False
+                    fail_dead_end += 1  # NEW
                     break  # Dead end, discard walk
 
                 next_idx = self.rng.choice(unvisited_indices)
                 visited_indices.add(next_idx)
-                wp.append(candidates[next_idx])
+                next_pt = candidates[next_idx]
+                prev_vec = next_pt - curr_pt
+                wp.append(next_pt)
 
             if success:
-                waypoints.append(wp)
+                # Check net displacement constraint if applicable
+                net_disp = np.linalg.norm(wp[-1] - wp[0])
+                if net_disp >= self.min_start_end_dist:
+                    waypoints.append(wp)
+                else:
+                    fail_displacement += 1  # NEW
+
+        # NEW: summary so you can tell which constraint is starving the generator
+        logging.info(f"build_waypoints: {attempts} attempts | {len(waypoints)} accepted | "
+                     f"{fail_dead_end} dead-ended (spacing/angle) | {fail_displacement} rejected on start-end distance")
 
         return np.array(waypoints, dtype=np.int32)
 
@@ -477,7 +519,7 @@ class DifficultyRanker:
     sorting by the average cost."""
 
     @staticmethod
-    def rank(waypoints: np.ndarray, costmaps: list, weights: dict) -> Tuple[np.ndarray, np.ndarray, list]:
+    def rank(waypoints: np.ndarray, costmaps: list) -> Tuple[np.ndarray, np.ndarray, list]:
         if len(waypoints) == 0:
             return waypoints, np.array([]), []
 
@@ -578,9 +620,7 @@ class Exporter:
             },
             "waypoint_breakdown": export_details,
             "rover_config": rover_cfg.__dict__,
-            "constraints": {
-                k: v for k, v in constraints.__dict__.items() if k != "weights"
-            }
+            "constraints": constraints.__dict__
         }
 
         # Ensure complete JSON serialization safety
@@ -609,9 +649,15 @@ def run_generator():
     sampler = CandidateSampler(master_obstacles.shape, constraints.boundary_margin_cells, constraints.seed)
     raw_candidates = sampler.sample_poisson(max(1.0, constraints.min_spacing_cells * 0.5), constraints.candidate_count)
     
-    # Step 3: Filter Candidates (Now enforcing the valid_map_mask!)
+# Step 3: Filter Candidates (Now enforcing the valid_map_mask!)
     candidate_filter = CandidateFilter(master_obstacles, valid_mask=valid_map_mask)
+    max_clearance_available = float(np.max(candidate_filter.clearance_map)) if candidate_filter.clearance_map.size > 0 else 0.0
+    logging.info(f"Required clearance: {rover_cfg.clearance_radius_cells} cells | "
+                 f"Max clearance available on map: {max_clearance_available:.1f} cells")  # NEW
     valid_candidates = candidate_filter.filter(raw_candidates, rover_cfg.clearance_radius_cells)
+    logging.info(f"Valid candidates: {len(valid_candidates)} | min_spacing={constraints.min_spacing_cells:.1f} | "
+                 f"max_spacing={constraints.max_spacing_cells:.1f} | max_turn_angle={constraints.max_turn_angle_deg} | "
+                 f"min_start_end_dist={constraints.min_start_end_dist}")  # NEW
 
     if len(valid_candidates) < 5:
         logging.error("Map bounds too constrained across all maps. Aborting gracefully.")
@@ -619,7 +665,13 @@ def run_generator():
         return
 
     # Step 4: Build Waypoints
-    builder = waypointBuilder(constraints.min_spacing_cells, constraints.max_spacing_cells, constraints.seed)
+    builder = waypointBuilder(
+        constraints.min_spacing_cells,
+        constraints.max_spacing_cells,
+        constraints.seed,
+        max_turn_angle_deg=constraints.max_turn_angle_deg,
+        min_start_end_dist=constraints.min_start_end_dist,
+    )
     raw_waypoints = builder.build_waypoints(valid_candidates, constraints.target_wp_count * 2, constraints.max_attempts)
 
     # Step 5: Validate
@@ -632,14 +684,30 @@ def run_generator():
     snapped_waypoints = enforce_valid_waypoints(unique_waypoints, valid_map_mask)
 
 
-    # Step 7: Multi-Map Ranking (scoring the fully enforced and snapped array)
-    ranked_waypoints, avg_scores, detailed_scores = DifficultyRanker.rank(snapped_waypoints, costmaps, constraints.weights)
+    # Step 7: Multi-Map Ranking
+    ranked_waypoints, avg_scores, detailed_scores = DifficultyRanker.rank(snapped_waypoints, costmaps)
     
+    # Stratified Sampling across the full difficulty spectrum
+    total_found = len(ranked_waypoints)
+    target_count = constraints.target_wp_count
+
+    if total_found > target_count:
+        # Pick indices evenly spaced from index 0 (easiest) to index total_found-1 (hardest)
+        selected_indices = np.linspace(0, total_found - 1, target_count, dtype=int)
+        
+        selected_waypoints = ranked_waypoints[selected_indices]
+        selected_avg_scores = avg_scores[selected_indices]
+        selected_detailed_scores = [detailed_scores[i] for i in selected_indices]
+    else:
+        selected_waypoints = ranked_waypoints
+        selected_avg_scores = avg_scores
+        selected_detailed_scores = detailed_scores
+
     # Step 8: Export
     Exporter.export(
-        ranked_waypoints[:constraints.target_wp_count], 
-        avg_scores[:constraints.target_wp_count], 
-        detailed_scores[:constraints.target_wp_count], 
+        selected_waypoints, 
+        selected_avg_scores, 
+        selected_detailed_scores, 
         map_names, rover_cfg, constraints, "outputs"
     )
 

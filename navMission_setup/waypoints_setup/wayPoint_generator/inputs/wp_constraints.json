@@ -1,17 +1,15 @@
 {
-    "candidate_count": 500,
-    "min_spacing_cells": 10.0,
-    "max_spacing_cells": 50.0,
-    "boundary_margin_cells": 5,
-    "duplicate_distance_threshold": 3.0,
+    "candidate_count": 700,
+    "min_spacing_cells": 20.0,
+    "max_spacing_cells": 60.0,
+    "boundary_margin_cells": 3.0,
+    "duplicate_distance_threshold": 15.0,
     "target_wp_count": 10,
     "max_attempts": 1000,
-    "seed": 42,
-    "boundary_margin_ratio": 0.02,
-    "min_spacing_ratio": 0.18,
-    "max_spacing_ratio": 0.45,
-    "weights": {
-        "avg_cost": 0.4,
-        "max_cost": 0.3
-    }
+    "seed": 50,
+    "boundary_margin_ratio": 0.01,
+    "min_spacing_ratio": 0.152,
+    "max_spacing_ratio": 0.558,
+    "max_turn_angle_deg": 80.0,
+    "min_start_end_dist": 60.0
 }
