@@ -125,6 +125,7 @@ def generate_launch_description():
             '/zed2i/depth@sensor_msgs/msg/Image[ignition.msgs.Image',
             '/zed2i/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
             '/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
+            '/chassis/contact_sensors@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
             '/world/rover_world/pose/info@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
         ],
         output='screen',
