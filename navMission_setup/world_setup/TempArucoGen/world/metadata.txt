@@ -1,0 +1,12 @@
+ROAR ArUco World Dataset
+==================================================
+Dataset name            : world_Rotated_Aruco
+Base world              : world_Rotated.world
+Base heightmap          : heightmap.npz
+Total ArUco Markers     : 15
+Marker Size             : 0.20 m
+Frame ID                : map
+Generated World         : world_Rotated_Aruco.world
+Generated Heightmap     : heightmap.npz
+Generated Costmap       : costmap.npz
+Models Directory        : models/

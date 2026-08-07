@@ -1,25 +1,46 @@
 Obstacle Data Summary
 World Name      : marsyard.world
-Heightmap       : /home/misara/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_heightmap/marsyard_heightmap.npz
-Total Placed    : 14
-Density         : 0.02 rocks/m²
+Heightmap       : /home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/world_setup/initial_inputs/i_heightmap/marsyard_heightmap.npz
+Total Placed    : 35
+Density         : 0.05 rocks/m²
 Collidable Ratio: 0.5
 Spacing Min     : 1.0 m
 Min Terrain Z   : 0.15 m
 Deadends        : False
-Timestamped File: obstacle_data_20260730_215747.npy
+Timestamped File: obstacle_data_20260807_142303.npy
 
-[  1] Rock_1       | Model #6 | Pos: (  9.019,   3.225,  0.959) | Collidable: False
-[  2] Rock_2       | Model #3 | Pos: (-13.410,   9.302,  1.024) | Collidable: False
-[  3] Rock_3       | Model #6 | Pos: ( -2.010,  -1.079,  1.084) | Collidable: False
-[  4] Rock_4       | Model #2 | Pos: (  4.784,   3.873,  2.010) | Collidable: False
-[  5] Rock_5       | Model #5 | Pos: ( -1.161,   7.569,  1.335) | Collidable: True
-[  6] Rock_6       | Model #5 | Pos: (-12.774,   2.067,  0.721) | Collidable: False
-[  7] Rock_7       | Model #7 | Pos: (-12.000,   5.492,  1.114) | Collidable: True
-[  8] Rock_8       | Model #1 | Pos: (  5.369,   6.288,  1.828) | Collidable: True
-[  9] Rock_9       | Model #5 | Pos: ( 10.123,   3.647,  1.326) | Collidable: True
-[ 10] Rock_10      | Model #5 | Pos: ( -7.769,  -4.307,  1.155) | Collidable: True
-[ 11] Rock_11      | Model #2 | Pos: (  6.298,  -9.480,  1.795) | Collidable: True
-[ 12] Rock_12      | Model #6 | Pos: (  4.112,  -6.848,  0.548) | Collidable: True
-[ 13] Rock_13      | Model #6 | Pos: (  4.870,  -5.203,  1.441) | Collidable: True
-[ 14] Rock_14      | Model #2 | Pos: ( -7.435,   2.995,  0.950) | Collidable: True
+[  1] Rock_1       | Model #1 | Pos: (  4.375,  -8.211,  0.662) | Size: L=1.775 m | W=1.086 m | H=2.260 m | Collidable: True
+[  2] Rock_2       | Model #3 | Pos: (-12.851,   0.299,  0.859) | Size: L=0.651 m | W=0.490 m | H=0.645 m | Collidable: False
+[  3] Rock_3       | Model #2 | Pos: ( -6.412, -10.603,  1.164) | Size: L=2.532 m | W=0.883 m | H=1.234 m | Collidable: True
+[  4] Rock_4       | Model #7 | Pos: (-12.436,   2.317,  0.693) | Size: L=0.104 m | W=0.057 m | H=0.098 m | Collidable: True
+[  5] Rock_5       | Model #7 | Pos: ( 12.413,   2.748,  1.291) | Size: L=0.104 m | W=0.057 m | H=0.098 m | Collidable: False
+[  6] Rock_6       | Model #8 | Pos: ( -0.081,   1.847,  0.912) | Size: L=0.115 m | W=0.037 m | H=0.082 m | Collidable: False
+[  7] Rock_7       | Model #8 | Pos: (  3.495,   3.948,  1.595) | Size: L=0.115 m | W=0.037 m | H=0.082 m | Collidable: False
+[  8] Rock_8       | Model #6 | Pos: ( 10.230,   2.811,  1.423) | Size: L=0.151 m | W=0.084 m | H=0.081 m | Collidable: False
+[  9] Rock_9       | Model #6 | Pos: (-10.873, -10.175,  0.727) | Size: L=0.151 m | W=0.084 m | H=0.081 m | Collidable: False
+[ 10] Rock_10      | Model #7 | Pos: ( -0.231,  -1.236,  0.990) | Size: L=0.104 m | W=0.057 m | H=0.098 m | Collidable: False
+[ 11] Rock_11      | Model #2 | Pos: (  8.676,   4.683,  1.207) | Size: L=2.532 m | W=0.883 m | H=1.234 m | Collidable: False
+[ 12] Rock_12      | Model #3 | Pos: (  1.439,  -9.962,  1.501) | Size: L=0.651 m | W=0.490 m | H=0.645 m | Collidable: True
+[ 13] Rock_13      | Model #1 | Pos: ( -4.050,   9.364,  0.987) | Size: L=1.775 m | W=1.086 m | H=2.260 m | Collidable: False
+[ 14] Rock_14      | Model #7 | Pos: (  2.341,  -5.746,  0.589) | Size: L=0.104 m | W=0.057 m | H=0.098 m | Collidable: True
+[ 15] Rock_15      | Model #9 | Pos: ( -3.823,   3.924,  1.235) | Size: L=0.111 m | W=0.077 m | H=0.112 m | Collidable: False
+[ 16] Rock_16      | Model #9 | Pos: ( 10.477,   6.131,  1.520) | Size: L=0.111 m | W=0.077 m | H=0.112 m | Collidable: True
+[ 17] Rock_17      | Model #1 | Pos: ( -9.993,  10.205,  0.998) | Size: L=1.775 m | W=1.086 m | H=2.260 m | Collidable: False
+[ 18] Rock_18      | Model #1 | Pos: ( -0.291,  -8.425,  1.204) | Size: L=1.775 m | W=1.086 m | H=2.260 m | Collidable: False
+[ 19] Rock_19      | Model #3 | Pos: ( 10.980,   7.081,  1.662) | Size: L=0.651 m | W=0.490 m | H=0.645 m | Collidable: False
+[ 20] Rock_20      | Model #4 | Pos: (  4.529,  -9.220,  1.310) | Size: L=2.263 m | W=0.801 m | H=1.190 m | Collidable: True
+[ 21] Rock_21      | Model #8 | Pos: (-12.335,  -7.361,  0.787) | Size: L=0.115 m | W=0.037 m | H=0.082 m | Collidable: False
+[ 22] Rock_22      | Model #6 | Pos: ( -8.714,   9.612,  0.980) | Size: L=0.151 m | W=0.084 m | H=0.081 m | Collidable: False
+[ 23] Rock_23      | Model #3 | Pos: ( -1.400,  -9.645,  1.626) | Size: L=0.651 m | W=0.490 m | H=0.645 m | Collidable: True
+[ 24] Rock_24      | Model #9 | Pos: ( -8.490,   5.128,  1.254) | Size: L=0.111 m | W=0.077 m | H=0.112 m | Collidable: True
+[ 25] Rock_25      | Model #1 | Pos: ( -1.593,  -1.103,  1.029) | Size: L=1.775 m | W=1.086 m | H=2.260 m | Collidable: False
+[ 26] Rock_26      | Model #1 | Pos: ( -7.718,  -5.129,  1.196) | Size: L=1.775 m | W=1.086 m | H=2.260 m | Collidable: True
+[ 27] Rock_27      | Model #6 | Pos: (  5.509,   0.666,  1.185) | Size: L=0.151 m | W=0.084 m | H=0.081 m | Collidable: True
+[ 28] Rock_28      | Model #3 | Pos: ( -8.100,  -9.611,  1.039) | Size: L=0.651 m | W=0.490 m | H=0.645 m | Collidable: False
+[ 29] Rock_29      | Model #4 | Pos: (  2.399,  -7.034,  0.697) | Size: L=2.263 m | W=0.801 m | H=1.190 m | Collidable: True
+[ 30] Rock_30      | Model #9 | Pos: (  7.592,   4.556,  1.910) | Size: L=0.111 m | W=0.077 m | H=0.112 m | Collidable: False
+[ 31] Rock_31      | Model #1 | Pos: (-11.178,  -6.605,  0.978) | Size: L=1.775 m | W=1.086 m | H=2.260 m | Collidable: False
+[ 32] Rock_32      | Model #3 | Pos: (  9.579,   8.601,  1.167) | Size: L=0.651 m | W=0.490 m | H=0.645 m | Collidable: True
+[ 33] Rock_33      | Model #7 | Pos: (-11.711,  -0.174,  0.937) | Size: L=0.104 m | W=0.057 m | H=0.098 m | Collidable: True
+[ 34] Rock_34      | Model #2 | Pos: (  3.587,   0.894,  1.544) | Size: L=2.532 m | W=0.883 m | H=1.234 m | Collidable: False
+[ 35] Rock_35      | Model #8 | Pos: ( -5.266,   2.208,  1.300) | Size: L=0.115 m | W=0.037 m | H=0.082 m | Collidable: False

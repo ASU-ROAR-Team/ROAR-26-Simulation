@@ -29,105 +29,105 @@
     </include>
     <model name="ArUco_51">
       <static>true</static>
-      <pose>-12.8626 -1.6754 0.7429 0.0000 0.0000 0.0000</pose>
+      <pose>-12.8626 -1.6754 1.1724 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_1</uri>
       </include>
     </model>
     <model name="ArUco_52">
       <static>true</static>
-      <pose>-6.9112 -10.5555 0.2000 0.0000 0.0000 0.0000</pose>
+      <pose>-6.9112 -10.5555 1.1742 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_2</uri>
       </include>
     </model>
     <model name="ArUco_53">
       <static>true</static>
-      <pose>-7.7269 -3.7522 1.0725 0.0000 0.0000 0.0000</pose>
+      <pose>-7.7269 -3.7522 1.1445 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_3</uri>
       </include>
     </model>
     <model name="ArUco_54">
       <static>true</static>
-      <pose>-2.4448 -2.6740 0.8188 0.0000 0.0000 0.0000</pose>
+      <pose>-2.4448 -2.6740 1.4944 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_4</uri>
       </include>
     </model>
     <model name="ArUco_55">
       <static>true</static>
-      <pose>1.6623 -8.7646 1.4218 0.0000 0.0000 0.0000</pose>
+      <pose>1.6623 -8.7646 1.2080 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_5</uri>
       </include>
     </model>
     <model name="ArUco_56">
       <static>true</static>
-      <pose>7.8746 -8.3014 0.9358 0.0000 0.0000 0.0000</pose>
+      <pose>7.8746 -8.3014 1.9224 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_6</uri>
       </include>
     </model>
     <model name="ArUco_57">
       <static>true</static>
-      <pose>11.7097 -3.2808 1.0574 0.0000 0.0000 0.0000</pose>
+      <pose>11.7097 -3.2808 1.2173 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_7</uri>
       </include>
     </model>
     <model name="ArUco_58">
       <static>true</static>
-      <pose>12.3320 2.6813 1.4401 0.0000 0.0000 0.0000</pose>
+      <pose>12.3320 2.6813 1.2706 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_8</uri>
       </include>
     </model>
     <model name="ArUco_59">
       <static>true</static>
-      <pose>9.8693 1.3461 1.5639 0.0000 0.0000 0.0000</pose>
+      <pose>9.8693 1.3461 1.4321 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_9</uri>
       </include>
     </model>
     <model name="ArUco_60">
       <static>true</static>
-      <pose>2.6570 -1.4837 1.5374 0.0000 0.0000 0.0000</pose>
+      <pose>2.6570 -1.4837 1.5868 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_10</uri>
       </include>
     </model>
     <model name="ArUco_61">
       <static>true</static>
-      <pose>-1.0969 0.1368 0.8388 0.0000 0.0000 0.0000</pose>
+      <pose>-1.0969 0.1368 0.8390 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_11</uri>
       </include>
     </model>
     <model name="ArUco_62">
       <static>true</static>
-      <pose>-2.7377 5.3769 1.2709 0.0000 0.0000 0.0000</pose>
+      <pose>-2.7377 5.3769 1.3454 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_12</uri>
       </include>
     </model>
     <model name="ArUco_63">
       <static>true</static>
-      <pose>-5.9985 -0.3173 1.3591 0.0000 0.0000 0.0000</pose>
+      <pose>-5.9985 -0.3173 1.3624 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_13</uri>
       </include>
     </model>
     <model name="ArUco_64">
       <static>true</static>
-      <pose>-7.9646 6.9120 1.0548 0.0000 0.0000 0.0000</pose>
+      <pose>-7.9646 6.9120 1.2799 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_14</uri>
       </include>
     </model>
     <model name="ArUco_65">
       <static>true</static>
-      <pose>-13.2124 7.5601 0.9365 0.0000 0.0000 0.0000</pose>
+      <pose>-13.2124 7.5601 1.1864 0.0000 0.0000 0.0000</pose>
       <include>
         <uri>model://aruco_15</uri>
       </include>

@@ -15,9 +15,13 @@ OUT_HEIGHT_PNG="$TEMP_DIR/heightmap/newhight.png"
 OUT_COST_NPZ="$TEMP_DIR/costmap/costmap.npz"
 OUT_COST_PNG="$TEMP_DIR/costmap/costmap.png"
 
-echo "=== Sourcing ROS 2 ==="
-source /opt/ros/humble/setup.bash
-source "$WORKSPACE_DIR/install/setup.bash"
+echo "=== Sourcing Environment (if available) ==="
+if [ -f "/opt/ros/humble/setup.bash" ]; then
+    source /opt/ros/humble/setup.bash
+fi
+if [ -f "$WORKSPACE_DIR/install/setup.bash" ]; then
+    source "$WORKSPACE_DIR/install/setup.bash"
+fi
 
 echo "=== Step 1a: Running Heightmap Generator ==="
 python3 "$HEIGHTMAP_GEN" "$WORLD_PATH" -o "$OUT_HEIGHT_NPZ" --preview "$OUT_HEIGHT_PNG"
