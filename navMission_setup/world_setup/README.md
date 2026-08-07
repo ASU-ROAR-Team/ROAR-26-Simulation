@@ -27,14 +27,14 @@ To run any folder independently, place the required input files in that stage's 
 ---
 
 ### 1. Stage 1: Obstacle Data Generation (`obsData_gen`)
-Samples rough terrain elevation to generate coordinate locations for rock placement.
+Samples rough terrain elevation to generate coordinate locations for rock placement using the self-contained `generator.py` module (no external ROS 2 dependencies). Output schema matches `worldData_example` (`frame_id`, `length`, `width`, `height`).
 
 - **Inputs**: Copy a `.npz` heightmap (from `initial_inputs/i_heightmap`) into `obsData_gen/inputs/`.
 - **Command**:
   ```bash
   python3 script.py --density 0.012 --collidable-ratio 0.50
   ```
-- **Outputs**: Generates `outputs/obstacle_data.npy`.
+- **Outputs**: Generates `outputs/obstacle_data.npy` and timestamped info summary `outputs/obstacle_data_info.txt`.
 
 ---
 

@@ -21,8 +21,11 @@ def _launch_gazebo(context, *args, **kwargs):
     # Construct resource paths for Gazebo to find models (model://)
     resource_paths = []
     
-    # 1. Include this worlds package
+    # 1. Include this worlds package and its consolidated models
     resource_paths.append(pkg_worlds)
+    resource_paths.append(os.path.join(pkg_worlds, 'models'))
+    resource_paths.append(os.path.join(pkg_worlds, 'models', 'rocks'))
+    resource_paths.append(os.path.join(pkg_worlds, 'models', 'aruco'))
     
     # 2. Find marsyard package if available
     try:

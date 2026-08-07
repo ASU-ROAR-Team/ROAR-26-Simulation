@@ -1,61 +1,44 @@
 #!/usr/bin/env python3
 
 import argparse
-import shlex
-import subprocess
+import sys
 from pathlib import Path
 
-
+# Ensure local imports work cleanly when script is executed directly
 SCRIPT_DIR = Path(__file__).resolve().parent
-WORKSPACE_ROOT = Path(__file__).resolve().parents[3]
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from generator import generate_obstacle_data
 
 DEFAULT_INPUT_DIR = SCRIPT_DIR / "inputs"
 DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "outputs"
+INITIAL_INPUT_DIR = SCRIPT_DIR.parent / "initial_inputs" / "i_heightmap"
 
 
-def find_single_file(folder: Path, pattern: str, description: str) -> Path:
-    files = sorted(folder.glob(pattern))
+def find_heightmap_file(custom_path: Path | None) -> Path:
+    if custom_path:
+        resolved = custom_path.resolve()
+        if not resolved.is_file():
+            raise FileNotFoundError(f"Specified heightmap file not found: {resolved}")
+        return resolved
 
-    if not files:
-        raise FileNotFoundError(
-            f"No {description} was found inside:\n{folder}\n"
-            f"Expected pattern: {pattern}"
-        )
+    # Search in obsData_gen/inputs first, then fallback to initial_inputs/i_heightmap
+    for folder in [DEFAULT_INPUT_DIR, INITIAL_INPUT_DIR]:
+        files = sorted(folder.glob("*.npz"))
+        if len(files) == 1:
+            return files[0].resolve()
+        elif len(files) > 1:
+            return files[0].resolve()
 
-    if len(files) > 1:
-        raise RuntimeError(
-            f"More than one {description} was found inside:\n{folder}\n"
-            "Pass the required file explicitly through the command line."
-        )
-
-    return files[0].resolve()
-
-
-def run_ros_command(arguments: list[str]) -> None:
-    setup_file = WORKSPACE_ROOT / "install" / "setup.bash"
-
-    if not setup_file.exists():
-        raise FileNotFoundError(
-            f"Workspace setup file was not found:\n{setup_file}\n"
-            "Build the rock_generator package first."
-        )
-
-    command = (
-        "source /opt/ros/humble/setup.bash && "
-        f"source {shlex.quote(str(setup_file))} && "
-        + shlex.join(arguments)
-    )
-
-    subprocess.run(
-        ["bash", "-lc", command],
-        cwd=WORKSPACE_ROOT,
-        check=True,
+    raise FileNotFoundError(
+        f"No heightmap NPZ file was found inside:\n{DEFAULT_INPUT_DIR} or {INITIAL_INPUT_DIR}"
     )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Generate obstacle data for one Mars Yard world."
+        description="Generate obstacle data for one Mars Yard world (Standalone mode)."
     )
 
     parser.add_argument("--world-name", default="marsyard.world")
@@ -70,15 +53,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    heightmap = (
-        args.heightmap.resolve()
-        if args.heightmap
-        else find_single_file(
-            DEFAULT_INPUT_DIR,
-            "*.npz",
-            "heightmap NPZ file",
-        )
-    )
+    heightmap = find_heightmap_file(args.heightmap)
 
     output = (
         args.output.resolve()
@@ -88,39 +63,23 @@ def main() -> None:
 
     output.parent.mkdir(parents=True, exist_ok=True)
 
-    command = [
-        "ros2",
-        "run",
-        "rock_generator",
-        "generate_obs",
-        "--world-name",
-        args.world_name,
-        "--heightmap",
-        str(heightmap),
-        "--density",
-        str(args.density),
-        "--collidable-ratio",
-        str(args.collidable_ratio),
-        "--spacing",
-        str(args.spacing),
-        "--min-roughness",
-        str(args.min_roughness),
-        "--min-terrain-height",
-        str(args.min_terrain_height),
-        "-o",
-        str(output),
-    ]
-
-    if args.deadends:
-        command.append("--deadends")
-
     print("=" * 70)
-    print("Obstacle Data Generation")
+    print("Obstacle Data Generation (Standalone)")
     print(f"Heightmap : {heightmap}")
     print(f"Output    : {output}")
     print("=" * 70)
 
-    run_ros_command(command)
+    generate_obstacle_data(
+        world_name=args.world_name,
+        density=args.density,
+        collidable_ratio=args.collidable_ratio,
+        spacing=args.spacing,
+        min_terrain_height=args.min_terrain_height,
+        min_roughness=args.min_roughness,
+        deadends=args.deadends,
+        output_file=str(output),
+        heightmap_path=str(heightmap),
+    )
 
 
 if __name__ == "__main__":

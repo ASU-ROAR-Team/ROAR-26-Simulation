@@ -6,7 +6,7 @@ This package provides a automated pipeline for generating parameterized Mars Yar
 
 ## 🗺️ Pipeline Flow Overview
 
-The orchestrator script `add_world.py` cleans the temporary stage directories, runs each step of the pipeline sequentially, and collects all final outputs into a structured folder.
+The orchestrator script `add_world.py` runs each step of the pipeline sequentially using native, self-contained Python generators inside `world_setup/` (with zero external dependencies on ROS 2 package builds or `history/` scripts). All obstacle data generated matches the exact schema and layout of `worldData_example`.
 
 ```mermaid
 graph TD
