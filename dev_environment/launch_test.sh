@@ -37,6 +37,25 @@ if [ ! -d "$WORLD_DIR" ]; then
     exit 1
 fi
 
+echo "[launch_sim] Killing any stale Ignition/Gazebo/ROS2 processes..."
+pkill -9 -f "ign gazebo"  2>/dev/null || true
+pkill -9 -f "ign_gazebo"  2>/dev/null || true
+pkill -9 -f "ruby.*ignition" 2>/dev/null || true
+pkill -9 -x "rviz2" 2>/dev/null || true
+pkill -9 -x "rviz" 2>/dev/null || true
+pkill -9 -f "robot_state_publisher" 2>/dev/null || true
+pkill -9 -f "spawner" 2>/dev/null || true
+pkill -9 -f "ros2" 2>/dev/null || true
+pkill -9 -f "zed_degradation_node" 2>/dev/null || true
+pkill -9 -f "encoder_sim_node" 2>/dev/null || true
+pkill -9 -f "clean_camera_node" 2>/dev/null || true
+pkill -9 -f "ros_gz_bridge" 2>/dev/null || true
+pkill -9 -f "teleop" 2>/dev/null || true
+pkill -9 -x "gazebo" 2>/dev/null || true
+killall -9 ign rviz2 gzserver gzclient ruby gazebo 2>/dev/null || true
+sleep 1
+
+
 WORLD_FILE="${WORLD_DIR}/${WORLD_NAME}.world"
 if [ ! -f "$WORLD_FILE" ]; then
     echo "[ERROR] World file not found: ${WORLD_FILE}"
