@@ -20,18 +20,25 @@ def plot_interactive_waypoints():
         print("Invalid input. Defaulting to index 1.")
         index = 1
 
-    # Load the correct map using an f-string
-    costmap_path = Path(f"inputs/costmap_{index}.npz")
-    if not costmap_path.exists():
-        alt_paths = list(Path("inputs").glob(f"*{index}*.npz"))
+    # Load the heightmap (used for map dimensions and basic visualization)
+    heightmap_path = Path(f"inputs/heightmap.npz")
+    if not heightmap_path.exists():
+        alt_paths = list(Path("inputs").glob("*heightmap*.npz"))
         if alt_paths:
-            costmap_path = alt_paths[0]
+            heightmap_path = alt_paths[0]
         else:
-            print(f"Error: Could not find costmap for index {index} in inputs/")
+            print(f"Error: Could not find heightmap.npz in inputs/")
             return
 
-    with np.load(costmap_path) as data:
-        costmap = data["total"].astype(np.float32)
+    with np.load(heightmap_path) as data:
+        # Expect a single 2D array; take the first array in the NPZ
+        heightmap = None
+        for key in data.files:
+            arr = data[key]
+            if isinstance(arr, np.ndarray) and arr.ndim == 2:
+                heightmap = arr.astype(np.float32)
+                break
+        assert heightmap is not None, "CRITICAL: Heightmap 2‑D array not found in NPZ"
 
     out_path = Path("outputs")
     
@@ -47,11 +54,15 @@ def plot_interactive_waypoints():
                 if "scores" in item and map_name in item["scores"]:
                     map_scores_lookup[wp_id] = item["scores"][map_name]
 
-    # Find and sort all waypoint files matching exporter naming format
-    wp_files = sorted(
-        out_path.glob("wp*.npy"),
-        key=lambda p: int(re.match(r"wp(\d+)_", p.name).group(1))
-    )
+    # Find all waypoint files and sort them safely by index
+    wp_files = []
+    for p in out_path.glob("wp*.npy"):
+        m = re.match(r"wp(\d+)(?:_(\d+))?\.npy", p.name)
+        if m:
+            wp_files.append((int(m.group(1)), p))
+    wp_files.sort(key=lambda x: x[0])
+    # Keep only the Path objects in order
+    wp_files = [p for _, p in wp_files]
 
     if len(wp_files) == 0:
         print("No waypoints found to plot in outputs/.")
@@ -61,15 +72,17 @@ def plot_interactive_waypoints():
     waypoints = []
     scores = []
     for wp_file in wp_files:
-        match = re.match(r"wp(\d+)_(\d+)\.npy", wp_file.name)
+        # Match either 'wpXX.npy' or 'wpXX_score.npy'
+        match = re.match(r"wp(\d+)(?:_(\d+))?\.npy", wp_file.name)
+        if not match:
+            continue
         wp_id = f"wp{int(match.group(1)):02d}"
-        
-        # Use specific map score if available, otherwise fallback to filename average score
+        # Use specific map score if available; otherwise use placeholder 0
         if wp_id in map_scores_lookup:
             scores.append(round(map_scores_lookup[wp_id], 1))
         else:
-            scores.append(int(match.group(2)))
-            
+            # If the filename includes a score, use it; otherwise default to 0
+            scores.append(int(match.group(2)) if match.group(2) else 0)
         waypoints.append(np.load(wp_file))
 
     # Set up figure with extra space at the bottom for interactive buttons
@@ -80,7 +93,7 @@ def plot_interactive_waypoints():
     current_idx = [0]
 
     # Render base costmap
-    ax.imshow(costmap, cmap='inferno', origin='lower')
+    # Render base heightmap (grayscale)\n    ax.imshow(heightmap, cmap='gray', origin='lower')
     ax.set_title(f"Map {index} | WP{current_idx[0]:02d} / {len(waypoints) - 1} | Score: {scores[current_idx[0]]}")
 
     # Initialize plot artists for fast updating
