@@ -1,0 +1,74 @@
+<sdf version="1.6">
+  <model name="aruco_10">
+    <static>true</static>
+    <link name="link">
+      <visual name="base_visual">
+        <pose>0 0 0.025 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.35 0.35 0.05</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.7 0.7 0.7 1</ambient>
+          <diffuse>0.7 0.7 0.7 1</diffuse>
+        </material>
+      </visual>
+      <collision name="base_collision">
+        <pose>0 0 0.025 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.35 0.35 0.05</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="pole_visual">
+        <pose>0 0 0.228500 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.357000</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.6 0.4 0.2 1</ambient>
+          <diffuse>0.6 0.4 0.2 1</diffuse>
+        </material>
+      </visual>
+      <collision name="pole_collision">
+        <pose>0 0 0.228500 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>0.015</radius>
+            <length>0.357000</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="head_visual">
+        <pose>0 0 0.496250 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.21 0.21 0.21</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <pbr>
+            <metal>
+              <albedo_map>model://aruco_10/materials/textures/marker_10.png</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="head_collision">
+        <pose>0 0 0.496250 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.21 0.21 0.21</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

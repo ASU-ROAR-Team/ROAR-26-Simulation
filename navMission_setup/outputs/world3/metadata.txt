@@ -1,19 +1,30 @@
 ROAR World Dataset
 ==================================================
-Run ID                  : world3
-Base world              : /home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/world_setup/initial_inputs/i_world/marsyard.world
-Base heightmap          : /home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/world_setup/initial_inputs/i_heightmap/marsyard_heightmap.npz
-Requested density       : 0.3
-Requested percentage    : 50.0
-Mapped collidable ratio : 0.5
-Rock spacing            : 1.0
+Dataset name            : world3
+Naming mode             : custom
+Base world              : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_world/marsyard.world
+Base heightmap          : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_heightmap/marsyard_heightmap.npz
+Requested density       : 0.012
+Requested collidable    : 0.9
+Rock spacing            : 0.7
 Minimum roughness       : 0.02
 Minimum terrain height  : 0.15
-Dead-end generation     : False
+Dead-end generation     : True
+Target rock count       : 28
+Rock seed               : 3
+Corridor width          : 1.4
+Corridor center X       : 0.0
+Dead-end count          : 4
 Heightmap resolution    : 0.25
 Gradient scale          : 150.0
 Stability scale         : 90.0
-Obstacle data           : /home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/outputs/world3/obstacle_data.npy
-Generated world         : /home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/outputs/world3/world3.world
-Generated heightmap     : /home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/outputs/world3/heightmap.npz
-Generated costmap       : /home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/outputs/world3/costmap.npz
+ArUco count             : 15
+ArUco ID start          : 1
+ArUco seed              : 103
+ArUco marker size       : 0.21
+Obstacle data           : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world3/obstacle_data.npy
+ArUco GT YAML           : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world3/aruco_data.yaml
+ArUco GT NPY            : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world3/aruco_data.npy
+Generated world         : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world3/world3.world
+Generated heightmap     : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world3/heightmap.npz
+Generated costmap       : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world3/costmap.npz

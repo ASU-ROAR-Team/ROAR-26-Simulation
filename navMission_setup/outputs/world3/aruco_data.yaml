@@ -1,0 +1,243 @@
+frame_id: map
+marker_count: 15
+markers:
+- id: 1
+  model: aruco_1
+  terrain_z: 1.661848093516678
+  model_origin_z: 1.661848093516678
+  marker_center_offset_z: 0.49625
+  position:
+    x: -12.200299999999999
+    y: 5.334199999999999
+    z: 1.5302258166666662
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.6346289004395522
+    w: 0.772817027974206
+  size_m: 0.21
+  frame_id: map
+- id: 2
+  model: aruco_2
+  terrain_z: 2.1046242306634486
+  model_origin_z: 2.1046242306634486
+  marker_center_offset_z: 0.49625
+  position:
+    x: -8.450299999999999
+    y: 4.334199999999999
+    z: 1.5960462333333334
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.9700976515047446
+    w: 0.24271494915842967
+  size_m: 0.21
+  frame_id: map
+- id: 3
+  model: aruco_3
+  terrain_z: 1.5320354699622367
+  model_origin_z: 1.5320354699622367
+  marker_center_offset_z: 0.49625
+  position:
+    x: -2.2002999999999986
+    y: 7.584199999999999
+    z: 1.6511333500000007
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.36161164662165096
+    w: 0.9323288137924185
+  size_m: 0.21
+  frame_id: map
+- id: 4
+  model: aruco_4
+  terrain_z: 0.7285616382712229
+  model_origin_z: 0.7285616382712229
+  marker_center_offset_z: 0.49625
+  position:
+    x: 3.7997000000000014
+    y: 7.834199999999999
+    z: 1.3419858499999997
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.7655113605350902
+    w: 0.6434223782957158
+  size_m: 0.21
+  frame_id: map
+- id: 5
+  model: aruco_5
+  terrain_z: 1.6013181432974273
+  model_origin_z: 1.6013181432974273
+  marker_center_offset_z: 0.49625
+  position:
+    x: 9.299700000000001
+    y: 6.584199999999999
+    z: 1.6584383833333343
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.7600327794458596
+    w: 0.6498847391405659
+  size_m: 0.21
+  frame_id: map
+- id: 6
+  model: aruco_6
+  terrain_z: 1.4437130319227287
+  model_origin_z: 1.4437130319227287
+  marker_center_offset_z: 0.49625
+  position:
+    x: -12.700299999999999
+    y: -0.16580000000000084
+    z: 1.506791666666667
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.28067003868861695
+    w: 0.9598043182766632
+  size_m: 0.21
+  frame_id: map
+- id: 7
+  model: aruco_7
+  terrain_z: 1.1572302056135357
+  model_origin_z: 1.1572302056135357
+  marker_center_offset_z: 0.49625
+  position:
+    x: -7.200299999999999
+    y: -0.16580000000000084
+    z: 1.6280333333333328
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.24970909688803333
+    w: 0.9683209008027054
+  size_m: 0.21
+  frame_id: map
+- id: 8
+  model: aruco_8
+  terrain_z: 1.3864700630801534
+  model_origin_z: 1.3864700630801534
+  marker_center_offset_z: 0.49625
+  position:
+    x: -2.7002999999999986
+    y: 0.08419999999999916
+    z: 1.453675
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.6341899459526789
+    w: 0.7731772839734353
+  size_m: 0.21
+  frame_id: map
+- id: 9
+  model: aruco_9
+  terrain_z: 1.3441536803618226
+  model_origin_z: 1.3441536803618226
+  marker_center_offset_z: 0.49625
+  position:
+    x: 4.299700000000001
+    y: 0.8341999999999992
+    z: 1.9219333333333333
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.9681473531658177
+    w: 0.2503811146193368
+  size_m: 0.21
+  frame_id: map
+- id: 10
+  model: aruco_10
+  terrain_z: 1.340042992915481
+  model_origin_z: 1.340042992915481
+  marker_center_offset_z: 0.49625
+  position:
+    x: 7.799700000000001
+    y: 1.5841999999999992
+    z: 1.5350765113630054
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: -0.04662719725536266
+    w: 0.9989123607584949
+  size_m: 0.21
+  frame_id: map
+- id: 11
+  model: aruco_11
+  terrain_z: 1.3937159903622818
+  model_origin_z: 1.3937159903622818
+  marker_center_offset_z: 0.49625
+  position:
+    x: -11.950299999999999
+    y: -6.415800000000001
+    z: 1.369591666666667
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.15623883489474147
+    w: 0.9877193055067486
+  size_m: 0.21
+  frame_id: map
+- id: 12
+  model: aruco_12
+  terrain_z: 1.4826590304374552
+  model_origin_z: 1.4826590304374552
+  marker_center_offset_z: 0.49625
+  position:
+    x: -6.950299999999999
+    y: -7.415800000000001
+    z: 1.4726916666666663
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.8426388681373841
+    w: 0.5384790969983405
+  size_m: 0.21
+  frame_id: map
+- id: 13
+  model: aruco_13
+  terrain_z: 1.2011651131137628
+  model_origin_z: 1.2011651131137628
+  marker_center_offset_z: 0.49625
+  position:
+    x: -1.7002999999999986
+    y: -6.915800000000001
+    z: 1.4724416666666669
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.40043938029665765
+    w: 0.91632325230108
+  size_m: 0.21
+  frame_id: map
+- id: 14
+  model: aruco_14
+  terrain_z: 1.2038183714798525
+  model_origin_z: 1.2038183714798525
+  marker_center_offset_z: 0.49625
+  position:
+    x: 3.7997000000000014
+    y: -6.415800000000001
+    z: 0.9476666666666675
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.9316835371186539
+    w: 0.3632709548836431
+  size_m: 0.21
+  frame_id: map
+- id: 15
+  model: aruco_15
+  terrain_z: 1.1189835045367305
+  model_origin_z: 1.1189835045367305
+  marker_center_offset_z: 0.49625
+  position:
+    x: 6.549700000000001
+    y: -6.915800000000001
+    z: 2.041033333333334
+  orientation:
+    x: 0.0
+    y: 0.0
+    z: 0.6480727617656056
+    w: 0.7615784237079597
+  size_m: 0.21
+  frame_id: map
