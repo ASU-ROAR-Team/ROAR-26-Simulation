@@ -64,13 +64,13 @@ class Constraints:
 # HELPER: MASK GENERATION
 # ====================================================
 
-def _compute_valid_map_mask(costmaps: list, boundary_margin_cells: int = 5) -> np.ndarray:
+def _compute_valid_map_mask(heightmaps: list, boundary_margin_cells: int = 5) -> np.ndarray:
     """Create a mask of traversable cells, removing padding and applying a safety margin."""
-    if not costmaps:
+    if not heightmaps:
         return None
-    h, w = costmaps[0].shape
+    h, w = heightmaps[0].shape
     universal_mask = np.ones((h, w), dtype=bool)
-    for cmap in costmaps:
+    for cmap in heightmaps:
         padding_mask = (cmap == -1) | np.isnan(cmap)
         labeled_array, _ = label(padding_mask)
         border_labels = set()
@@ -113,7 +113,7 @@ def enforce_valid_waypoints(waypoints: np.ndarray, valid_mask: np.ndarray) -> np
 # ====================================================
 
 class InputLoader:
-    """Loads rover configuration, constraints, and map data (costmaps + obstacles)."""
+    """Loads rover configuration, constraints, and map data (heightmaps + obstacles)."""
 
     @staticmethod
     def load(inputs_dir: str = "inputs") -> Tuple[list, np.ndarray, RoverConfig, Constraints, List[str]]:
@@ -454,8 +454,8 @@ class Exporter:
 def run_generator():
     start = time.time()
     logging.info("--- Starting Waypoint Generator Pipeline (No Difficulty Scoring) ---")
-    costmaps, master_obstacles, rover_cfg, constraints, map_names = InputLoader.load("inputs")
-    valid_mask = _compute_valid_map_mask(costmaps, constraints.boundary_margin_cells)
+    heightmaps, master_obstacles, rover_cfg, constraints, map_names = InputLoader.load("inputs")
+    valid_mask = _compute_valid_map_mask(heightmaps, constraints.boundary_margin_cells)
     sampler = CandidateSampler(master_obstacles.shape, constraints.boundary_margin_cells, constraints.seed)
     raw_candidates = sampler.sample_poisson(max(1.0, constraints.min_spacing_cells * 0.5), constraints.candidate_count)
     cand_filter = CandidateFilter(master_obstacles, valid_mask=valid_mask)
