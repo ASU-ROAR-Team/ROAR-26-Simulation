@@ -10,6 +10,11 @@ Workflow:
   5. Enforces minimum spacing between accepted rocks.
   6. Saves the final list with accurate ground-level Z coordinates and dimensions to .npy.
 
+Rock length/width/height are computed dynamically from each rock's mesh
+bounding box in rocks_ws/rock_N/meshes/rock_N.obj, rather than a hardcoded
+table -- so adding, removing, or replacing rock meshes is picked up
+automatically without touching this script.
+
 Because rocks are placed at their true Z, there is NO need for a physics
 air-drop or a 2-second physics settle in Gazebo — they are baked in place.
 """
@@ -153,36 +158,142 @@ class HeightmapSampler:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Rock Dimensions & Path Helpers
+# Rock Mesh Dimensions (dynamic, read from rocks_ws meshes)
 # ─────────────────────────────────────────────────────────────────────────────
 
-ROCK_DIMENSIONS = {
-    1: {"length": 1.774677, "width": 1.086138, "height": 2.260027},
-    2: {"length": 2.532143, "width": 0.882638, "height": 1.234263},
-    3: {"length": 0.651468, "width": 0.490462, "height": 0.644744},
-    4: {"length": 2.262609, "width": 0.801431, "height": 1.190260},
-    5: {"length": 0.076263, "width": 0.038018, "height": 0.063081},
-    6: {"length": 0.150958, "width": 0.083966, "height": 0.080710},
-    7: {"length": 0.103850, "width": 0.057152, "height": 0.097906},
-    8: {"length": 0.114572, "width": 0.036846, "height": 0.082195},
-    9: {"length": 0.110947, "width": 0.076731, "height": 0.112061},
-}
+# In-memory cache: {rocks_dir_str: {rock_id: {"length":..,"width":..,"height":..}}}
+# Populated once per rocks_dir the first time it's needed, so a run placing
+# hundreds of rock instances never re-parses the same .obj more than once.
+_ROCK_DIM_CACHE: dict[str, dict[int, dict[str, float]]] = {}
+
+
+def _read_obj_extents(obj_path: Path) -> tuple[float, float, float]:
+    """
+    Parses vertex lines ('v x y z ...') out of a Wavefront .obj file and
+    returns the axis-aligned bounding box size (length, width, height) in
+    the mesh's own X/Y/Z coordinate frame.
+
+    No mesh library dependency (trimesh, etc.) required -- this is a plain
+    line scan, which is all that's needed for a bounding box.
+    """
+    min_v = [math.inf, math.inf, math.inf]
+    max_v = [-math.inf, -math.inf, -math.inf]
+
+    with open(obj_path, "r", errors="ignore") as f:
+        for line in f:
+            if not line.startswith("v "):
+                continue
+            parts = line.split()
+            # 'v x y z' -- ignore any trailing w/color components
+            if len(parts) < 4:
+                continue
+            x, y, z = float(parts[1]), float(parts[2]), float(parts[3])
+            for i, val in enumerate((x, y, z)):
+                if val < min_v[i]:
+                    min_v[i] = val
+                if val > max_v[i]:
+                    max_v[i] = val
+
+    if any(math.isinf(v) for v in min_v):
+        raise ValueError(f"No vertex data found in {obj_path}")
+
+    length = max_v[0] - min_v[0]
+    width = max_v[1] - min_v[1]
+    height = max_v[2] - min_v[2]
+    return length, width, height
+
+
+def discover_rock_ids(rocks_dir: Path) -> list[int]:
+    """
+    Scans rocks_dir for rock_N/meshes/rock_N.obj folders and returns the
+    sorted list of valid integer rock IDs found. A rock_N folder without a
+    matching rock_N.obj mesh is skipped with a warning.
+    """
+    ids = []
+    for entry in sorted(rocks_dir.glob("rock_*")):
+        if not entry.is_dir():
+            continue
+        suffix = entry.name.split("_", 1)[-1]
+        if not suffix.isdigit():
+            continue
+        rock_id = int(suffix)
+        obj_path = entry / "meshes" / f"rock_{rock_id}.obj"
+        if obj_path.is_file():
+            ids.append(rock_id)
+        else:
+            print(f"  [Warning] {entry.name}: no meshes/rock_{rock_id}.obj found — skipping.")
+    return sorted(ids)
+
+
+def get_rock_dimensions(rocks_dir: Path) -> dict[int, dict[str, float]]:
+    """
+    Returns {rock_id: {"length","width","height"}} for every rock mesh found
+    in rocks_dir, computing bounding boxes on first use and caching per
+    rocks_dir for the remainder of this process.
+    """
+    key = str(rocks_dir.resolve())
+    if key in _ROCK_DIM_CACHE:
+        return _ROCK_DIM_CACHE[key]
+
+    dims: dict[int, dict[str, float]] = {}
+    for rock_id in discover_rock_ids(rocks_dir):
+        obj_path = rocks_dir / f"rock_{rock_id}" / "meshes" / f"rock_{rock_id}.obj"
+        try:
+            length, width, height = _read_obj_extents(obj_path)
+        except Exception as exc:
+            print(f"  [Warning] Could not read mesh for rock_{rock_id} ({obj_path}): {exc}")
+            continue
+        dims[rock_id] = {"length": length, "width": width, "height": height}
+
+    _ROCK_DIM_CACHE[key] = dims
+    return dims
+
+
+def classify_rock_sizes(
+    rock_dimensions: dict[int, dict[str, float]],
+    min_collidable_size_m: float = 0.15,
+) -> tuple[list[int], list[int]]:
+    """
+    Splits rock IDs into (collidable_ids, non_collidable_ids) based on their
+    measured mesh height -- a rock is considered collidable if its bounding
+    box height meets or exceeds min_collidable_size_m.
+
+    This replaces any assumption about folder naming/ordering (e.g. "first N
+    rocks are big") with an actual size measurement, so it keeps working
+    correctly even if rocks_ws is reordered, renamed, or gains new meshes.
+    """
+    collidable_ids = []
+    non_collidable_ids = []
+    for rock_id, dims in rock_dimensions.items():
+        if dims["height"] >= min_collidable_size_m:
+            collidable_ids.append(rock_id)
+        else:
+            non_collidable_ids.append(rock_id)
+    return sorted(collidable_ids), sorted(non_collidable_ids)
+
+
+def get_default_rocks_dir() -> Path | None:
+    """Locate rocks_ws relative to this script (world_setup/rocks_ws)."""
+    current_dir = Path(__file__).resolve().parent
+    world_setup_dir = current_dir.parent
+    candidate = world_setup_dir / "rocks_ws"
+    return candidate if candidate.is_dir() else None
 
 
 def get_heightmap_path():
     """Locate marsyard_heightmap.npz inside navMission_setup directory structure."""
     current_dir = Path(__file__).resolve().parent
     world_setup_dir = current_dir.parent
-    
+
     candidates = [
         current_dir / "inputs" / "marsyard_heightmap.npz",
         world_setup_dir / "initial_inputs" / "i_heightmap" / "marsyard_heightmap.npz",
     ]
-    
+
     for candidate in candidates:
         if candidate.is_file():
             return str(candidate)
-            
+
     return None
 
 
@@ -202,6 +313,8 @@ def generate_obstacle_data(
     deadends=False,
     output_file=None,
     heightmap_path=None,
+    rocks_dir=None,
+    min_collidable_size_m=0.15,
 ):
     """
     Generates rock obstacle configuration using the terrain heightmap and saves
@@ -215,6 +328,33 @@ def generate_obstacle_data(
             f"Could not locate valid heightmap file: {heightmap_path}\n"
             "Provide a valid .npz file via --heightmap parameter."
         )
+
+    if rocks_dir is None:
+        rocks_dir = get_default_rocks_dir()
+    if rocks_dir is None:
+        raise FileNotFoundError(
+            "Could not locate rocks_ws directory. Provide a valid path via --rocks-dir."
+        )
+    rocks_dir = Path(rocks_dir).resolve()
+    if not rocks_dir.is_dir():
+        raise FileNotFoundError(f"rocks_dir does not exist or is not a directory: {rocks_dir}")
+
+    rock_dimensions = get_rock_dimensions(rocks_dir)
+    if not rock_dimensions:
+        raise RuntimeError(
+            f"No valid rock meshes found under {rocks_dir} "
+            "(expected rocks_dir/rock_N/meshes/rock_N.obj)."
+        )
+    available_rock_ids = sorted(rock_dimensions.keys())
+    collidable_rock_ids, non_collidable_rock_ids = classify_rock_sizes(
+        rock_dimensions, min_collidable_size_m
+    )
+    if not collidable_rock_ids:
+        print(f"  [Warning] No rock mesh reaches min_collidable_size_m={min_collidable_size_m}m "
+              "-- all rocks will be non-collidable.")
+    if not non_collidable_rock_ids:
+        print(f"  [Warning] Every rock mesh meets/exceeds min_collidable_size_m={min_collidable_size_m}m "
+              "-- all rocks will be collidable.")
 
     sampler = HeightmapSampler(
         heightmap_path,
@@ -244,6 +384,13 @@ def generate_obstacle_data(
     print("=" * 60)
     print(f"  Target World         : {world_name}")
     print(f"  Heightmap            : {heightmap_path}")
+    print(f"  Rocks Dir            : {rocks_dir}")
+    print(f"  Rock IDs Discovered  : {available_rock_ids}")
+    for rid in available_rock_ids:
+        d = rock_dimensions[rid]
+        tag = "collidable" if rid in collidable_rock_ids else "non-collidable"
+        print(f"    rock_{rid}: L={d['length']:.3f} m  W={d['width']:.3f} m  H={d['height']:.3f} m  [{tag}]")
+    print(f"  Min Collidable Height: {min_collidable_size_m:.3f} m")
     print(f"  Terrain Bounds (sampling): X=[{x_min:.1f}, {x_max:.1f}]  Y=[{y_min:.1f}, {y_max:.1f}]")
     print(f"  Calculated Area      : {area:.1f} m²")
     print(f"  Rock Density         : {density} rocks/m²")
@@ -263,6 +410,9 @@ def generate_obstacle_data(
     if deadends:
         barrier_xs = [-3.0, -1.5, 0.0, 1.5, 3.0]
         num_barrier = min(num_rocks, len(barrier_xs))
+        # Barriers must actually block the rover, so always draw from the
+        # collidable (large) pool; fall back to any rock if none qualify.
+        barrier_pool = collidable_rock_ids or available_rock_ids
         for idx, bx in enumerate(barrier_xs[:num_barrier], 1):
             by = 2.5
             z = sampler.get_height(bx, by)
@@ -277,7 +427,7 @@ def generate_obstacle_data(
                 "roll": 0.0,
                 "pitch": 0.0,
                 "yaw": float(random.uniform(-math.pi, math.pi)),
-                "rock_id": int(random.randint(1, 5)),
+                "rock_id": int(random.choice(barrier_pool)),
                 "is_collidable": True,
                 "is_barrier": True,
                 "world_name": str(world_name),
@@ -319,6 +469,16 @@ def generate_obstacle_data(
             )
             continue
 
+        # collidable_ratio controls the probability of drawing from the big
+        # (collidable) rock pool vs the small (non-collidable) pool -- not an
+        # independent flag, so is_collidable always matches the mesh chosen.
+        if collidable_rock_ids and (not non_collidable_rock_ids or random.random() < collidable_ratio):
+            chosen_rock_id = random.choice(collidable_rock_ids)
+        elif non_collidable_rock_ids:
+            chosen_rock_id = random.choice(non_collidable_rock_ids)
+        else:
+            chosen_rock_id = random.choice(available_rock_ids)
+
         rock_entry = {
             "id": idx,
             "name": f"Rock_{idx}",
@@ -328,8 +488,8 @@ def generate_obstacle_data(
             "roll": 0.0,
             "pitch": 0.0,
             "yaw": float(random.uniform(-math.pi, math.pi)),
-            "rock_id": int(random.randint(1, 9)),
-            "is_collidable": bool(random.random() < collidable_ratio),
+            "rock_id": int(chosen_rock_id),
+            "is_collidable": chosen_rock_id in collidable_rock_ids,
             "is_barrier": False,
             "world_name": str(world_name),
         }
@@ -344,7 +504,7 @@ def generate_obstacle_data(
     for rock_item in obs_array:
         rock = rock_item.item() if hasattr(rock_item, "item") else rock_item
         rock["frame_id"] = "world"
-        dimensions = ROCK_DIMENSIONS[int(rock["rock_id"])]
+        dimensions = rock_dimensions[int(rock["rock_id"])]
         rock["length"] = float(dimensions["length"])
         rock["width"] = float(dimensions["width"])
         rock["height"] = float(dimensions["height"])
@@ -362,12 +522,16 @@ def generate_obstacle_data(
         f.write("Obstacle Data Summary\n")
         f.write(f"World Name      : {world_name}\n")
         f.write(f"Heightmap       : {heightmap_path}\n")
+        f.write(f"Rocks Dir       : {rocks_dir}\n")
         f.write(f"Total Placed    : {placed}\n")
         f.write(f"Density         : {density} rocks/m²\n")
         f.write(f"Collidable Ratio: {collidable_ratio}\n")
         f.write(f"Spacing Min     : {spacing} m\n")
         f.write(f"Min Terrain Z   : {min_terrain_height} m\n")
         f.write(f"Deadends        : {deadends}\n")
+        f.write(f"Min Collidable Height: {min_collidable_size_m} m\n")
+        f.write(f"Collidable Rock IDs: {collidable_rock_ids}\n")
+        f.write(f"Non-Collidable Rock IDs: {non_collidable_rock_ids}\n")
         f.write(f"Timestamped File: obstacle_data_{timestamp}.npy\n\n")
         for r in rock_data_list:
             f.write(
@@ -399,7 +563,13 @@ def parse_args():
     )
     parser.add_argument(
         "-c", "--collidable-ratio", type=float, default=0.5,
-        help="Ratio of rocks with collision enabled (default: 0.5)",
+        help="Probability of drawing a placed rock from the collidable (large) mesh "
+             "pool vs the non-collidable (small) pool (default: 0.5)",
+    )
+    parser.add_argument(
+        "--min-collidable-height", dest="min_collidable_size", type=float, default=0.15,
+        help="A rock mesh is classified collidable if its measured mesh height "
+             "meets or exceeds this, in metres (default: 0.15)",
     )
     parser.add_argument(
         "-s", "--spacing", type=float, default=1.0,
@@ -422,6 +592,10 @@ def parse_args():
         help="Override path to heightmap .npz",
     )
     parser.add_argument(
+        "--rocks-dir", type=str, default=None,
+        help="Override path to rocks_ws directory (default: world_setup/rocks_ws)",
+    )
+    parser.add_argument(
         "-o", "--output", type=str, default=None,
         help="Output .npy path",
     )
@@ -440,6 +614,8 @@ def main():
         deadends=args.deadends,
         output_file=args.output,
         heightmap_path=args.heightmap,
+        rocks_dir=args.rocks_dir,
+        min_collidable_size_m=args.min_collidable_size,
     )
 
 

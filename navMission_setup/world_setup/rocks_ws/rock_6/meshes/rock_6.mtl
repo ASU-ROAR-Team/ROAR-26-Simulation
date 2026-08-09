@@ -1,8 +1,12 @@
-newmtl namaqualand_stones_01
+# Blender 4.5.1 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl namaqualand_stones_01.002
+Ns 1000.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd ../../rock_5/meshes/rock_small_diffuse.jpg
+map_Kd /home/misara/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/world_setup/rocks_ws/rock_5/meshes/rock_small_diffuse.jpg
