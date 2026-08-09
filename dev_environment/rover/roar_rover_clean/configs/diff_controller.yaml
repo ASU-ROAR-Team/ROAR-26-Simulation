@@ -26,7 +26,7 @@ diff_drive_controller:
 
 
     wheel_separation: 0.61  # Distance between left and right wheels (meters)
-    wheel_radius: 0.1       # Radius of your wheels (meters)
+    wheel_radius: 0.125     # Radius of your wheels (meters)
 
     use_stamped_vel: false  # Allows standard Twist messages instead of TwistStamped
 

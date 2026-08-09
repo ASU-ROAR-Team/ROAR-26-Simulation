@@ -30,9 +30,11 @@ diff_drive_controller:
 
 
     wheel_separation: 0.61  # Distance between left and right wheels (meters)
-    wheel_radius: 0.1       # Radius of your wheels (meters)
+    wheel_radius: 0.125     # Radius of your wheels (meters)
 
     use_stamped_vel: false  # Allows standard Twist messages instead of TwistStamped
+
+    enable_odom_tf: false   # IESKF owns odom→base_footprint; prevent TF conflict
 
     linear.x.has_velocity_limits: true
     linear.x.max_velocity: 1.0
