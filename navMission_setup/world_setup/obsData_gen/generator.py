@@ -22,7 +22,6 @@ import os
 import math
 import random
 import argparse
-import datetime
 from pathlib import Path
 
 import numpy as np
@@ -358,6 +357,7 @@ def generate_obstacle_data(
     rocks_dir=None,
     min_collidable_size_m=0.15,
     balance_model_pools=True,
+    clean_previous_outputs=True,
 ):
     """
     Generates rock obstacle configuration using the terrain heightmap and saves
@@ -422,6 +422,14 @@ def generate_obstacle_data(
     else:
         output_dir = Path(output_file).resolve().parent
         output_dir.mkdir(parents=True, exist_ok=True)
+
+    if clean_previous_outputs:
+        removed = 0
+        for old in list(output_dir.glob("obstacle_data*.npy")) + list(output_dir.glob("*_info.txt")):
+            old.unlink()
+            removed += 1
+        if removed:
+            print(f"  Cleared {removed} previous output file(s) from {output_dir}")
 
     output_dir_str = str(output_dir)
 
@@ -574,12 +582,7 @@ def generate_obstacle_data(
         rock["height"] = float(dimensions["height"])
 
     np.save(output_file, obs_array)
-    print(f"  -> Primary file   : {output_file}")
-
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    timestamped_file = os.path.join(output_dir_str, f"obstacle_data_{timestamp}.npy")
-    np.save(timestamped_file, obs_array)
-    print(f"  -> Timestamped    : {timestamped_file}")
+    print(f"  -> Saved: {output_file}")
 
     info_file = os.path.splitext(output_file)[0] + "_info.txt"
     with open(info_file, "w") as f:
@@ -601,7 +604,7 @@ def generate_obstacle_data(
             tag = "collidable" if info["is_collidable"] else "non-collidable"
             f.write(f"  rock_id={rid:>2} [{tag:<14}] -> mesh=rock_{info['mesh_id']}  "
                     f"L={d['length']:.3f} m  W={d['width']:.3f} m  H={d['height']:.3f} m\n")
-        f.write(f"\nTimestamped File: obstacle_data_{timestamp}.npy\n\n")
+        f.write("\n")
         for r in rock_data_list:
             f.write(
                 f"[{r['id']:3d}] {r['name']:<12} | rock_id={r['rock_id']:>2} | mesh=rock_{r['mesh_id']} | "
@@ -670,6 +673,10 @@ def parse_args():
              "(by default the smaller pool is cycled so odd/even rock_id ranges match in count).",
     )
     parser.add_argument(
+        "--no-clean-outputs", dest="clean_previous_outputs", action="store_false", default=True,
+        help="Keep old obstacle_data*.npy / *_info.txt files instead of deleting them before this run.",
+    )
+    parser.add_argument(
         "-o", "--output", type=str, default=None,
         help="Output .npy path",
     )
@@ -691,6 +698,7 @@ def main():
         rocks_dir=args.rocks_dir,
         min_collidable_size_m=args.min_collidable_size,
         balance_model_pools=args.balance_model_pools,
+        clean_previous_outputs=args.clean_previous_outputs,
     )
 
 
