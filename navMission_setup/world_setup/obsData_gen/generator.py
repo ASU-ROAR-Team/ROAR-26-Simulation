@@ -607,11 +607,11 @@ def generate_obstacle_data(
         f.write("\n")
         for r in rock_data_list:
             f.write(
-                f"[{r['id']:3d}] {r['name']:<12} | rock_id={r['rock_id']:>2} | mesh=rock_{r['mesh_id']} | "
-                f"Pos: ({r['x']:7.3f}, {r['y']:7.3f}, {r['z']:6.3f}) | "
-                f"Size: L={r['length']:.3f} m | W={r['width']:.3f} m | H={r['height']:.3f} m | "
-                f"Collidable: {r['is_collidable']}\n"
+                f"[{r['id']:3d}] {r['name']:<12} | rock_id={r['rock_id']:>2} "
+                f"({'collidable' if r['is_collidable'] else 'non-collidable'}) | "
+                f"Pos: ({r['x']:7.3f}, {r['y']:7.3f}, {r['z']:6.3f}) | yaw={r['yaw']:6.3f}\n"
             )
+        f.write("\n(mesh + dimensions for each rock_id are in the Rock ID Map above, not repeated per-instance)\n")
 
     print("=" * 60)
     return output_file
