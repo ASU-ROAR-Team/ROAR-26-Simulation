@@ -14,6 +14,7 @@ from generator import generate_obstacle_data
 DEFAULT_INPUT_DIR = SCRIPT_DIR / "inputs"
 DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "outputs"
 INITIAL_INPUT_DIR = SCRIPT_DIR.parent / "initial_inputs" / "i_heightmap"
+DEFAULT_ROCKS_DIR = SCRIPT_DIR.parent / "rocks_ws"
 
 
 def find_heightmap_file(custom_path: Path | None) -> Path:
@@ -36,6 +37,21 @@ def find_heightmap_file(custom_path: Path | None) -> Path:
     )
 
 
+def find_rocks_dir(custom_path: Path | None) -> Path:
+    if custom_path:
+        resolved = custom_path.resolve()
+        if not resolved.is_dir():
+            raise FileNotFoundError(f"Specified rocks directory not found: {resolved}")
+        return resolved
+
+    if DEFAULT_ROCKS_DIR.is_dir():
+        return DEFAULT_ROCKS_DIR.resolve()
+
+    raise FileNotFoundError(
+        f"No rocks_ws directory was found at:\n{DEFAULT_ROCKS_DIR}"
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Generate obstacle data for one Mars Yard world (Standalone mode)."
@@ -43,17 +59,22 @@ def main() -> None:
 
     parser.add_argument("--world-name", default="marsyard.world")
     parser.add_argument("--heightmap", type=Path)
+    parser.add_argument("--rocks-dir", type=Path)
     parser.add_argument("--density", type=float, default=0.012)
     parser.add_argument("--collidable-ratio", "-c", type=float, default=0.5)
+    parser.add_argument("--min-collidable-size", type=float, default=0.15)
     parser.add_argument("--spacing", "-s", type=float, default=1.0)
     parser.add_argument("--min-roughness", type=float, default=0.02)
     parser.add_argument("--min-terrain-height", type=float, default=0.15)
     parser.add_argument("--deadends", action="store_true")
+    parser.add_argument("--no-balance-model-pools", dest="balance_model_pools",
+                         action="store_false", default=True)
     parser.add_argument("--output", "-o", type=Path)
 
     args = parser.parse_args()
 
     heightmap = find_heightmap_file(args.heightmap)
+    rocks_dir = find_rocks_dir(args.rocks_dir)
 
     output = (
         args.output.resolve()
@@ -66,6 +87,7 @@ def main() -> None:
     print("=" * 70)
     print("Obstacle Data Generation (Standalone)")
     print(f"Heightmap : {heightmap}")
+    print(f"Rocks Dir : {rocks_dir}")
     print(f"Output    : {output}")
     print("=" * 70)
 
@@ -79,6 +101,9 @@ def main() -> None:
         deadends=args.deadends,
         output_file=str(output),
         heightmap_path=str(heightmap),
+        rocks_dir=str(rocks_dir),
+        min_collidable_size_m=args.min_collidable_size,
+        balance_model_pools=args.balance_model_pools,
     )
 
 
