@@ -3,6 +3,7 @@
   <world name="rover_world">
     
     <!-- ESSENTIAL GAZEBO PLUGINS -->
+        <plugin filename="ignition-gazebo-contact-system" name="ignition::gazebo::systems::Contact"/>
     <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics"/>
     <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands"/>
     <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster"/>

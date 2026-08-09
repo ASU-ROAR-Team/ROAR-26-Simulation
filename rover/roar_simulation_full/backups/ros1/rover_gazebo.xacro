@@ -97,6 +97,7 @@
         </camera>
         <plugin name="camera_plugin" filename="libgazebo_ros_depth_camera.so">
           <always_on>true</always_on>
+        <topic>/rover_contact</topic>
           <update_rate>0.0</update_rate>
           <frameName>camera_depth_optical_frame</frameName>
           <pointCloudCutoff>0.3</pointCloudCutoff>
@@ -138,6 +139,26 @@
       </plugin>
     </gazebo>
 
+    <xacro:contact_sensor_gazebo name="base_link" />
+    <xacro:contact_sensor_gazebo name="wheel_rhs_front" />
+    <xacro:contact_sensor_gazebo name="wheel_rhs_mid" />
+    <xacro:contact_sensor_gazebo name="wheel_rhs_rear" />
+    <xacro:contact_sensor_gazebo name="wheel_lhs_front" />
+    <xacro:contact_sensor_gazebo name="wheel_lhs_mid" />
+    <xacro:contact_sensor_gazebo name="wheel_lhs_rear" />
+  </xacro:macro>
+
+  <xacro:macro name="contact_sensor_gazebo" params="name">
+    <gazebo reference="${name}">
+      <sensor name="${name}_contact" type="contact">
+        <always_on>true</always_on>
+        <topic>/rover_contact</topic>
+        <update_rate>50</update_rate>
+        <contact>
+          <collision>${name}_collision</collision>
+        </contact>
+      </sensor>
+    </gazebo>
   </xacro:macro>
 
 </robot>

@@ -89,7 +89,7 @@ if [ -f "${SCRIPT_DIR}/install/setup.bash" ]; then
     source "${SCRIPT_DIR}/install/setup.bash"
 else
     echo "[WARNING] Workspace not built yet. Building now..."
-    (cd "${SCRIPT_DIR}" && colcon build --paths rover/*)
+    (cd "${SCRIPT_DIR}" && colcon build --parallel-workers 1 --executor sequential --paths rover/*)
     source "${SCRIPT_DIR}/install/setup.bash"
 fi
 

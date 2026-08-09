@@ -21,6 +21,7 @@ find_package(cv_bridge REQUIRED)
 
 # Install Python scripts
 install(PROGRAMS
+  src/collision_alarm_node.py
   src/teleop.py
   src/ground_truth_tf_broadcaster.py
   src/zed_degradation_node.py

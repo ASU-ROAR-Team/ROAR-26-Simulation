@@ -123,8 +123,24 @@ def generate_launch_description():
             '/zed2i/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
             '/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
             '/world/rover_world/pose/info@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
+                        '/world/rover_world/model/roar_rover/link/base_footprint/sensor/base_link_contact/contact@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
+            '/world/rover_world/model/roar_rover/link/wheel_lhs_front/sensor/wheel_lhs_front_contact/contact@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
+            '/world/rover_world/model/roar_rover/link/wheel_lhs_mid/sensor/wheel_lhs_mid_contact/contact@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
+            '/world/rover_world/model/roar_rover/link/wheel_lhs_rear/sensor/wheel_lhs_rear_contact/contact@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
+            '/world/rover_world/model/roar_rover/link/wheel_rhs_front/sensor/wheel_rhs_front_contact/contact@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
+            '/world/rover_world/model/roar_rover/link/wheel_rhs_mid/sensor/wheel_rhs_mid_contact/contact@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
+            '/world/rover_world/model/roar_rover/link/wheel_rhs_rear/sensor/wheel_rhs_rear_contact/contact@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
         ],
         output='screen',
+                remappings=[
+            ('/world/rover_world/model/roar_rover/link/base_footprint/sensor/base_link_contact/contact', '/rover_contact'),
+            ('/world/rover_world/model/roar_rover/link/wheel_lhs_front/sensor/wheel_lhs_front_contact/contact', '/rover_contact'),
+            ('/world/rover_world/model/roar_rover/link/wheel_lhs_mid/sensor/wheel_lhs_mid_contact/contact', '/rover_contact'),
+            ('/world/rover_world/model/roar_rover/link/wheel_lhs_rear/sensor/wheel_lhs_rear_contact/contact', '/rover_contact'),
+            ('/world/rover_world/model/roar_rover/link/wheel_rhs_front/sensor/wheel_rhs_front_contact/contact', '/rover_contact'),
+            ('/world/rover_world/model/roar_rover/link/wheel_rhs_mid/sensor/wheel_rhs_mid_contact/contact', '/rover_contact'),
+            ('/world/rover_world/model/roar_rover/link/wheel_rhs_rear/sensor/wheel_rhs_rear_contact/contact', '/rover_contact'),
+        ],
         parameters=[{'use_sim_time': use_sim_time}]
     )
 
@@ -170,6 +186,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    node_collision_alarm = Node(
+        package='roar_simulation_full',
+        executable='collision_alarm_node.py',
+        name='collision_alarm_node',
+        output='screen'
+    )
+
     return LaunchDescription([
         use_sim_time_arg,
         start_rviz_arg,
@@ -185,6 +208,7 @@ def generate_launch_description():
         spawn_sun,
         node_encoder_sim,
         node_zed_noise,
+        node_collision_alarm,
 
         # Wait for spawn → wait 12 s → start joint state broadcaster
         RegisterEventHandler(

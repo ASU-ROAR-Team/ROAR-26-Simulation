@@ -21,6 +21,7 @@ find_package(cv_bridge REQUIRED)
 
 # Install Python scripts
 install(PROGRAMS
+  src/collision_alarm_node.py
   src/teleop.py
   src/clean_camera_node.py
   DESTINATION lib/${PROJECT_NAME}

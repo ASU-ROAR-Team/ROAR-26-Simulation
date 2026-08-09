@@ -6,17 +6,29 @@
       <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
         <parameters>${controllers_yaml}</parameters>
       </plugin>
-    </gazebo>
-    <gazebo reference="base_link">
-      <sensor name="chassis_contact" type="contact">
-        <contact>
-          <collision>base_footprint_fixed_joint_lump__base_link_collision</collision>
-        </contact>
-        <update_rate>10</update_rate>
-        <topic>/chassis/contact_sensors</topic>
-      </sensor>
+
     </gazebo>
 
+    <xacro:contact_sensor_gazebo name="base_link" />
+    <xacro:contact_sensor_gazebo name="wheel_rhs_front" />
+    <xacro:contact_sensor_gazebo name="wheel_rhs_mid" />
+    <xacro:contact_sensor_gazebo name="wheel_rhs_rear" />
+    <xacro:contact_sensor_gazebo name="wheel_lhs_front" />
+    <xacro:contact_sensor_gazebo name="wheel_lhs_mid" />
+    <xacro:contact_sensor_gazebo name="wheel_lhs_rear" />
+  </xacro:macro>
+
+  <xacro:macro name="contact_sensor_gazebo" params="name">
+    <gazebo reference="${name}">
+      <sensor name="${name}_contact" type="contact">
+        <always_on>true</always_on>
+        <topic>/rover_contact</topic>
+        <update_rate>50</update_rate>
+        <contact>
+          <collision>${name}_collision</collision>
+        </contact>
+      </sensor>
+    </gazebo>
   </xacro:macro>
 
   <xacro:macro name="depth_camera_gazebo" params="name">
@@ -55,7 +67,6 @@
       </sensor>
       
     </gazebo>
-
   </xacro:macro>
 
   <xacro:macro name="bno055_imu_gazebo" params="name">
@@ -168,7 +179,6 @@
       </sensor>
 
     </gazebo>
-
   </xacro:macro>
   
 </robot>
