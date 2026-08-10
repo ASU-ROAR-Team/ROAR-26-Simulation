@@ -22,7 +22,6 @@ import os
 import math
 import random
 import argparse
-import datetime
 from pathlib import Path
 
 import numpy as np
@@ -272,6 +271,48 @@ def classify_rock_sizes(
     return sorted(collidable_ids), sorted(non_collidable_ids)
 
 
+def build_model_id_map(
+    collidable_mesh_ids: list,
+    non_collidable_mesh_ids: list,
+    balance_pools: bool = True,
+) -> dict:
+    """
+    Builds the canonical 'rock_id' -> mesh mapping that gets exported and
+    consumed downstream (including the mission-scoring package that
+    blacklists non-collidable rocks). This is a SEPARATE id space from the
+    rocks_ws folder numbers (mesh_id) -- rock_id is what other packages
+    should read, mesh_id only says which .obj to render for that rock_id.
+
+    Convention:  ODD rock_id  -> collidable
+                 EVEN rock_id -> non-collidable
+    So collidability can be checked with a single test, no lookup table
+    required downstream: `is_collidable = (rock_id % 2 == 1)`.
+
+    If balance_pools is True and the collidable/non-collidable mesh counts
+    differ, the smaller pool's meshes are cycled/reused until both pools are
+    the same length, so the odd and even id ranges come out equal-sized
+    instead of one side being a single mesh reused far more than the other.
+    """
+    collidable = list(collidable_mesh_ids)
+    non_collidable = list(non_collidable_mesh_ids)
+
+    if balance_pools and collidable and non_collidable:
+        target = max(len(collidable), len(non_collidable))
+        if len(collidable) < target:
+            collidable = [collidable[i % len(collidable_mesh_ids)] for i in range(target)]
+        if len(non_collidable) < target:
+            non_collidable = [non_collidable[i % len(non_collidable_mesh_ids)] for i in range(target)]
+
+    model_map = {}
+    for i, mesh_id in enumerate(collidable):
+        rock_id = 2 * i + 1  # 1, 3, 5, ...
+        model_map[rock_id] = {"mesh_id": mesh_id, "is_collidable": True}
+    for i, mesh_id in enumerate(non_collidable):
+        rock_id = 2 * i + 2  # 2, 4, 6, ...
+        model_map[rock_id] = {"mesh_id": mesh_id, "is_collidable": False}
+    return model_map
+
+
 def get_default_rocks_dir() -> Path | None:
     """Locate rocks_ws relative to this script (world_setup/rocks_ws)."""
     current_dir = Path(__file__).resolve().parent
@@ -315,6 +356,8 @@ def generate_obstacle_data(
     heightmap_path=None,
     rocks_dir=None,
     min_collidable_size_m=0.15,
+    balance_model_pools=True,
+    clean_previous_outputs=True,
 ):
     """
     Generates rock obstacle configuration using the terrain heightmap and saves
@@ -356,6 +399,12 @@ def generate_obstacle_data(
         print(f"  [Warning] Every rock mesh meets/exceeds min_collidable_size_m={min_collidable_size_m}m "
               "-- all rocks will be collidable.")
 
+    model_map = build_model_id_map(
+        collidable_rock_ids, non_collidable_rock_ids, balance_pools=balance_model_pools
+    )
+    collidable_model_ids = sorted(rid for rid, info in model_map.items() if info["is_collidable"])
+    non_collidable_model_ids = sorted(rid for rid, info in model_map.items() if not info["is_collidable"])
+
     sampler = HeightmapSampler(
         heightmap_path,
         min_terrain_height=min_terrain_height,
@@ -374,6 +423,14 @@ def generate_obstacle_data(
         output_dir = Path(output_file).resolve().parent
         output_dir.mkdir(parents=True, exist_ok=True)
 
+    if clean_previous_outputs:
+        removed = 0
+        for old in list(output_dir.glob("obstacle_data*.npy")) + list(output_dir.glob("*_info.txt")):
+            old.unlink()
+            removed += 1
+        if removed:
+            print(f"  Cleared {removed} previous output file(s) from {output_dir}")
+
     output_dir_str = str(output_dir)
 
     area = (x_max - x_min) * (y_max - y_min)
@@ -391,6 +448,13 @@ def generate_obstacle_data(
         tag = "collidable" if rid in collidable_rock_ids else "non-collidable"
         print(f"    rock_{rid}: L={d['length']:.3f} m  W={d['width']:.3f} m  H={d['height']:.3f} m  [{tag}]")
     print(f"  Min Collidable Height: {min_collidable_size_m:.3f} m")
+    print(f"  Rock ID Map (odd=collidable, even=non-collidable) -- this is the id downstream packages should read:")
+    for rid in sorted(model_map.keys()):
+        info = model_map[rid]
+        d = rock_dimensions[info["mesh_id"]]
+        tag = "collidable" if info["is_collidable"] else "non-collidable"
+        print(f"    rock_id={rid:>2} [{tag:<14}] -> mesh=rock_{info['mesh_id']}  "
+              f"L={d['length']:.3f} m  W={d['width']:.3f} m  H={d['height']:.3f} m")
     print(f"  Terrain Bounds (sampling): X=[{x_min:.1f}, {x_max:.1f}]  Y=[{y_min:.1f}, {y_max:.1f}]")
     print(f"  Calculated Area      : {area:.1f} m²")
     print(f"  Rock Density         : {density} rocks/m²")
@@ -411,13 +475,15 @@ def generate_obstacle_data(
         barrier_xs = [-3.0, -1.5, 0.0, 1.5, 3.0]
         num_barrier = min(num_rocks, len(barrier_xs))
         # Barriers must actually block the rover, so always draw from the
-        # collidable (large) pool; fall back to any rock if none qualify.
-        barrier_pool = collidable_rock_ids or available_rock_ids
+        # collidable (odd rock_id) pool; fall back to any rock if none qualify.
+        barrier_pool = collidable_model_ids or list(model_map.keys())
         for idx, bx in enumerate(barrier_xs[:num_barrier], 1):
             by = 2.5
             z = sampler.get_height(bx, by)
             if math.isnan(z):
                 z = min_terrain_height
+            chosen_model_id = random.choice(barrier_pool)
+            mesh_id = model_map[chosen_model_id]["mesh_id"]
             rock_entry = {
                 "id": idx,
                 "name": f"Rock_{idx}",
@@ -427,7 +493,8 @@ def generate_obstacle_data(
                 "roll": 0.0,
                 "pitch": 0.0,
                 "yaw": float(random.uniform(-math.pi, math.pi)),
-                "rock_id": int(random.choice(barrier_pool)),
+                "rock_id": int(chosen_model_id),
+                "mesh_id": int(mesh_id),
                 "is_collidable": True,
                 "is_barrier": True,
                 "world_name": str(world_name),
@@ -469,15 +536,19 @@ def generate_obstacle_data(
             )
             continue
 
-        # collidable_ratio controls the probability of drawing from the big
-        # (collidable) rock pool vs the small (non-collidable) pool -- not an
-        # independent flag, so is_collidable always matches the mesh chosen.
-        if collidable_rock_ids and (not non_collidable_rock_ids or random.random() < collidable_ratio):
-            chosen_rock_id = random.choice(collidable_rock_ids)
-        elif non_collidable_rock_ids:
-            chosen_rock_id = random.choice(non_collidable_rock_ids)
+        # collidable_ratio controls the probability of drawing from the
+        # collidable (odd rock_id) pool vs the non-collidable (even rock_id)
+        # pool. rock_id is the field downstream packages should read --
+        # collidability is fully determined by its parity, no lookup needed.
+        if collidable_model_ids and (not non_collidable_model_ids or random.random() < collidable_ratio):
+            chosen_model_id = random.choice(collidable_model_ids)
+        elif non_collidable_model_ids:
+            chosen_model_id = random.choice(non_collidable_model_ids)
         else:
-            chosen_rock_id = random.choice(available_rock_ids)
+            chosen_model_id = random.choice(list(model_map.keys()))
+
+        mesh_id = model_map[chosen_model_id]["mesh_id"]
+        is_collidable = model_map[chosen_model_id]["is_collidable"]
 
         rock_entry = {
             "id": idx,
@@ -488,8 +559,9 @@ def generate_obstacle_data(
             "roll": 0.0,
             "pitch": 0.0,
             "yaw": float(random.uniform(-math.pi, math.pi)),
-            "rock_id": int(chosen_rock_id),
-            "is_collidable": chosen_rock_id in collidable_rock_ids,
+            "rock_id": int(chosen_model_id),
+            "mesh_id": int(mesh_id),
+            "is_collidable": is_collidable,
             "is_barrier": False,
             "world_name": str(world_name),
         }
@@ -504,18 +576,13 @@ def generate_obstacle_data(
     for rock_item in obs_array:
         rock = rock_item.item() if hasattr(rock_item, "item") else rock_item
         rock["frame_id"] = "world"
-        dimensions = rock_dimensions[int(rock["rock_id"])]
+        dimensions = rock_dimensions[int(rock["mesh_id"])]
         rock["length"] = float(dimensions["length"])
         rock["width"] = float(dimensions["width"])
         rock["height"] = float(dimensions["height"])
 
     np.save(output_file, obs_array)
-    print(f"  -> Primary file   : {output_file}")
-
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    timestamped_file = os.path.join(output_dir_str, f"obstacle_data_{timestamp}.npy")
-    np.save(timestamped_file, obs_array)
-    print(f"  -> Timestamped    : {timestamped_file}")
+    print(f"  -> Saved: {output_file}")
 
     info_file = os.path.splitext(output_file)[0] + "_info.txt"
     with open(info_file, "w") as f:
@@ -529,17 +596,22 @@ def generate_obstacle_data(
         f.write(f"Spacing Min     : {spacing} m\n")
         f.write(f"Min Terrain Z   : {min_terrain_height} m\n")
         f.write(f"Deadends        : {deadends}\n")
-        f.write(f"Min Collidable Height: {min_collidable_size_m} m\n")
-        f.write(f"Collidable Rock IDs: {collidable_rock_ids}\n")
-        f.write(f"Non-Collidable Rock IDs: {non_collidable_rock_ids}\n")
-        f.write(f"Timestamped File: obstacle_data_{timestamp}.npy\n\n")
+        f.write(f"Min Collidable Height: {min_collidable_size_m} m\n\n")
+        f.write("Rock ID Map (odd=collidable, even=non-collidable) -- read this for blacklisting:\n")
+        for rid in sorted(model_map.keys()):
+            info = model_map[rid]
+            d = rock_dimensions[info["mesh_id"]]
+            tag = "collidable" if info["is_collidable"] else "non-collidable"
+            f.write(f"  rock_id={rid:>2} [{tag:<14}] -> mesh=rock_{info['mesh_id']}  "
+                    f"L={d['length']:.3f} m  W={d['width']:.3f} m  H={d['height']:.3f} m\n")
+        f.write("\n")
         for r in rock_data_list:
             f.write(
-                f"[{r['id']:3d}] {r['name']:<12} | Model #{r['rock_id']} | "
-                f"Pos: ({r['x']:7.3f}, {r['y']:7.3f}, {r['z']:6.3f}) | "
-                f"Size: L={r['length']:.3f} m | W={r['width']:.3f} m | H={r['height']:.3f} m | "
-                f"Collidable: {r['is_collidable']}\n"
+                f"[{r['id']:3d}] {r['name']:<12} | rock_id={r['rock_id']:>2} "
+                f"({'collidable' if r['is_collidable'] else 'non-collidable'}) | "
+                f"Pos: ({r['x']:7.3f}, {r['y']:7.3f}, {r['z']:6.3f}) | yaw={r['yaw']:6.3f}\n"
             )
+        f.write("\n(mesh + dimensions for each rock_id are in the Rock ID Map above, not repeated per-instance)\n")
 
     print("=" * 60)
     return output_file
@@ -596,6 +668,15 @@ def parse_args():
         help="Override path to rocks_ws directory (default: world_setup/rocks_ws)",
     )
     parser.add_argument(
+        "--no-balance-model-pools", dest="balance_model_pools", action="store_false", default=True,
+        help="Disable reusing meshes to equalize collidable/non-collidable pool sizes "
+             "(by default the smaller pool is cycled so odd/even rock_id ranges match in count).",
+    )
+    parser.add_argument(
+        "--no-clean-outputs", dest="clean_previous_outputs", action="store_false", default=True,
+        help="Keep old obstacle_data*.npy / *_info.txt files instead of deleting them before this run.",
+    )
+    parser.add_argument(
         "-o", "--output", type=str, default=None,
         help="Output .npy path",
     )
@@ -616,6 +697,8 @@ def main():
         heightmap_path=args.heightmap,
         rocks_dir=args.rocks_dir,
         min_collidable_size_m=args.min_collidable_size,
+        balance_model_pools=args.balance_model_pools,
+        clean_previous_outputs=args.clean_previous_outputs,
     )
 
 

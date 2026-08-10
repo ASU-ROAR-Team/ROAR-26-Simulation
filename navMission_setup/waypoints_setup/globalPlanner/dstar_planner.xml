@@ -1,0 +1,7 @@
+<library path="dstar_planner">
+  <class name="nav2_dstar_planner/DStarPlanner" type="nav2_dstar_planner::DStarPlanner" base_class_type="nav2_core::GlobalPlanner">
+    <description>
+      D* Lite path planning plugin for Nav2.
+    </description>
+  </class>
+</library>

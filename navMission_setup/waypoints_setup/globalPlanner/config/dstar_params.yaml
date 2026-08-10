@@ -1,0 +1,26 @@
+dstar_global_planner:
+  ros__parameters:
+    lethal_cost_threshold: 253
+    unknown_traversal_cost: 2.0
+    allow_unknown: true
+    heuristic_weight: 1.0
+    corridor_penalty_scale: 1.0
+    enable_clearance_cost: true
+    clearance_cost_weight: 5.0
+    enable_clearance_field: false
+    clearance_field_weight: 2.0
+    enable_incremental_updates: true
+    enable_slope_cost: true
+    slope_cost_weight: 3.0
+    max_traversable_slope_deg: 25.0
+    enable_height_diff_cost: true
+    max_traversable_height_diff: 0.30
+    occupancy_heightmap_scale: 0.015
+    enable_terrain_costmap: true
+    terrain_costmap_weight: 2.0
+    map_topic: "/map"
+    heightmap_topic: "/active_map/heightmap"
+    heightmap_range_topic: "/active_map/heightmap_range"
+    terrain_costmap_topic: "/terrain_costmap"
+    debug_publish_costmap: true
+    debug_publish_potential: true
