@@ -621,7 +621,7 @@ def generate_heightmap_for_world(
     world_path: str,
     output_path: str,
     *,
-    resolution: float = 0.25,
+    resolution: float = 0.1,
     model_paths: Sequence[str] = (),
     package_paths: Optional[Dict[str, str]] = None,
     prefer: str = "collision",
@@ -655,7 +655,7 @@ def generate_heightmap_for_world(
         key=lambda item: (item[1][1] - item[1][0]) * (item[1][3] - item[1][2]),
     )
     map_bounds = base_bounds_3d[:4]
-    base_triangles = _decimate_triangles(_source_world_triangles(base_source), maximum=20000)
+    base_triangles = _decimate_triangles(_source_world_triangles(base_source), maximum=90000)
     xs, ys, grid = rasterize_triangles(base_triangles, resolution, bounds=map_bounds)
 
     overlay_count = 0
@@ -702,7 +702,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser.add_argument("world", help="path to the generated .world file")
     parser.add_argument("-o", "--output", required=True, help="output .npz path")
     parser.add_argument("--preview", help="optional grayscale preview PNG path")
-    parser.add_argument("--resolution", type=float, default=0.25, help="grid resolution in metres (default: 0.25)")
+    parser.add_argument("--resolution", type=float, default=0.1, help="grid resolution in metres (default: 0.1)")
     parser.add_argument("--prefer", choices=("collision", "visual"), default="collision")
     parser.add_argument(
         "--no-visual-fallback",

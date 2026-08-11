@@ -53,7 +53,7 @@ def main() -> None:
     parser.add_argument("--input-world", "-i", type=Path)
     parser.add_argument("--output", "-o", type=Path)
     parser.add_argument("--preview", type=Path)
-    parser.add_argument("--resolution", type=float, default=0.25)
+    parser.add_argument("--resolution", type=float, default=0.1)
 
     args = parser.parse_args()
 

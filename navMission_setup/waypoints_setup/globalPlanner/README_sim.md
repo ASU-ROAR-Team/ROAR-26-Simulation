@@ -166,7 +166,7 @@ Example:
 
 ```bash
 ros2 launch dstar_navigation offline_planner.launch.py \
-    waypoints_file:=wp00_191.csv \
+    waypoints_file:=wp00.csv \
     heightmap_file:=heightmap00.npz
 ```
 
