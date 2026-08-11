@@ -75,7 +75,7 @@ def request_dataset_name(
             cli_index,
             "Dataset index",
         )
-        return f"world Data_{safe_index}", "index"
+        return f"world_Data_{safe_index}", "index"
 
     if cli_name is not None:
         safe_name = sanitize_name(
@@ -87,7 +87,7 @@ def request_dataset_name(
     while True:
         print()
         print("Choose dataset naming mode:")
-        print("1) Enter an index after world Data_")
+        print("1) Enter an index after world_Data_")
         print("2) Enter a complete custom name")
 
         choice = input("Select [1/2]: ").strip()
@@ -104,7 +104,7 @@ def request_dataset_name(
                         "Dataset index",
                     )
                     return (
-                        f"world Data_{safe_index}",
+                        f"world_Data_{safe_index}",
                         "index",
                     )
 
@@ -155,8 +155,8 @@ def main() -> None:
         "--index",
         type=str,
         help=(
-            "Index appended after world Data_. "
-            "Example: --index 007 creates world Data_007."
+            "Index appended after world_Data_. "
+            "Example: --index 007 creates world_Data_007."
         ),
     )
 

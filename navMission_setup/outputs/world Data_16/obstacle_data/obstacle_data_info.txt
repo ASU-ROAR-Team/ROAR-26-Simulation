@@ -1,0 +1,34 @@
+Obstacle Data Summary
+World Name      : marsyard.world
+Heightmap       : /home/saif/Desktop/ROAR/simulation_ws/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_heightmap/heightmap.npz
+Rocks Dir       : /home/saif/Desktop/ROAR/simulation_ws/ROAR-26-Simulation/navMission_setup/world_setup/rocks_ws
+Total Placed    : 8
+Density         : 0.012 rocks/m²
+Collidable Ratio: 0.5
+Spacing Min     : 1.0 m
+Min Terrain Z   : 0.15 m
+Deadends        : False
+Min Collidable Height: 0.15 m
+
+Rock ID Map (odd=collidable, even=non-collidable) -- read this for blacklisting:
+  rock_id= 1 [collidable    ] -> mesh=rock_1  L=0.471 m  W=0.289 m  H=0.600 m
+  rock_id= 2 [non-collidable] -> mesh=rock_6  L=0.151 m  W=0.084 m  H=0.081 m
+  rock_id= 3 [collidable    ] -> mesh=rock_2  L=1.029 m  W=0.359 m  H=0.502 m
+  rock_id= 4 [non-collidable] -> mesh=rock_7  L=0.104 m  W=0.057 m  H=0.098 m
+  rock_id= 5 [collidable    ] -> mesh=rock_3  L=0.651 m  W=0.490 m  H=0.645 m
+  rock_id= 6 [non-collidable] -> mesh=rock_8  L=0.115 m  W=0.037 m  H=0.082 m
+  rock_id= 7 [collidable    ] -> mesh=rock_4  L=0.484 m  W=0.171 m  H=0.254 m
+  rock_id= 8 [non-collidable] -> mesh=rock_9  L=0.111 m  W=0.077 m  H=0.112 m
+  rock_id= 9 [collidable    ] -> mesh=rock_5  L=0.311 m  W=0.155 m  H=0.257 m
+  rock_id=10 [non-collidable] -> mesh=rock_6  L=0.151 m  W=0.084 m  H=0.081 m
+
+[  1] Rock_1       | rock_id= 5 (collidable) | Pos: (  1.929,  -2.125,  1.403) | yaw= 1.707
+[  2] Rock_2       | rock_id= 9 (collidable) | Pos: ( -0.843,  -6.981,  1.276) | yaw= 1.841
+[  3] Rock_3       | rock_id=10 (non-collidable) | Pos: ( -1.906,   5.284,  0.970) | yaw= 1.104
+[  4] Rock_4       | rock_id= 3 (collidable) | Pos: (  5.116,   3.745,  1.038) | yaw=-0.024
+[  5] Rock_5       | rock_id= 1 (collidable) | Pos: (  8.248,   3.037,  1.068) | yaw= 1.581
+[  6] Rock_6       | rock_id= 3 (collidable) | Pos: ( -3.288,  -1.962,  0.939) | yaw= 0.145
+[  7] Rock_7       | rock_id= 6 (non-collidable) | Pos: ( -3.309,   5.072,  1.926) | yaw= 2.418
+[  8] Rock_8       | rock_id= 1 (collidable) | Pos: (  3.584,  -8.932,  1.092) | yaw=-2.572
+
+(mesh + dimensions for each rock_id are in the Rock ID Map above, not repeated per-instance)

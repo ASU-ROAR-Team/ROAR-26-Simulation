@@ -1,0 +1,2879 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.7">
+  <world name="marsyard">
+    <gravity>0 0 -9.81</gravity>
+    <physics name="dart_physics" type="ignored">
+      <max_step_size>0.003</max_step_size>
+      <real_time_update_rate>333</real_time_update_rate>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics" />
+    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands" />
+    <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster" />
+    <plugin filename="ignition-gazebo-contact-system" name="ignition::gazebo::systems::Contact" />
+    <scene>
+      <ambient>0.95 0.95 0.95 1</ambient>
+      <background>0.70 0.70 0.70 1</background>
+      <shadows>false</shadows>
+    </scene>
+    <light type="directional" name="sun">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 30 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.15 0.15 0.15 1</specular>
+      <direction>-0.35 0.1 -0.93</direction>
+    </light>
+    <include>
+      <uri>model://mars_yard</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+    <model name="Rock_1">
+      <static>true</static>
+      <pose>2.4257 10.3441 1.6320 0.0000 0.0000 -0.1570</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_2">
+      <static>true</static>
+      <pose>-4.4727 -8.9052 1.0947 0.0000 0.0000 0.0062</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_3">
+      <static>true</static>
+      <pose>-9.5837 9.8777 1.1695 0.0000 0.0000 0.4367</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_4">
+      <static>true</static>
+      <pose>-6.8959 9.6581 1.3806 0.0000 0.0000 -2.7559</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_5">
+      <static>true</static>
+      <pose>-1.8327 9.1068 1.2512 0.0000 0.0000 -2.7905</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_6">
+      <static>true</static>
+      <pose>6.5321 5.0921 0.9722 0.0000 0.0000 -0.8657</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_7">
+      <static>true</static>
+      <pose>6.5331 -8.6495 1.0742 0.0000 0.0000 1.5885</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_8">
+      <static>true</static>
+      <pose>-9.3086 -9.4009 1.1063 0.0000 0.0000 0.1321</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_9">
+      <static>true</static>
+      <pose>-14.2211 -5.9242 0.6756 0.0000 0.0000 -0.8550</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_10">
+      <static>true</static>
+      <pose>5.6278 6.0478 1.5806 0.0000 0.0000 -0.3390</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_11">
+      <static>true</static>
+      <pose>-7.1282 8.2779 1.0099 0.0000 0.0000 -1.5279</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_12">
+      <static>true</static>
+      <pose>-6.4931 6.5172 1.9328 0.0000 0.0000 -2.5055</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_13">
+      <static>true</static>
+      <pose>-5.6198 8.3575 1.4505 0.0000 0.0000 0.3608</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_14">
+      <static>true</static>
+      <pose>7.4172 2.4759 0.8900 0.0000 0.0000 -3.0515</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_15">
+      <static>true</static>
+      <pose>1.5154 -0.3708 1.0650 0.0000 0.0000 -2.7431</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_16">
+      <static>true</static>
+      <pose>-11.5814 -6.9359 0.9860 0.0000 0.0000 0.9496</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_17">
+      <static>true</static>
+      <pose>-2.0356 5.9063 0.8608 0.0000 0.0000 -1.7299</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_18">
+      <static>true</static>
+      <pose>8.8377 3.0587 1.3504 0.0000 0.0000 2.1583</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_19">
+      <static>true</static>
+      <pose>6.2372 3.9811 0.5872 0.0000 0.0000 -0.8442</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_20">
+      <static>true</static>
+      <pose>7.8442 3.4658 0.6677 0.0000 0.0000 1.4121</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_21">
+      <static>true</static>
+      <pose>9.8889 5.6885 1.8319 0.0000 0.0000 2.6098</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_22">
+      <static>true</static>
+      <pose>-5.2780 3.2447 0.9200 0.0000 0.0000 2.6423</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_23">
+      <static>true</static>
+      <pose>5.2496 1.5110 0.8970 0.0000 0.0000 2.6292</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_24">
+      <static>true</static>
+      <pose>4.4463 4.5973 1.6573 0.0000 0.0000 1.1363</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_25">
+      <static>true</static>
+      <pose>-10.9846 7.6973 1.4665 0.0000 0.0000 -0.5786</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_26">
+      <static>true</static>
+      <pose>-3.9462 7.7101 1.7083 0.0000 0.0000 1.0853</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_27">
+      <static>true</static>
+      <pose>-3.2445 -3.9169 1.0968 0.0000 0.0000 2.9198</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_28">
+      <static>true</static>
+      <pose>-1.5920 7.2551 0.9468 0.0000 0.0000 -0.6696</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_29">
+      <static>true</static>
+      <pose>8.4306 7.1350 1.8485 0.0000 0.0000 -0.3875</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_30">
+      <static>true</static>
+      <pose>-2.6257 0.7201 1.3635 0.0000 0.0000 1.5277</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_31">
+      <static>true</static>
+      <pose>-2.5174 4.3425 1.5160 0.0000 0.0000 -0.3469</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_32">
+      <static>true</static>
+      <pose>-9.6532 6.3034 0.9542 0.0000 0.0000 -0.2940</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_33">
+      <static>true</static>
+      <pose>-9.9444 -2.5215 0.8364 0.0000 0.0000 0.8070</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_34">
+      <static>true</static>
+      <pose>-7.3890 -4.3968 1.1962 0.0000 0.0000 -2.8577</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_35">
+      <static>true</static>
+      <pose>-2.7942 -6.6327 1.2713 0.0000 0.0000 -2.5951</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_36">
+      <static>true</static>
+      <pose>-9.8676 8.1585 1.0440 0.0000 0.0000 2.0803</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_37">
+      <static>true</static>
+      <pose>-4.5887 2.1545 1.4219 0.0000 0.0000 -0.2380</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_38">
+      <static>true</static>
+      <pose>-7.8709 -2.7748 1.1054 0.0000 0.0000 -1.3482</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_39">
+      <static>true</static>
+      <pose>5.4962 -10.1572 1.0747 0.0000 0.0000 1.0361</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_40">
+      <static>true</static>
+      <pose>-2.9288 9.1128 1.0307 0.0000 0.0000 -1.0810</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_41">
+      <static>true</static>
+      <pose>7.6959 4.9218 0.5694 0.0000 0.0000 -3.0746</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_42">
+      <static>true</static>
+      <pose>6.6797 0.1925 0.9144 0.0000 0.0000 -1.6929</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_43">
+      <static>true</static>
+      <pose>0.0381 -7.4446 1.1807 0.0000 0.0000 -0.9595</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_44">
+      <static>true</static>
+      <pose>4.4132 -9.5854 1.1476 0.0000 0.0000 -0.5670</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_45">
+      <static>true</static>
+      <pose>0.7042 1.4467 1.3986 0.0000 0.0000 2.1886</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_46">
+      <static>true</static>
+      <pose>-3.6216 0.1014 1.4196 0.0000 0.0000 2.2415</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_47">
+      <static>true</static>
+      <pose>6.9565 6.4315 1.4951 0.0000 0.0000 -1.5646</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_48">
+      <static>true</static>
+      <pose>-3.9716 9.5998 1.0824 0.0000 0.0000 -0.7165</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_49">
+      <static>true</static>
+      <pose>-1.6953 -7.3082 0.9879 0.0000 0.0000 -2.7495</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_50">
+      <static>true</static>
+      <pose>-3.8025 3.9182 1.7640 0.0000 0.0000 2.8820</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_51">
+      <static>true</static>
+      <pose>1.4798 7.6707 1.6253 0.0000 0.0000 2.6137</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_52">
+      <static>true</static>
+      <pose>3.2746 -6.4051 1.2206 0.0000 0.0000 2.7096</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_53">
+      <static>true</static>
+      <pose>7.0933 1.4305 0.9303 0.0000 0.0000 -1.5474</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_54">
+      <static>true</static>
+      <pose>-10.6620 -5.0186 0.8563 0.0000 0.0000 -2.9575</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_55">
+      <static>true</static>
+      <pose>-1.5413 4.5739 1.2550 0.0000 0.0000 -2.3227</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_56">
+      <static>true</static>
+      <pose>-5.5990 -9.9674 1.2246 0.0000 0.0000 2.3063</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_57">
+      <static>true</static>
+      <pose>9.0568 1.5172 1.0954 0.0000 0.0000 0.7083</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_58">
+      <static>true</static>
+      <pose>-3.2721 5.3874 1.9344 0.0000 0.0000 0.1188</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_59">
+      <static>true</static>
+      <pose>0.0993 4.9057 1.4982 0.0000 0.0000 -1.6406</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_60">
+      <static>true</static>
+      <pose>-0.7304 6.5172 1.1236 0.0000 0.0000 2.0217</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_61">
+      <static>true</static>
+      <pose>5.6666 0.2988 0.7202 0.0000 0.0000 -1.2295</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_62">
+      <static>true</static>
+      <pose>-7.7222 7.4472 1.0143 0.0000 0.0000 0.3855</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_63">
+      <static>true</static>
+      <pose>-1.6603 -5.2023 1.3031 0.0000 0.0000 2.6156</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_64">
+      <static>true</static>
+      <pose>-5.2198 4.8061 1.8154 0.0000 0.0000 -1.8524</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_65">
+      <static>true</static>
+      <pose>-8.2950 2.1902 1.3201 0.0000 0.0000 2.2121</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_66">
+      <static>true</static>
+      <pose>-8.1607 6.4267 0.8501 0.0000 0.0000 -2.4951</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_67">
+      <static>true</static>
+      <pose>-10.5465 -9.3368 0.9062 0.0000 0.0000 2.3999</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_68">
+      <static>true</static>
+      <pose>-5.7315 10.6537 1.4733 0.0000 0.0000 -1.4605</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_69">
+      <static>true</static>
+      <pose>6.3859 -2.8525 1.1268 0.0000 0.0000 1.4201</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_70">
+      <static>true</static>
+      <pose>4.0760 2.0120 1.4773 0.0000 0.0000 -1.0576</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_71">
+      <static>true</static>
+      <pose>-4.6423 -10.8426 0.8594 0.0000 0.0000 2.4691</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_72">
+      <static>true</static>
+      <pose>-3.7497 -1.5236 1.2554 0.0000 0.0000 -2.8567</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_73">
+      <static>true</static>
+      <pose>-9.0567 -0.9233 1.1919 0.0000 0.0000 3.0044</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_74">
+      <static>true</static>
+      <pose>-10.6834 4.0370 1.4081 0.0000 0.0000 -1.4717</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_75">
+      <static>true</static>
+      <pose>-7.9545 -6.0983 1.2781 0.0000 0.0000 -2.8651</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_76">
+      <static>true</static>
+      <pose>1.1175 -1.6262 1.0131 0.0000 0.0000 3.0735</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_77">
+      <static>true</static>
+      <pose>5.8788 -0.8933 1.0587 0.0000 0.0000 -1.7312</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_78">
+      <static>true</static>
+      <pose>-8.3817 10.8845 1.3299 0.0000 0.0000 -1.6900</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_79">
+      <static>true</static>
+      <pose>-14.3142 -4.1193 1.2870 0.0000 0.0000 -3.0842</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_80">
+      <static>true</static>
+      <pose>1.2928 10.5875 1.4593 0.0000 0.0000 2.9385</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_81">
+      <static>true</static>
+      <pose>12.6793 9.0705 2.0177 0.0000 0.0000 0.6400</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_82">
+      <static>true</static>
+      <pose>-7.1406 4.8776 1.1011 0.0000 0.0000 -2.0209</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_83">
+      <static>true</static>
+      <pose>-3.7223 -7.1170 1.2201 0.0000 0.0000 -1.4497</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_84">
+      <static>true</static>
+      <pose>-0.9672 -3.6725 0.9245 0.0000 0.0000 -2.2914</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_85">
+      <static>true</static>
+      <pose>-10.5089 10.4144 1.5095 0.0000 0.0000 -1.1889</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_86">
+      <static>true</static>
+      <pose>6.1154 -6.3328 1.1260 0.0000 0.0000 -0.7332</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_87">
+      <static>true</static>
+      <pose>-1.8030 1.5581 1.4452 0.0000 0.0000 -0.5400</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_88">
+      <static>true</static>
+      <pose>-11.8804 -4.3717 1.1039 0.0000 0.0000 -0.5330</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_89">
+      <static>true</static>
+      <pose>-3.1256 6.6843 1.7035 0.0000 0.0000 -3.0509</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_90">
+      <static>true</static>
+      <pose>-13.1878 -3.9701 1.2522 0.0000 0.0000 -2.8103</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_91">
+      <static>true</static>
+      <pose>-1.0173 0.6782 0.9158 0.0000 0.0000 3.0108</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_92">
+      <static>true</static>
+      <pose>-9.2604 3.9673 0.7970 0.0000 0.0000 2.3874</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_93">
+      <static>true</static>
+      <pose>-11.1489 6.2248 1.4044 0.0000 0.0000 -1.5130</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_94">
+      <static>true</static>
+      <pose>0.8873 -10.5295 1.1201 0.0000 0.0000 1.7204</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_95">
+      <static>true</static>
+      <pose>4.6697 -8.4434 1.1499 0.0000 0.0000 -1.3372</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_96">
+      <static>true</static>
+      <pose>-13.5425 -9.7434 0.9626 0.0000 0.0000 -3.0437</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_97">
+      <static>true</static>
+      <pose>4.0537 3.2467 1.5453 0.0000 0.0000 0.9981</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_98">
+      <static>true</static>
+      <pose>-5.9129 2.1858 1.1337 0.0000 0.0000 0.4901</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_99">
+      <static>true</static>
+      <pose>-10.3896 -3.8105 0.6568 0.0000 0.0000 -1.1909</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_100">
+      <static>true</static>
+      <pose>-9.9633 4.9922 0.6949 0.0000 0.0000 3.0782</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_101">
+      <static>true</static>
+      <pose>4.3155 10.9203 1.6243 0.0000 0.0000 2.0735</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_102">
+      <static>true</static>
+      <pose>-7.2037 2.7915 0.8299 0.0000 0.0000 -2.7512</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_103">
+      <static>true</static>
+      <pose>1.7425 -9.3311 1.2667 0.0000 0.0000 2.5226</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_104">
+      <static>true</static>
+      <pose>-2.9246 10.2190 1.4240 0.0000 0.0000 -2.4126</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_105">
+      <static>true</static>
+      <pose>-14.3657 9.2832 1.6172 0.0000 0.0000 0.0890</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_106">
+      <static>true</static>
+      <pose>-7.9420 9.0185 1.1811 0.0000 0.0000 -2.7916</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_107">
+      <static>true</static>
+      <pose>0.1501 -9.3675 0.7788 0.0000 0.0000 2.0798</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_108">
+      <static>true</static>
+      <pose>9.3281 4.4327 1.3581 0.0000 0.0000 -1.6776</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_109">
+      <static>true</static>
+      <pose>-7.0255 1.4921 1.2652 0.0000 0.0000 2.3030</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_110">
+      <static>true</static>
+      <pose>5.5929 2.5273 0.5803 0.0000 0.0000 -2.2097</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_111">
+      <static>true</static>
+      <pose>-0.1111 10.6582 1.5108 0.0000 0.0000 0.8654</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_112">
+      <static>true</static>
+      <pose>-3.8431 -2.6800 1.0832 0.0000 0.0000 0.9863</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_113">
+      <static>true</static>
+      <pose>6.6922 -10.1632 1.0134 0.0000 0.0000 -2.3026</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_114">
+      <static>true</static>
+      <pose>12.6307 6.1529 1.8816 0.0000 0.0000 -3.0064</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_115">
+      <static>true</static>
+      <pose>-0.2901 2.0345 1.5131 0.0000 0.0000 1.5793</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_116">
+      <static>true</static>
+      <pose>10.0055 1.9019 1.5592 0.0000 0.0000 2.5284</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_117">
+      <static>true</static>
+      <pose>-8.8826 -2.2317 0.9146 0.0000 0.0000 -2.2612</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_118">
+      <static>true</static>
+      <pose>-7.7654 -1.6574 1.2688 0.0000 0.0000 -2.0512</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_119">
+      <static>true</static>
+      <pose>4.6196 -10.6632 1.1796 0.0000 0.0000 -1.1812</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_120">
+      <static>true</static>
+      <pose>-3.2564 -10.3625 0.7186 0.0000 0.0000 -2.0839</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_121">
+      <static>true</static>
+      <pose>3.3280 -9.6381 1.1631 0.0000 0.0000 0.4751</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_122">
+      <static>true</static>
+      <pose>-6.0688 3.8662 0.8561 0.0000 0.0000 0.0441</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_123">
+      <static>true</static>
+      <pose>-1.3972 -1.7189 0.6937 0.0000 0.0000 1.5777</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_124">
+      <static>true</static>
+      <pose>7.8952 10.6394 1.7508 0.0000 0.0000 -2.6694</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_125">
+      <static>true</static>
+      <pose>5.6137 10.9876 1.5561 0.0000 0.0000 -3.0721</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_126">
+      <static>true</static>
+      <pose>6.8108 -1.6425 0.7269 0.0000 0.0000 2.6348</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_127">
+      <static>true</static>
+      <pose>-11.2728 -2.4004 1.2993 0.0000 0.0000 -0.2190</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_128">
+      <static>true</static>
+      <pose>-8.5591 5.0636 0.8578 0.0000 0.0000 -0.9460</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_129">
+      <static>true</static>
+      <pose>-0.9661 8.3101 1.3205 0.0000 0.0000 -0.5312</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_130">
+      <static>true</static>
+      <pose>-2.8485 -0.7200 0.9906 0.0000 0.0000 -1.1545</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_131">
+      <static>true</static>
+      <pose>11.2782 3.2686 1.7150 0.0000 0.0000 2.5536</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_132">
+      <static>true</static>
+      <pose>4.3729 0.1111 1.4427 0.0000 0.0000 1.7822</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_133">
+      <static>true</static>
+      <pose>0.5988 8.7616 1.5285 0.0000 0.0000 -1.4921</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_134">
+      <static>true</static>
+      <pose>-9.1742 2.8989 1.2388 0.0000 0.0000 0.0005</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_135">
+      <static>true</static>
+      <pose>-0.8801 -7.8893 0.8283 0.0000 0.0000 -1.1688</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_136">
+      <static>true</static>
+      <pose>2.0364 9.3884 1.6147 0.0000 0.0000 -2.3077</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_137">
+      <static>true</static>
+      <pose>8.6245 5.8267 1.2754 0.0000 0.0000 -1.8159</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_138">
+      <static>true</static>
+      <pose>-2.0182 10.9571 1.4326 0.0000 0.0000 -1.8856</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_139">
+      <static>true</static>
+      <pose>-13.1853 -5.1220 0.6088 0.0000 0.0000 2.7511</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_140">
+      <static>true</static>
+      <pose>-12.4488 -9.4249 0.8377 0.0000 0.0000 1.6309</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_141">
+      <static>true</static>
+      <pose>-0.1785 -3.0081 1.0019 0.0000 0.0000 -1.4650</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_142">
+      <static>true</static>
+      <pose>3.2193 -8.0647 1.1011 0.0000 0.0000 -0.6167</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_143">
+      <static>true</static>
+      <pose>-9.6979 -7.0852 0.9776 0.0000 0.0000 0.4772</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_144">
+      <static>true</static>
+      <pose>-12.2096 -5.6821 0.7192 0.0000 0.0000 -1.3176</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_145">
+      <static>true</static>
+      <pose>6.5446 10.6138 1.6457 0.0000 0.0000 1.0019</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_146">
+      <static>true</static>
+      <pose>-4.5119 10.9450 1.3513 0.0000 0.0000 -2.6794</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_147">
+      <static>true</static>
+      <pose>-9.8520 -10.3714 1.0399 0.0000 0.0000 2.5034</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_148">
+      <static>true</static>
+      <pose>-14.6504 -9.9382 0.9719 0.0000 0.0000 3.1288</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_149">
+      <static>true</static>
+      <pose>-9.6793 -8.2753 0.9956 0.0000 0.0000 -0.2299</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_150">
+      <static>true</static>
+      <pose>-7.2598 10.7940 1.6037 0.0000 0.0000 -2.9846</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_151">
+      <static>true</static>
+      <pose>-8.3001 3.5694 0.8297 0.0000 0.0000 2.5508</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_152">
+      <static>true</static>
+      <pose>9.1862 10.8602 1.8807 0.0000 0.0000 1.3910</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_153">
+      <static>true</static>
+      <pose>-8.4324 -3.8726 1.1455 0.0000 0.0000 0.2964</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_154">
+      <static>true</static>
+      <pose>-5.1620 9.5626 0.9709 0.0000 0.0000 0.6603</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_155">
+      <static>true</static>
+      <pose>-2.2394 -9.3853 0.6747 0.0000 0.0000 0.5768</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_156">
+      <static>true</static>
+      <pose>-10.4066 9.0077 1.4764 0.0000 0.0000 0.5939</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_157">
+      <static>true</static>
+      <pose>-3.8147 -4.8642 1.3031 0.0000 0.0000 -0.2842</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_158">
+      <static>true</static>
+      <pose>1.0678 -3.1579 1.2540 0.0000 0.0000 1.1454</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_159">
+      <static>true</static>
+      <pose>9.8612 2.9021 1.6555 0.0000 0.0000 -1.5512</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_160">
+      <static>true</static>
+      <pose>-8.2202 -7.8193 1.1229 0.0000 0.0000 0.8894</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_161">
+      <static>true</static>
+      <pose>-1.2050 -9.1429 0.6740 0.0000 0.0000 2.5383</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_162">
+      <static>true</static>
+      <pose>9.4230 6.8062 1.8844 0.0000 0.0000 -2.7475</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_163">
+      <static>true</static>
+      <pose>-6.0273 7.4271 1.9226 0.0000 0.0000 1.5180</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_164">
+      <static>true</static>
+      <pose>5.1429 -1.5999 1.3172 0.0000 0.0000 -2.1065</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_165">
+      <static>true</static>
+      <pose>-8.9141 7.1381 1.0053 0.0000 0.0000 0.5907</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_166">
+      <static>true</static>
+      <pose>1.1338 -8.4144 1.2174 0.0000 0.0000 -3.0792</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_167">
+      <static>true</static>
+      <pose>-8.4984 8.1603 1.0310 0.0000 0.0000 2.7125</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_168">
+      <static>true</static>
+      <pose>-2.3883 -1.9674 0.7742 0.0000 0.0000 1.4502</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_169">
+      <static>true</static>
+      <pose>-2.2595 8.1494 0.9408 0.0000 0.0000 -1.5196</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_170">
+      <static>true</static>
+      <pose>-1.9549 -10.9124 0.6585 0.0000 0.0000 0.2481</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_171">
+      <static>true</static>
+      <pose>1.6989 1.3235 1.4991 0.0000 0.0000 -2.4643</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_172">
+      <static>true</static>
+      <pose>1.1927 4.8887 1.5913 0.0000 0.0000 0.0772</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_173">
+      <static>true</static>
+      <pose>-1.9595 -8.3458 0.6568 0.0000 0.0000 -2.2690</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_174">
+      <static>true</static>
+      <pose>-10.3021 -1.3344 1.2551 0.0000 0.0000 -2.2596</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_175">
+      <static>true</static>
+      <pose>12.6598 10.9698 1.9949 0.0000 0.0000 -1.6967</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_176">
+      <static>true</static>
+      <pose>-14.7604 -8.9109 0.8974 0.0000 0.0000 -0.4949</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>package://rock_generator/rocks_ws/rock_10/meshes/rock_10.obj</uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

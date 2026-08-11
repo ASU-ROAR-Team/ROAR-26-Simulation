@@ -161,6 +161,7 @@ def fuse_obstacle_data_into_world(input_npy_path=None, world_name="marsyard.worl
         pitch = float(r.get('pitch', 0.0))
         yaw = float(r.get('yaw', 0.0))
         rock_id = int(r.get('rock_id', 1))
+        mesh_id = int(r.get('mesh_id', rock_id))
         is_collidable = bool(r.get('is_collidable', True))
         model_name = str(r.get('name', f"Rock_{i}"))
 
@@ -178,14 +179,14 @@ def fuse_obstacle_data_into_world(input_npy_path=None, world_name="marsyard.worl
         v_geom_el = ET.SubElement(visual_el, 'geometry')
         v_mesh_el = ET.SubElement(v_geom_el, 'mesh')
         v_uri_el = ET.SubElement(v_mesh_el, 'uri')
-        v_uri_el.text = f"package://rock_generator/rocks_ws/rock_{rock_id}/meshes/rock_{rock_id}.obj"
+        v_uri_el.text = f"package://rock_generator/rocks_ws/rock_{mesh_id}/meshes/rock_{mesh_id}.obj"
 
         if is_collidable:
             col_el = ET.SubElement(link_el, 'collision', attrib={'name': 'collision'})
             c_geom_el = ET.SubElement(col_el, 'geometry')
             c_mesh_el = ET.SubElement(c_geom_el, 'mesh')
             c_uri_el = ET.SubElement(c_mesh_el, 'uri')
-            c_uri_el.text = f"package://rock_generator/rocks_ws/rock_{rock_id}/meshes/rock_{rock_id}.obj"
+            c_uri_el.text = f"package://rock_generator/rocks_ws/rock_{mesh_id}/meshes/rock_{mesh_id}.obj"
 
     ET.indent(tree, space="  ", level=0)
 

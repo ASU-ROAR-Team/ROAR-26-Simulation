@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Generate a metric height map from a complete Gazebo / SDF world.
 
-Unlike the original terrain-only script, this module merges the base terrain and
-all inline / included rock meshes into one grid. Collision geometry is preferred;
-visual geometry is used only when a model has no collision geometry, so generated
-non-collidable rocks still appear in the world height map.
+This module fuses base terrain (mesh or SDF heightmap tag) and all inline / included
+rock meshes into one unified grid with SLAM coordinate alignment support (--yaw, --swap-xy, --fill-nan).
+Collision geometry is preferred; visual geometry is used only when a model has no collision geometry,
+so generated non-collidable rocks still appear in the world height map.
 """
 
 from __future__ import annotations
@@ -125,6 +125,9 @@ def gather_model_paths(world_path: str, extra_paths: Sequence[str]) -> List[str]
             [
                 os.path.join(ancestor, "models"),
                 os.path.join(ancestor, "marsyard", "models"),
+                os.path.join(ancestor, "marsyards", "models"),
+                os.path.join(ancestor, "marsyards", "marsyard", "models"),
+                os.path.join(ancestor, "dev_environment", "models"),
                 os.path.join(ancestor, "mars_yard", "models"),
             ]
         )
@@ -351,8 +354,6 @@ def collect_world_geometries(
         if model_filter and model_filter not in name:
             continue
         model_pose = parse_pose(model_el.findtext("pose"))
-        # The world-level model pose is the instance pose. Remove it from a copy-like
-        # interpretation by collecting links under an identity model pose.
         model_clone = ET.fromstring(ET.tostring(model_el, encoding="unicode"))
         pose_el = model_clone.find("pose")
         if pose_el is not None:
@@ -370,8 +371,6 @@ def collect_world_geometries(
             )
         )
 
-    if not sources:
-        raise RuntimeError(f"No mesh geometry was found in {world_path}")
     return sources
 
 
@@ -497,15 +496,16 @@ def rasterize_triangles(
     return xs, ys, grid
 
 
-def _source_world_triangles(source: GeometrySource) -> np.ndarray:
+def _source_world_triangles(source: GeometrySource, R_yaw: np.ndarray) -> np.ndarray:
     triangles = load_mesh_triangles(source.mesh_path) * np.asarray(source.scale, dtype=np.float64)
     triangles = apply_transform(source.local_transform, triangles.reshape(-1, 3)).reshape(-1, 3, 3)
-    triangles = apply_transform(source.instance_transform, triangles.reshape(-1, 3)).reshape(-1, 3, 3)
+    combined = R_yaw @ source.instance_transform
+    triangles = apply_transform(combined, triangles.reshape(-1, 3)).reshape(-1, 3, 3)
     return triangles
 
 
-def _source_bounds(source: GeometrySource) -> Tuple[float, float, float, float, float, float]:
-    triangles = _source_world_triangles(source)
+def _source_bounds(source: GeometrySource, R_yaw: np.ndarray) -> Tuple[float, float, float, float, float, float]:
+    triangles = _source_world_triangles(source, R_yaw)
     return (
         float(np.min(triangles[:, :, 0])),
         float(np.max(triangles[:, :, 0])),
@@ -548,6 +548,7 @@ def _overlay_source(
     ys: np.ndarray,
     source: GeometrySource,
     resolution: float,
+    R_yaw: np.ndarray,
 ) -> int:
     local_xs, local_ys, local_grid = _local_raster(source, resolution)
     valid_y, valid_x = np.where(~np.isnan(local_grid))
@@ -556,7 +557,8 @@ def _overlay_source(
     points = np.column_stack(
         [local_xs[valid_x], local_ys[valid_y], local_grid[valid_y, valid_x]]
     )
-    world_points = apply_transform(source.instance_transform, points)
+    combined_transform = R_yaw @ source.instance_transform
+    world_points = apply_transform(combined_transform, points)
 
     col_float = (world_points[:, 0] - xs[0]) / resolution
     row_float = (world_points[:, 1] - ys[0]) / resolution
@@ -617,6 +619,152 @@ def write_preview(output_path: str, grid: np.ndarray) -> None:
     Image.fromarray(np.flipud(image), mode="L").save(output_path)
 
 
+def rasterize_heightmap_image(
+    heightmap_el: ET.Element,
+    model_dir: str,
+    model_paths: Sequence[str],
+    package_paths: Dict[str, str],
+    resolution: float,
+    pose: np.ndarray,
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    uri = heightmap_el.findtext("uri")
+    size_str = heightmap_el.findtext("size") or "1 1 1"
+    sx, sy, sz = (float(v) for v in size_str.split())
+    pos_str = heightmap_el.findtext("pos") or "0 0 0"
+    px, py, pz = (float(v) for v in pos_str.split())
+
+    img_path = resolve_uri(
+        uri or "",
+        context_dir=model_dir,
+        model_paths=model_paths,
+        package_paths=package_paths,
+    )
+    if img_path is None or not os.path.isfile(img_path):
+        raise RuntimeError(f"Could not resolve heightmap image '{uri}' under {model_dir}")
+    if Image is None:
+        raise RuntimeError("Reading heightmap images requires Pillow: pip install Pillow")
+
+    img = Image.open(img_path).convert("L")
+    nx = max(2, int(round(sx / resolution)) + 1)
+    ny = max(2, int(round(sy / resolution)) + 1)
+    img_resized = img.resize((nx, ny))
+    arr = np.asarray(img_resized, dtype=np.float64) / 255.0
+    z = pz + arr * sz  # 0..255 -> 0..sz, offset by pos.z
+
+    xs = px - sx / 2.0 + np.arange(nx) * resolution
+    ys = py - sy / 2.0 + np.arange(ny) * resolution
+
+    # apply model/link/visual pose translation
+    xs = xs + pose[0, 3]
+    ys = ys + pose[1, 3]
+    z = z + pose[2, 3]
+    return xs, ys, z
+
+
+def fill_nan_nearest(xs: np.ndarray, ys: np.ndarray, grid: np.ndarray) -> np.ndarray:
+    from scipy.interpolate import griddata
+    gx, gy = np.meshgrid(xs, ys)
+    mask = ~np.isnan(grid)
+    if mask.sum() == 0:
+        return grid
+    filled = griddata(
+        (gx[mask], gy[mask]), grid[mask], (gx, gy), method="nearest"
+    )
+    return filled
+
+
+def heightmap_grid_to_triangles(xs: np.ndarray, ys: np.ndarray, grid: np.ndarray) -> np.ndarray:
+    ny, nx = grid.shape
+    gx, gy = np.meshgrid(xs, ys)
+    vertices = np.stack([gx, gy, grid], axis=-1)
+
+    r = np.arange(ny - 1)[:, np.newaxis]
+    c = np.arange(nx - 1)
+
+    t1_v0 = vertices[r, c]
+    t1_v1 = vertices[r + 1, c]
+    t1_v2 = vertices[r, c + 1]
+
+    t2_v0 = vertices[r + 1, c]
+    t2_v1 = vertices[r + 1, c + 1]
+    t2_v2 = vertices[r, c + 1]
+
+    t1 = np.stack([t1_v0, t1_v1, t1_v2], axis=-2).reshape(-1, 3, 3)
+    t2 = np.stack([t2_v0, t2_v1, t2_v2], axis=-2).reshape(-1, 3, 3)
+
+    triangles = np.concatenate([t1, t2], axis=0)
+    # Filter out triangles that contain NaN heights
+    mask = ~np.isnan(triangles).any(axis=(1, 2))
+    return triangles[mask]
+
+
+def find_world_heightmap_geometry(
+    world_path: str,
+    model_paths: Sequence[str],
+    package_paths: Dict[str, str],
+) -> Optional[Tuple[ET.Element, str, np.ndarray]]:
+    """
+    Find a heightmap geometry element inside the world (either included or inline).
+    Returns: (heightmap_element, model_dir, total_pose) or None.
+    """
+    tree = ET.parse(world_path)
+    root = tree.getroot()
+    world_el = root.find("world") if root.tag != "world" else root
+    if world_el is None:
+        return None
+
+    world_dir = os.path.dirname(os.path.abspath(world_path))
+
+    # 1. Search included models
+    for include_index, include_el in enumerate(world_el.findall("include")):
+        uri = (include_el.findtext("uri") or "").strip()
+        model_dir = resolve_uri(uri, context_dir=world_dir, model_paths=model_paths, package_paths=package_paths)
+        if not model_dir or not os.path.isdir(model_dir):
+            continue
+        sdf_path = _model_sdf_path(model_dir)
+        if not sdf_path:
+            continue
+        model_root = ET.parse(sdf_path).getroot()
+        model_el = model_root.find("model") if model_root.tag != "model" else model_root
+        if model_el is None:
+            continue
+
+        include_pose = parse_pose(include_el.findtext("pose"))
+        model_local_pose = parse_pose(model_el.findtext("pose"))
+
+        for link_el in model_el.findall("link"):
+            link_pose = parse_pose(link_el.findtext("pose"))
+            # Search collision then visual
+            for tag in ["collision", "visual"]:
+                for geom_owner in link_el.findall(tag):
+                    geom_pose = parse_pose(geom_owner.findtext("pose"))
+                    geometry_el = geom_owner.find("geometry")
+                    if geometry_el is None:
+                        continue
+                    heightmap_el = geometry_el.find("heightmap")
+                    if heightmap_el is not None:
+                        total_pose = include_pose @ model_local_pose @ link_pose @ geom_pose
+                        return heightmap_el, model_dir, total_pose
+
+    # 2. Search inline models
+    for model_index, model_el in enumerate(world_el.findall("model")):
+        model_pose = parse_pose(model_el.findtext("pose"))
+        for link_el in model_el.findall("link"):
+            link_pose = parse_pose(link_el.findtext("pose"))
+            for tag in ["collision", "visual"]:
+                for geom_owner in link_el.findall(tag):
+                    geom_pose = parse_pose(geom_owner.findtext("pose"))
+                    geometry_el = geom_owner.find("geometry")
+                    if geometry_el is None:
+                        continue
+                    heightmap_el = geometry_el.find("heightmap")
+                    if heightmap_el is not None:
+                        total_pose = model_pose @ link_pose @ geom_pose
+                        return heightmap_el, world_dir, total_pose
+
+    return None
+
+
 def generate_heightmap_for_world(
     world_path: str,
     output_path: str,
@@ -628,6 +776,9 @@ def generate_heightmap_for_world(
     visual_fallback: bool = True,
     preview_path: Optional[str] = None,
     model_filter: Optional[str] = None,
+    yaw: float = 0.0,
+    swap_xy: bool = False,
+    fill_nan: bool = False,
 ) -> str:
     world_path = os.path.abspath(os.path.expanduser(world_path))
     output_path = os.path.abspath(os.path.expanduser(output_path))
@@ -638,31 +789,76 @@ def generate_heightmap_for_world(
 
     package_paths = dict(package_paths or {})
     resolved_model_paths = gather_model_paths(world_path, model_paths)
-    sources = collect_world_geometries(
-        world_path,
-        model_paths=resolved_model_paths,
-        package_paths=package_paths,
-        prefer=prefer,
-        visual_fallback=visual_fallback,
-        model_filter=model_filter,
-    )
+    try:
+        sources = collect_world_geometries(
+            world_path,
+            model_paths=resolved_model_paths,
+            package_paths=package_paths,
+            prefer=prefer,
+            visual_fallback=visual_fallback,
+            model_filter=model_filter,
+        )
+    except Exception:
+        sources = []
 
-    bounds_with_sources = [(source, _source_bounds(source)) for source in sources]
-    # The largest projected mesh is the base terrain; its bounds define a stable map
-    # frame so every generated world uses the same origin and dimensions.
-    base_source, base_bounds_3d = max(
-        bounds_with_sources,
-        key=lambda item: (item[1][1] - item[1][0]) * (item[1][3] - item[1][2]),
-    )
-    map_bounds = base_bounds_3d[:4]
-    base_triangles = _decimate_triangles(_source_world_triangles(base_source), maximum=90000)
+    hm_src = find_world_heightmap_geometry(world_path, resolved_model_paths, package_paths)
+
+    if not sources and hm_src is None:
+        raise RuntimeError(f"No mesh geometry or heightmap terrain was found in {world_path}")
+
+    # Define additional yaw rotation matrix
+    R_yaw = np.eye(4, dtype=np.float64)
+    if yaw != 0.0:
+        yaw_rad = np.radians(yaw)
+        c, s = math.cos(yaw_rad), math.sin(yaw_rad)
+        R_yaw[0, 0] = c
+        R_yaw[0, 1] = -s
+        R_yaw[1, 0] = s
+        R_yaw[1, 1] = c
+
+    if swap_xy:
+        T_swap = np.array([
+            [0.0, 1.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0]
+        ], dtype=np.float64)
+        R_yaw = R_yaw @ T_swap
+
+    if hm_src is not None:
+        heightmap_el, model_dir, total_pose = hm_src
+        xs_gz, ys_gz, z_gz = rasterize_heightmap_image(
+            heightmap_el, model_dir, resolved_model_paths, package_paths, resolution, total_pose
+        )
+        base_triangles = heightmap_grid_to_triangles(xs_gz, ys_gz, z_gz)
+        base_triangles = apply_transform(R_yaw, base_triangles.reshape(-1, 3)).reshape(-1, 3, 3)
+        base_source = None
+    else:
+        bounds_with_sources = [(source, _source_bounds(source, R_yaw)) for source in sources]
+        # The largest projected mesh is the base terrain; its bounds define a stable map
+        # frame so every generated world uses the same origin and dimensions.
+        base_source, base_bounds_3d = max(
+            bounds_with_sources,
+            key=lambda item: (item[1][1] - item[1][0]) * (item[1][3] - item[1][2]),
+        )
+        base_triangles = _decimate_triangles(_source_world_triangles(base_source, R_yaw), maximum=90000)
+
+    xmin = float(np.min(base_triangles[:, :, 0]))
+    xmax = float(np.max(base_triangles[:, :, 0]))
+    ymin = float(np.min(base_triangles[:, :, 1]))
+    ymax = float(np.max(base_triangles[:, :, 1]))
+    map_bounds = (xmin, xmax, ymin, ymax)
+
     xs, ys, grid = rasterize_triangles(base_triangles, resolution, bounds=map_bounds)
 
     overlay_count = 0
     for source in sources:
         if source is base_source:
             continue
-        overlay_count += _overlay_source(grid, xs, ys, source, resolution)
+        overlay_count += _overlay_source(grid, xs, ys, source, resolution, R_yaw)
+
+    if fill_nan:
+        grid = fill_nan_nearest(xs, ys, grid)
 
     write_npz(
         output_path,
@@ -671,7 +867,7 @@ def generate_heightmap_for_world(
         grid=grid,
         resolution=resolution,
         world_path=world_path,
-        geometry_count=len(sources),
+        geometry_count=len(sources) + (1 if hm_src is not None else 0),
     )
     if preview_path:
         preview_path = os.path.abspath(os.path.expanduser(preview_path))
@@ -687,7 +883,7 @@ def generate_heightmap_for_world(
         print(f"Preview:     {preview_path}")
     print(f"Resolution:  {resolution:.3f} m/cell")
     print(f"Grid:        {grid.shape[1]} x {grid.shape[0]}")
-    print(f"Geometries:  {len(sources)} (terrain + world rocks)")
+    print(f"Geometries:  {len(sources) + (1 if hm_src is not None else 0)} (terrain + world rocks)")
     print(f"Rock samples overlaid: {overlay_count}")
     print(f"Z range:     {np.nanmin(grid):.4f} .. {np.nanmax(grid):.4f} m")
     print(f"Empty cells: {empty_cells}")
@@ -699,7 +895,7 @@ def build_argument_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Generate a metric height map from a complete Gazebo world, including rocks."
     )
-    parser.add_argument("world", help="path to the generated .world file")
+    parser.add_argument("world", nargs="?", help="path to the generated .world file")
     parser.add_argument("-o", "--output", required=True, help="output .npz path")
     parser.add_argument("--preview", help="optional grayscale preview PNG path")
     parser.add_argument("--resolution", type=float, default=0.1, help="grid resolution in metres (default: 0.1)")
@@ -718,6 +914,10 @@ def build_argument_parser() -> argparse.ArgumentParser:
         metavar="PACKAGE=PATH",
         help="explicit package directory for package:// URIs; repeatable",
     )
+    parser.add_argument("--yaw", type=float, default=0.0, help="apply an additional yaw rotation in degrees to the mesh before rasterizing")
+    parser.add_argument("--swap-xy", action="store_true", help="swap X and Y coordinates of the mesh before rasterizing")
+    parser.add_argument("--fill-nan", action="store_true", help="fill gaps in the grid via nearest-neighbor interpolation")
+    parser.add_argument("--mesh", help="skip world parsing, rasterize this mesh file directly")
     return parser
 
 
@@ -726,18 +926,82 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
     args = parser.parse_args(argv)
     if not args.output.lower().endswith(".npz"):
         parser.error("the output file must use the .npz extension")
-    package_paths = parse_package_paths(args.package_path)
-    generate_heightmap_for_world(
-        args.world,
-        args.output,
-        resolution=args.resolution,
-        model_paths=args.model_path,
-        package_paths=package_paths,
-        prefer=args.prefer,
-        visual_fallback=not args.no_visual_fallback,
-        preview_path=args.preview,
-        model_filter=args.model,
-    )
+
+    is_mesh_file = False
+    mesh_path = None
+    if args.mesh:
+        is_mesh_file = True
+        mesh_path = args.mesh
+    elif args.world and (args.world.lower().endswith(".stl") or args.world.lower().endswith(".obj")):
+        is_mesh_file = True
+        mesh_path = args.world
+
+    if is_mesh_file:
+        # Define additional yaw rotation matrix
+        R_yaw = np.eye(4, dtype=np.float64)
+        if args.yaw != 0.0:
+            yaw_rad = np.radians(args.yaw)
+            c, s = math.cos(yaw_rad), math.sin(yaw_rad)
+            R_yaw[0, 0] = c
+            R_yaw[0, 1] = -s
+            R_yaw[1, 0] = s
+            R_yaw[1, 1] = c
+    
+        if args.swap_xy:
+            T_swap = np.array([
+                [0.0, 1.0, 0.0, 0.0],
+                [1.0, 0.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0, 0.0],
+                [0.0, 0.0, 0.0, 1.0]
+            ], dtype=np.float64)
+            R_yaw = R_yaw @ T_swap
+            
+        triangles = load_mesh_triangles(mesh_path)
+        triangles = apply_transform(R_yaw, triangles.reshape(-1, 3)).reshape(-1, 3, 3)
+        xs, ys, grid = rasterize_triangles(triangles, args.resolution)
+        if args.fill_nan:
+            grid = fill_nan_nearest(xs, ys, grid)
+            
+        write_npz(
+            args.output,
+            xs=xs,
+            ys=ys,
+            grid=grid,
+            resolution=args.resolution,
+            world_path=mesh_path,
+            geometry_count=1,
+        )
+        if args.preview:
+            write_preview(args.preview, grid)
+            
+        empty_cells = int(np.isnan(grid).sum())
+        print("=" * 60)
+        print("Generated height map from direct mesh")
+        print(f"Mesh:        {mesh_path}")
+        print(f"Output:      {args.output}")
+        if args.preview:
+            print(f"Preview:     {args.preview}")
+        print(f"Resolution:  {args.resolution:.3f} m/cell")
+        print(f"Grid:        {grid.shape[1]} x {grid.shape[0]}")
+        print(f"Z range:     {np.nanmin(grid):.4f} .. {np.nanmax(grid):.4f} m")
+        print(f"Empty cells: {empty_cells}")
+        print("=" * 60)
+    else:
+        package_paths = parse_package_paths(args.package_path)
+        generate_heightmap_for_world(
+            args.world,
+            args.output,
+            resolution=args.resolution,
+            model_paths=args.model_path,
+            package_paths=package_paths,
+            prefer=args.prefer,
+            visual_fallback=not args.no_visual_fallback,
+            preview_path=args.preview,
+            model_filter=args.model,
+            yaw=args.yaw,
+            swap_xy=args.swap_xy,
+            fill_nan=args.fill_nan,
+        )
 
 
 if __name__ == "__main__":
