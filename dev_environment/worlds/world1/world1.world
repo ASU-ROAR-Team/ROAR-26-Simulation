@@ -38,66 +38,326 @@
       <uri>model://erc_marsyard_2026</uri>
       <pose>0 0 0 0 0 0</pose>
     </include>
-    <include>
-      <name>Rock_1</name>
-      <pose>-13.4631 10.0919 0.4856 0.0000 0.0000 -1.4988</pose>
-      <uri>model://rock_3</uri>
-    </include>
-    <include>
-      <name>Rock_2</name>
-      <pose>1.7285 25.5898 0.4191 0.0000 0.0000 0.8046</pose>
-      <uri>model://rock_8</uri>
-    </include>
-    <include>
-      <name>Rock_3</name>
-      <pose>5.8911 25.1113 0.5870 0.0000 0.0000 1.6049</pose>
-      <uri>model://rock_7</uri>
-    </include>
-    <include>
-      <name>Rock_4</name>
-      <pose>10.7459 28.4022 0.4049 0.0000 0.0000 1.8333</pose>
-      <uri>model://rock_5</uri>
-    </include>
-    <include>
-      <name>Rock_5</name>
-      <pose>8.3612 5.3637 0.3151 0.0000 0.0000 -0.2058</pose>
-      <uri>model://rock_5</uri>
-    </include>
-    <include>
-      <name>Rock_6</name>
-      <pose>4.9333 1.2457 0.7826 0.0000 0.0000 0.3210</pose>
-      <uri>model://rock_6</uri>
-    </include>
-    <include>
-      <name>Rock_7</name>
-      <pose>-8.1083 5.3216 0.6360 0.0000 0.0000 1.5915</pose>
-      <uri>model://rock_3</uri>
-    </include>
-    <include>
-      <name>Rock_8</name>
-      <pose>-11.6104 7.1457 0.3894 0.0000 0.0000 -3.0779</pose>
-      <uri>model://rock_6</uri>
-    </include>
-    <include>
-      <name>Rock_9</name>
-      <pose>8.5793 27.1960 0.5730 0.0000 0.0000 1.6799</pose>
-      <uri>model://rock_1</uri>
-    </include>
-    <include>
-      <name>Rock_10</name>
-      <pose>-9.7083 5.2439 0.6601 0.0000 0.0000 -2.5768</pose>
-      <uri>model://rock_9</uri>
-    </include>
-    <include>
-      <name>Rock_11</name>
-      <pose>3.6647 9.5039 0.3607 0.0000 0.0000 0.4816</pose>
-      <uri>model://rock_8</uri>
-    </include>
-    <include>
-      <name>Rock_12</name>
-      <pose>-12.6726 11.5770 0.8238 0.0000 0.0000 2.2679</pose>
-      <uri>model://rock_3</uri>
-    </include>
+    <model name="Rock_1">
+      <static>true</static>
+      <pose>7.9714 26.9211 0.6784 0.0000 0.0000 -2.0852</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_1/meshes/rock_1_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_2">
+      <static>true</static>
+      <pose>1.1508 7.2139 0.5272 0.0000 0.0000 -0.9075</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_3">
+      <static>true</static>
+      <pose>-13.1661 10.7776 0.7989 0.0000 0.0000 1.2120</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_3/meshes/rock_3_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_4">
+      <static>true</static>
+      <pose>2.4344 25.8963 0.7189 0.0000 0.0000 1.0260</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_3/meshes/rock_3_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_5">
+      <static>true</static>
+      <pose>-6.9120 12.6964 0.2643 0.0000 0.0000 -1.0305</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_6">
+      <static>true</static>
+      <pose>3.9204 9.0703 0.2700 0.0000 0.0000 -0.6200</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_7">
+      <static>true</static>
+      <pose>11.6574 29.2473 0.5671 0.0000 0.0000 -1.1391</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_3/meshes/rock_3_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_8">
+      <static>true</static>
+      <pose>-4.9617 2.6835 0.7696 0.0000 0.0000 0.9639</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_9">
+      <static>true</static>
+      <pose>-7.7268 4.8917 0.8344 0.0000 0.0000 1.4711</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_3/meshes/rock_3_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_10">
+      <static>true</static>
+      <pose>5.0963 26.0588 0.5610 0.0000 0.0000 -0.6724</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_1/meshes/rock_1_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_11">
+      <static>true</static>
+      <pose>-12.7434 12.0228 0.7019 0.0000 0.0000 -0.9817</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_1/meshes/rock_1_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_12">
+      <static>true</static>
+      <pose>-3.0921 1.6648 0.5040 0.0000 0.0000 1.2067</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_8/meshes/rock_8.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
     <model name="ArUco_51">
       <static>true</static>
       <pose>3.1830 8.0120 0.0848 0.0000 0.0000 0.0000</pose>

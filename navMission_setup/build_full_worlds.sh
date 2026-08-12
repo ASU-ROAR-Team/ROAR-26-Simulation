@@ -8,8 +8,10 @@ echo "=========================================================="
 echo "    MARS YARD WORLD & ARUCO MARKER GENERATION PIPELINE"
 echo "=========================================================="
 
-export IGN_GAZEBO_RESOURCE_PATH="${SCRIPT_DIR}/world_setup/rocks_ws"
-export GZ_SIM_RESOURCE_PATH="${SCRIPT_DIR}/world_setup/rocks_ws"
+MARSYARD_MODELS_DIR="${WORKSPACE_DIR}/marsyards/marsyard/models"
+ROCKS_DIR="${SCRIPT_DIR}/world_setup/rocks_ws"
+export IGN_GAZEBO_RESOURCE_PATH="${MARSYARD_MODELS_DIR}:${ROCKS_DIR}:${IGN_GAZEBO_RESOURCE_PATH}"
+export GZ_SIM_RESOURCE_PATH="${MARSYARD_MODELS_DIR}:${ROCKS_DIR}:${GZ_SIM_RESOURCE_PATH}"
 
 echo -e "\n[1/3] Generating Core Worlds (world_1, world_2, world_3)..."
 cd "${SCRIPT_DIR}"
@@ -68,6 +70,13 @@ done
 
 # Ensure ArUco models exist in the gazebo workspace
 cp -r "${SCRIPT_DIR}/world_setup/TempArucoGen/models/aruco_"* "${WORKSPACE_DIR}/marsyards/marsyard/models/" 2>/dev/null || true
+
+# The deployed copies above are the canonical three batch worlds.  Remove only
+# this run's staging directories so a future run cannot silently reuse them.
+rm -rf \
+    "${SRC_DIR}/world_1" \
+    "${SRC_DIR}/world_2" \
+    "${SRC_DIR}/world_3"
 
 echo -e "\n=========================================================="
 echo " ✅ SUCCESS! All worlds generated and correctly integrated!"

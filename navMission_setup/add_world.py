@@ -4,7 +4,10 @@ import argparse
 import shutil
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
+
+import numpy as np
 
 
 SETUP_DIR = Path(__file__).resolve().parent
@@ -19,6 +22,64 @@ OBS_SCRIPT = WORLD_SETUP_DIR / "obsData_gen" / "script.py"
 WORLD_SCRIPT = WORLD_SETUP_DIR / "world_gen" / "script.py"
 HEIGHTMAP_SCRIPT = WORLD_SETUP_DIR / "heightMap_gen" / "script.py"
 COSTMAP_SCRIPT = WORLD_SETUP_DIR / "costMap_gen" / "script.py"
+
+NEW_MARSYARD_URI = "model://erc_marsyard_2026"
+NEW_MARSYARD_COLLISION_MESH = "marsyard_collision.obj"
+
+
+def validate_base_terrain(base_world: Path, base_heightmap: Path) -> None:
+    """Reject stale / mismatched Mars Yard inputs before placing any rocks."""
+    root = ET.parse(base_world).getroot()
+    world = root.find("world") if root.tag != "world" else root
+    if world is None:
+        raise ValueError(f"Base world has no <world> element: {base_world}")
+
+    terrain_includes = [
+        include
+        for include in world.findall("include")
+        if (include.findtext("uri") or "").strip() == NEW_MARSYARD_URI
+    ]
+    if len(terrain_includes) != 1:
+        found = sorted(
+            (include.findtext("uri") or "").strip()
+            for include in world.findall("include")
+        )
+        raise ValueError(
+            f"Base world must include exactly one {NEW_MARSYARD_URI}; found {found}"
+        )
+
+    pose = [float(value) for value in (terrain_includes[0].findtext("pose") or "0 0 0 0 0 0").split()]
+    if len(pose) != 6 or any(abs(value) > 1e-9 for value in pose):
+        raise ValueError(
+            "The new Mars Yard must use the survey frame at pose '0 0 0 0 0 0'; "
+            f"found {pose}"
+        )
+
+    with np.load(base_heightmap, allow_pickle=False) as heightmap:
+        required = {"xs", "ys", "grid", "resolution", "world_path", "terrain_mesh_path"}
+        missing = required.difference(heightmap.files)
+        if missing:
+            raise ValueError(f"Base heightmap is missing fields: {sorted(missing)}")
+        xs = np.asarray(heightmap["xs"], dtype=np.float64)
+        ys = np.asarray(heightmap["ys"], dtype=np.float64)
+        grid = np.asarray(heightmap["grid"], dtype=np.float64)
+        source = str(np.asarray(heightmap["terrain_mesh_path"]).item())
+
+    if Path(source).name != NEW_MARSYARD_COLLISION_MESH:
+        raise ValueError(
+            "Base heightmap was not generated from the new Mars Yard collision mesh: "
+            f"{source}"
+        )
+    if grid.shape != (len(ys), len(xs)) or len(xs) < 2 or len(ys) < 2:
+        raise ValueError("Base heightmap axes/grid dimensions are inconsistent")
+    if not (np.all(np.diff(xs) > 0.0) and np.all(np.diff(ys) > 0.0)):
+        raise ValueError("Base heightmap X/Y axes must increase in the Gazebo world frame")
+
+    print("Validated terrain pipeline:")
+    print(f"  World model : {NEW_MARSYARD_URI}")
+    print("  Model pose  : 0 0 0 0 0 0 (survey frame)")
+    print(f"  Height mesh : {source}")
+    print(f"  Map bounds  : X=[{xs[0]:.3f}, {xs[-1]:.3f}] Y=[{ys[0]:.3f}, {ys[-1]:.3f}]")
 
 
 def find_single_file(
@@ -264,6 +325,8 @@ def main() -> None:
             "initial terrain heightmap",
         )
     )
+
+    validate_base_terrain(base_world, base_heightmap)
 
     run_dir = MASTER_OUTPUTS_DIR / dataset_name
 
