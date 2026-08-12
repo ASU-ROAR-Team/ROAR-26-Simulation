@@ -64,7 +64,13 @@ def sanitize_name(value: str, description: str) -> str:
 def request_dataset_name(
     cli_index: str | None,
     cli_name: str | None,
-) -> tuple[str, str]:
+) -> tuple[str, str, str]:
+    """
+    Returns (dataset_name, naming_mode, tag).
+
+    tag is the short piece used to suffix every individual output file
+    (e.g. "02" for --index 02, or the full custom name for --name mode).
+    """
     if cli_index is not None and cli_name is not None:
         raise ValueError(
             "Use either --index or --name, not both."
@@ -75,14 +81,14 @@ def request_dataset_name(
             cli_index,
             "Dataset index",
         )
-        return f"world_Data_{safe_index}", "index"
+        return f"world_Data_{safe_index}", "index", safe_index
 
     if cli_name is not None:
         safe_name = sanitize_name(
             cli_name,
             "Dataset name",
         )
-        return safe_name, "custom"
+        return safe_name, "custom", safe_name
 
     while True:
         print()
@@ -106,6 +112,7 @@ def request_dataset_name(
                     return (
                         f"world_Data_{safe_index}",
                         "index",
+                        safe_index,
                     )
 
                 print("Dataset index cannot be empty.")
@@ -121,7 +128,7 @@ def request_dataset_name(
                         custom_name,
                         "Dataset name",
                     )
-                    return safe_name, "custom"
+                    return safe_name, "custom", safe_name
 
                 print("Dataset name cannot be empty.")
 
@@ -156,7 +163,7 @@ def main() -> None:
         type=str,
         help=(
             "Index appended after world_Data_. "
-            "Example: --index 007 creates world_Data_007."
+            "Example: --index 02 creates world_Data_02."
         ),
     )
 
@@ -240,7 +247,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    dataset_name, naming_mode = request_dataset_name(
+    dataset_name, naming_mode, tag = request_dataset_name(
         args.index,
         args.name,
     )
@@ -292,38 +299,34 @@ def main() -> None:
             exist_ok=True,
         )
 
-    file_prefix = (
-        f"{dataset_name}_"
-        f"d{args.density:.3f}_"
-        f"c{args.collidable_ratio:.2f}"
-    )
-
+    # Every output file is tagged with just the dataset index/name --
+    # no density or collidable-ratio baked into filenames anymore.
     obstacle_output = (
-        obstacle_dir / "obstacle_data.npy"
+        obstacle_dir / f"obstacle_data_{tag}.npy"
     )
 
     world_output = (
-        world_dir / f"{file_prefix}.world"
+        world_dir / f"{dataset_name}.world"
     )
 
     heightmap_output = (
         heightmap_dir
-        / f"{file_prefix}_heightmap.npz"
+        / f"heightmap_{tag}.npz"
     )
 
     heightmap_preview = (
         heightmap_dir
-        / f"{file_prefix}_heightmap.png"
+        / f"heightmap_{tag}.png"
     )
 
     costmap_output = (
         costmap_dir
-        / f"{file_prefix}_costmap.npz"
+        / f"costmap_{tag}.npz"
     )
 
     costmap_preview = (
         costmap_dir
-        / f"{file_prefix}_costmap.png"
+        / f"costmap_{tag}.png"
     )
 
     try:
@@ -415,7 +418,7 @@ def main() -> None:
         if info_candidates:
             expected_info = (
                 obstacle_dir
-                / "obstacle_data_info.txt"
+                / f"obstacle_data_{tag}_info.txt"
             )
 
             if info_candidates[0] != expected_info:

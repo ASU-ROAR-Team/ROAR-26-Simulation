@@ -46,10 +46,21 @@ class HeightmapSampler:
       - terrain_bounds()           → (x_min, x_max, y_min, y_max) from the map
 
     Uses bilinear interpolation for smooth, accurate height queries.
+
+    NOTE on roughness: `min_roughness` filters out flat cells, but on
+    heightmaps where actual textured terrain only exists in a couple of
+    narrow rough streaks (with the rest of the mission-valid area being
+    smooth), enabling this gate collapses ALL rock placement into those
+    tiny streaks, regardless of density -- the rejection loop just keeps
+    retrying until it happens to land there. Roughness filtering is
+    therefore OFF by default (`require_roughness=False`); pass
+    `require_roughness=True` only if you've confirmed (e.g. by dumping the
+    valid-cells mask as an image) that the rough area actually covers the
+    region you want rocks scattered across.
     """
 
-    def __init__(self, npz_path: str, min_terrain_height: float = 0.15,
-                 min_roughness: float = 0.02):
+    def __init__(self, npz_path: str, min_terrain_height: float = -1.3,
+                 min_roughness: float = 0.02, require_roughness: bool = False):
         if not os.path.isfile(npz_path):
             raise FileNotFoundError(
                 f"Heightmap not found: {npz_path}\n"
@@ -62,6 +73,7 @@ class HeightmapSampler:
 
         self.min_terrain_height = min_terrain_height
         self.min_roughness = min_roughness
+        self.require_roughness = require_roughness
         self.x_min = float(self.xs[0])
         self.x_max = float(self.xs[-1])
         self.y_min = float(self.ys[0])
@@ -76,13 +88,19 @@ class HeightmapSampler:
         print(f"  Y range   : {self.y_min:.2f} → {self.y_max:.2f} m")
         print(f"  Z range   : {np.nanmin(self.grid):.3f} → {np.nanmax(self.grid):.3f} m")
         print(f"  Min valid Z: {self.min_terrain_height:.3f} m")
+        print(f"  Roughness gate: {'ON' if require_roughness else 'OFF'} "
+              f"(min_roughness={self.min_roughness:.4f} m)")
 
-        valid_cells = np.sum(~np.isnan(self.grid) & (self.grid >= min_terrain_height)
-                             & (self._roughness >= min_roughness))
+        height_valid = ~np.isnan(self.grid) & (self.grid >= min_terrain_height)
+        valid_cells = np.sum(
+            height_valid & (self._roughness >= min_roughness) if require_roughness
+            else height_valid
+        )
         total_cells = self.grid.size
         print(f"  Valid terrain cells: {valid_cells}/{total_cells} "
               f"({100.0 * valid_cells / total_cells:.1f}%) "
-              f"[height>={min_terrain_height}m AND roughness>={min_roughness}m]")
+              f"[height>={min_terrain_height}m"
+              + (f" AND roughness>={min_roughness}m]" if require_roughness else "]"))
 
     def get_height(self, x: float, y: float) -> float:
         """
@@ -149,13 +167,17 @@ class HeightmapSampler:
         return float(self._roughness[row0, col0])
 
     def is_valid_terrain(self, x: float, y: float) -> bool:
-        """Returns True if (x, y) sits on actual rough terrain."""
+        """
+        Returns True if (x, y) sits on valid terrain: above min_terrain_height,
+        and (only if require_roughness is set) also above min_roughness.
+        """
         z = self.get_height(x, y)
         if math.isnan(z) or z < self.min_terrain_height:
             return False
-        roughness = self.get_roughness(x, y)
-        if math.isnan(roughness) or roughness < self.min_roughness:
-            return False
+        if self.require_roughness:
+            roughness = self.get_roughness(x, y)
+            if math.isnan(roughness) or roughness < self.min_roughness:
+                return False
         return True
 
     def terrain_bounds(self):
@@ -332,8 +354,8 @@ def get_heightmap_path():
     world_setup_dir = current_dir.parent
 
     candidates = [
-        current_dir / "inputs" / "marsyard_heightmap.npz",
-        world_setup_dir / "initial_inputs" / "i_heightmap" / "marsyard_heightmap.npz",
+        current_dir / "inputs" / "heightmap.npz",
+        world_setup_dir / "initial_inputs" / "i_heightmap" / "heightmap.npz",
     ]
 
     for candidate in candidates:
@@ -354,8 +376,9 @@ def generate_obstacle_data(
     spacing=1.0,
     x_range=(-19.0, 13.0),
     y_range=(-11.0, 11.0),
-    min_terrain_height=0.15,
+    min_terrain_height=-1.3,
     min_roughness=0.02,
+    require_roughness=False,
     deadends=False,
     output_file=None,
     heightmap_path=None,
@@ -414,6 +437,7 @@ def generate_obstacle_data(
         heightmap_path,
         min_terrain_height=min_terrain_height,
         min_roughness=min_roughness,
+        require_roughness=require_roughness,
     )
 
     x_min, x_max, y_min, y_max = sampler.terrain_bounds()
@@ -442,7 +466,9 @@ def generate_obstacle_data(
     output_dir_str = str(output_dir)
 
     area = (x_max - x_min) * (y_max - y_min)
-    num_rocks = max(1, int(round(density * area)))
+    num_rocks = int(round(density * area))
+    if density > 0:
+        num_rocks = max(1, num_rocks)
 
     print("=" * 60)
     print("   Generating Obstacle Data File (.npy) — Heightmap Mode")
@@ -470,7 +496,8 @@ def generate_obstacle_data(
     print(f"  Collidable Ratio     : {collidable_ratio:.2f}")
     print(f"  Min Spacing          : {spacing:.2f} m")
     print(f"  Min Terrain Height   : {min_terrain_height:.3f} m")
-    print(f"  Min Roughness        : {min_roughness:.4f} m (rejects flat areas)")
+    print(f"  Min Roughness        : {min_roughness:.4f} m "
+          f"({'enforced' if require_roughness else 'NOT enforced'})")
     print(f"  Deadends             : {deadends}")
     print(f"  Output File          : {output_file}")
     print("=" * 60)
@@ -623,6 +650,7 @@ def generate_obstacle_data(
         f.write(f"Collidable Ratio: {collidable_ratio}\n")
         f.write(f"Spacing Min     : {spacing} m\n")
         f.write(f"Min Terrain Z   : {min_terrain_height} m\n")
+        f.write(f"Min Roughness   : {min_roughness} m ({'enforced' if require_roughness else 'not enforced'})\n")
         f.write(f"Deadends        : {deadends}\n")
         f.write(f"Min Collidable Height: {min_collidable_size_m} m\n\n")
         f.write("Rock ID Map (odd=collidable, even=non-collidable) -- read this for blacklisting:\n")
@@ -677,11 +705,21 @@ def parse_args():
     )
     parser.add_argument(
         "--min-roughness", type=float, default=0.02,
-        help="Min local Z std-dev to accept a cell as rough terrain (default: 0.02).",
+        help="Min local Z std-dev to accept a cell as rough terrain (default: 0.02). "
+             "Only enforced if --require-roughness is passed.",
     )
     parser.add_argument(
-        "--min-terrain-height", type=float, default=0.15,
-        help="Minimum Z to consider valid terrain (default: 0.15)",
+        "--require-roughness", action="store_true", default=False,
+        help="Also reject candidate cells below --min-roughness. OFF by default -- "
+             "on heightmaps where rough texture only covers a couple of narrow "
+             "streaks, enabling this collapses all rocks into those streaks "
+             "regardless of density.",
+    )
+    parser.add_argument(
+        "--min-terrain-height", type=float, default=-1.3,
+        help="Minimum Z to consider valid terrain (default: -1.3, tuned for this "
+             "heightmap's Z origin -- adjust if you switch heightmaps with a "
+             "different Z reference).",
     )
     parser.add_argument(
         "--deadends", action="store_true", default=False,
@@ -720,6 +758,7 @@ def main():
         spacing=args.spacing,
         min_terrain_height=args.min_terrain_height,
         min_roughness=args.min_roughness,
+        require_roughness=args.require_roughness,
         deadends=args.deadends,
         output_file=args.output,
         heightmap_path=args.heightmap,

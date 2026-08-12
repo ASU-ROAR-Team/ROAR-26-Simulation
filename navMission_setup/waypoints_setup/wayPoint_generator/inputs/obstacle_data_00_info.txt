@@ -1,0 +1,27 @@
+Obstacle Data Summary
+World Name      : marsyard.world
+Heightmap       : /home/misara/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_heightmap/heightmap.npz
+Rocks Dir       : /home/misara/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/world_setup/rocks_ws
+Total Placed    : 0
+Density         : 0.0 rocks/m²
+Collidable Ratio: 0.5
+Spacing Min     : 1.0 m
+Min Terrain Z   : 0.15 m
+Min Roughness   : 0.02 m (not enforced)
+Deadends        : False
+Min Collidable Height: 0.15 m
+
+Rock ID Map (odd=collidable, even=non-collidable) -- read this for blacklisting:
+  rock_id= 1 [collidable    ] -> mesh=rock_1  L=0.471 m  W=0.289 m  H=0.600 m
+  rock_id= 2 [non-collidable] -> mesh=rock_6  L=0.151 m  W=0.084 m  H=0.081 m
+  rock_id= 3 [collidable    ] -> mesh=rock_2  L=1.029 m  W=0.359 m  H=0.502 m
+  rock_id= 4 [non-collidable] -> mesh=rock_7  L=0.104 m  W=0.057 m  H=0.098 m
+  rock_id= 5 [collidable    ] -> mesh=rock_3  L=0.651 m  W=0.490 m  H=0.645 m
+  rock_id= 6 [non-collidable] -> mesh=rock_8  L=0.115 m  W=0.037 m  H=0.082 m
+  rock_id= 7 [collidable    ] -> mesh=rock_4  L=0.484 m  W=0.171 m  H=0.254 m
+  rock_id= 8 [non-collidable] -> mesh=rock_9  L=0.111 m  W=0.077 m  H=0.112 m
+  rock_id= 9 [collidable    ] -> mesh=rock_5  L=0.311 m  W=0.155 m  H=0.257 m
+  rock_id=10 [non-collidable] -> mesh=rock_6  L=0.151 m  W=0.084 m  H=0.081 m
+
+
+(mesh + dimensions for each rock_id are in the Rock ID Map above, not repeated per-instance)
