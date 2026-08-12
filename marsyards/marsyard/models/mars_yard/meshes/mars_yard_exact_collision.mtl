@@ -1,7 +1,7 @@
-# Blender 4.5.1 LTS MTL File: 'yard1.blend'
+# Blender 4.5.1 LTS MTL File: 'None'
 # www.blender.org
 
-newmtl mars_yard_exact_closed_photo
+newmtl mars_yard_exact_closed_photo.003
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Ks 0.000000 0.000000 0.000000
@@ -9,4 +9,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 1
-map_Kd ../materials/textures/marsyard_coordsys_exact_closed.png
+map_Kd //wsl.localhost/Ubuntu-22.04/home/misara/Simulation_ws/src/ROAR-26-Simulation/marsyards/marsyard/models/mars_yard/materials/textures/marsyard_coordsys_exact_closed.png

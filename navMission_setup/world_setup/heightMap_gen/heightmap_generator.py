@@ -946,7 +946,7 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
             R_yaw[0, 1] = -s
             R_yaw[1, 0] = s
             R_yaw[1, 1] = c
-    
+
         if args.swap_xy:
             T_swap = np.array([
                 [0.0, 1.0, 0.0, 0.0],
@@ -955,13 +955,13 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
                 [0.0, 0.0, 0.0, 1.0]
             ], dtype=np.float64)
             R_yaw = R_yaw @ T_swap
-            
+
         triangles = load_mesh_triangles(mesh_path)
         triangles = apply_transform(R_yaw, triangles.reshape(-1, 3)).reshape(-1, 3, 3)
         xs, ys, grid = rasterize_triangles(triangles, args.resolution)
         if args.fill_nan:
             grid = fill_nan_nearest(xs, ys, grid)
-            
+
         write_npz(
             args.output,
             xs=xs,
@@ -973,7 +973,7 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
         )
         if args.preview:
             write_preview(args.preview, grid)
-            
+
         empty_cells = int(np.isnan(grid).sum())
         print("=" * 60)
         print("Generated height map from direct mesh")
