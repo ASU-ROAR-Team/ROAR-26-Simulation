@@ -165,28 +165,13 @@ def fuse_obstacle_data_into_world(input_npy_path=None, world_name="marsyard.worl
         is_collidable = bool(r.get('is_collidable', True))
         model_name = str(r.get('name', f"Rock_{i}"))
 
-        model_el = ET.SubElement(world_elem, 'model', attrib={'name': model_name})
-        
-        static_el = ET.SubElement(model_el, 'static')
-        static_el.text = 'true'
-
-        pose_el = ET.SubElement(model_el, 'pose')
+        inc_el = ET.SubElement(world_elem, 'include')
+        name_el = ET.SubElement(inc_el, 'name')
+        name_el.text = model_name
+        pose_el = ET.SubElement(inc_el, 'pose')
         pose_el.text = f"{x:.4f} {y:.4f} {z:.4f} {roll:.4f} {pitch:.4f} {yaw:.4f}"
-
-        link_el = ET.SubElement(model_el, 'link', attrib={'name': 'link'})
-
-        visual_el = ET.SubElement(link_el, 'visual', attrib={'name': 'visual'})
-        v_geom_el = ET.SubElement(visual_el, 'geometry')
-        v_mesh_el = ET.SubElement(v_geom_el, 'mesh')
-        v_uri_el = ET.SubElement(v_mesh_el, 'uri')
-        v_uri_el.text = f"package://rock_generator/rocks_ws/rock_{mesh_id}/meshes/rock_{mesh_id}.obj"
-
-        if is_collidable:
-            col_el = ET.SubElement(link_el, 'collision', attrib={'name': 'collision'})
-            c_geom_el = ET.SubElement(col_el, 'geometry')
-            c_mesh_el = ET.SubElement(c_geom_el, 'mesh')
-            c_uri_el = ET.SubElement(c_mesh_el, 'uri')
-            c_uri_el.text = f"package://rock_generator/rocks_ws/rock_{mesh_id}/meshes/rock_{mesh_id}.obj"
+        uri_el = ET.SubElement(inc_el, 'uri')
+        uri_el.text = f"model://rock_{mesh_id}"
 
     ET.indent(tree, space="  ", level=0)
 

@@ -1,301 +1,102 @@
 Obstacle Data Summary
 World Name      : marsyard.world
-Heightmap       : /home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/world_setup/obsData_gen/inputs/marsyard_heightmap.npz
-Total Placed    : 290
-Density         : 0.412 rocks/m²
-Collidable Ratio: 0.5
+Heightmap       : /home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/navMission_setup/world_setup/initial_inputs/i_heightmap/heightmap.npz
+Rocks Dir       : /home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/navMission_setup/world_setup/rocks_ws
+Total Placed    : 76
+Density         : 0.08 rocks/m²
+Collidable Ratio: 0.6
 Spacing Min     : 1.0 m
 Min Terrain Z   : 0.15 m
 Deadends        : False
-Timestamped File: obstacle_data_20260724_000959.npy
+Min Collidable Height: 0.15 m
 
-[  1] Rock_1       | Model #4 | Pos: ( -2.657,   3.738,  1.069) | Collidable: False
-[  2] Rock_2       | Model #7 | Pos: ( -9.557,  -0.710,  1.076) | Collidable: True
-[  3] Rock_3       | Model #7 | Pos: ( -1.239,   7.866,  1.298) | Collidable: True
-[  4] Rock_4       | Model #2 | Pos: (  8.018,   7.929,  0.945) | Collidable: False
-[  5] Rock_5       | Model #9 | Pos: (  7.443,   3.537,  1.648) | Collidable: False
-[  6] Rock_6       | Model #5 | Pos: ( -6.067,  -5.449,  1.199) | Collidable: False
-[  7] Rock_7       | Model #5 | Pos: (  3.911,   4.869,  1.294) | Collidable: True
-[  8] Rock_8       | Model #8 | Pos: ( -4.258,   1.403,  0.980) | Collidable: True
-[  9] Rock_9       | Model #9 | Pos: ( -3.254,   9.851,  0.765) | Collidable: True
-[ 10] Rock_10      | Model #7 | Pos: (-14.776,   3.331,  0.889) | Collidable: True
-[ 11] Rock_11      | Model #1 | Pos: (  5.325,   7.529,  1.057) | Collidable: True
-[ 12] Rock_12      | Model #4 | Pos: (-14.963,   2.136,  0.882) | Collidable: False
-[ 13] Rock_13      | Model #7 | Pos: ( -6.135,   8.725,  1.196) | Collidable: True
-[ 14] Rock_14      | Model #1 | Pos: ( -3.419,  -7.028,  1.027) | Collidable: True
-[ 15] Rock_15      | Model #1 | Pos: ( 11.979,   9.788,  0.855) | Collidable: True
-[ 16] Rock_16      | Model #8 | Pos: ( -8.599,   9.319,  1.017) | Collidable: True
-[ 17] Rock_17      | Model #6 | Pos: (  9.703,   6.466,  1.300) | Collidable: True
-[ 18] Rock_18      | Model #6 | Pos: (  6.061,   3.271,  1.832) | Collidable: False
-[ 19] Rock_19      | Model #7 | Pos: ( -7.609,   1.000,  0.956) | Collidable: True
-[ 20] Rock_20      | Model #7 | Pos: ( -6.530,   2.474,  1.281) | Collidable: True
-[ 21] Rock_21      | Model #7 | Pos: ( -8.319,  -4.343,  1.152) | Collidable: False
-[ 22] Rock_22      | Model #8 | Pos: (  9.597,   9.278,  0.883) | Collidable: True
-[ 23] Rock_23      | Model #1 | Pos: ( -1.521,  -1.314,  1.099) | Collidable: False
-[ 24] Rock_24      | Model #5 | Pos: (  5.074,   9.996,  0.807) | Collidable: True
-[ 25] Rock_25      | Model #9 | Pos: ( -0.751,  -9.106,  1.435) | Collidable: True
-[ 26] Rock_26      | Model #4 | Pos: ( 12.115,   4.884,  1.201) | Collidable: False
-[ 27] Rock_27      | Model #9 | Pos: (  7.634,   5.145,  1.946) | Collidable: False
-[ 28] Rock_28      | Model #8 | Pos: (-13.959,  -6.587,  1.018) | Collidable: True
-[ 29] Rock_29      | Model #6 | Pos: (  4.550,   5.977,  1.387) | Collidable: True
-[ 30] Rock_30      | Model #1 | Pos: (-11.975,  -4.723,  1.140) | Collidable: True
-[ 31] Rock_31      | Model #6 | Pos: (-10.046,  -5.078,  1.122) | Collidable: False
-[ 32] Rock_32      | Model #8 | Pos: ( -8.615,  -2.814,  1.209) | Collidable: False
-[ 33] Rock_33      | Model #3 | Pos: (  3.768,   2.830,  1.582) | Collidable: False
-[ 34] Rock_34      | Model #4 | Pos: (-14.527,   5.701,  1.186) | Collidable: True
-[ 35] Rock_35      | Model #4 | Pos: ( -2.629,  -8.372,  1.196) | Collidable: False
-[ 36] Rock_36      | Model #1 | Pos: (  0.812,  -0.748,  1.083) | Collidable: True
-[ 37] Rock_37      | Model #1 | Pos: ( -7.677,  -7.792,  0.852) | Collidable: True
-[ 38] Rock_38      | Model #1 | Pos: (  7.087,   6.334,  1.905) | Collidable: True
-[ 39] Rock_39      | Model #4 | Pos: (-10.112,   5.015,  1.105) | Collidable: True
-[ 40] Rock_40      | Model #5 | Pos: ( -7.653,   2.423,  0.807) | Collidable: False
-[ 41] Rock_41      | Model #7 | Pos: (  2.120,  -5.058,  0.980) | Collidable: True
-[ 42] Rock_42      | Model #8 | Pos: ( -1.798,  -4.059,  1.450) | Collidable: True
-[ 43] Rock_43      | Model #6 | Pos: ( -0.454,   2.160,  0.905) | Collidable: True
-[ 44] Rock_44      | Model #7 | Pos: (  3.546,   6.280,  0.736) | Collidable: False
-[ 45] Rock_45      | Model #3 | Pos: ( -3.136,  -9.921,  1.563) | Collidable: True
-[ 46] Rock_46      | Model #2 | Pos: (  2.300,  -8.036,  1.167) | Collidable: False
-[ 47] Rock_47      | Model #9 | Pos: ( -2.594,  -4.727,  1.349) | Collidable: False
-[ 48] Rock_48      | Model #6 | Pos: ( -2.655,  -1.317,  1.248) | Collidable: True
-[ 49] Rock_49      | Model #8 | Pos: (  8.754,   4.253,  1.081) | Collidable: False
-[ 50] Rock_50      | Model #8 | Pos: (  2.703,  10.251,  1.467) | Collidable: False
-[ 51] Rock_51      | Model #6 | Pos: ( -9.233,   2.602,  0.670) | Collidable: False
-[ 52] Rock_52      | Model #9 | Pos: ( 11.145,   8.582,  1.397) | Collidable: True
-[ 53] Rock_53      | Model #9 | Pos: (  7.369,   9.008,  0.984) | Collidable: True
-[ 54] Rock_54      | Model #8 | Pos: (  7.089,   2.422,  1.051) | Collidable: False
-[ 55] Rock_55      | Model #6 | Pos: ( -7.573,   8.899,  1.087) | Collidable: True
-[ 56] Rock_56      | Model #5 | Pos: (  4.723,  -8.105,  0.645) | Collidable: True
-[ 57] Rock_57      | Model #2 | Pos: (  5.632,   0.790,  1.125) | Collidable: True
-[ 58] Rock_58      | Model #7 | Pos: (  3.021,  -9.743,  1.664) | Collidable: False
-[ 59] Rock_59      | Model #2 | Pos: ( -8.961,  -8.637,  0.735) | Collidable: True
-[ 60] Rock_60      | Model #2 | Pos: (-12.333,  -8.396,  0.634) | Collidable: True
-[ 61] Rock_61      | Model #3 | Pos: ( -5.911,  -7.358,  1.031) | Collidable: False
-[ 62] Rock_62      | Model #6 | Pos: (  4.051,   9.806,  1.052) | Collidable: False
-[ 63] Rock_63      | Model #3 | Pos: ( -4.630,   2.481,  1.135) | Collidable: True
-[ 64] Rock_64      | Model #7 | Pos: (  5.845,  -2.120,  1.666) | Collidable: True
-[ 65] Rock_65      | Model #8 | Pos: ( -5.075,  -9.426,  1.005) | Collidable: False
-[ 66] Rock_66      | Model #1 | Pos: (  0.184,  -6.029,  0.743) | Collidable: True
-[ 67] Rock_67      | Model #1 | Pos: (  6.272,  -8.861,  1.591) | Collidable: True
-[ 68] Rock_68      | Model #6 | Pos: (  1.281,  -7.995,  1.206) | Collidable: False
-[ 69] Rock_69      | Model #6 | Pos: (  5.909,   5.338,  2.101) | Collidable: False
-[ 70] Rock_70      | Model #2 | Pos: (-13.891,  -8.864,  0.676) | Collidable: False
-[ 71] Rock_71      | Model #2 | Pos: (  2.141, -10.340,  1.674) | Collidable: True
-[ 72] Rock_72      | Model #4 | Pos: ( -6.687,  -9.018,  1.001) | Collidable: True
-[ 73] Rock_73      | Model #3 | Pos: (  6.793,  10.953,  1.359) | Collidable: False
-[ 74] Rock_74      | Model #3 | Pos: (  8.942,   2.643,  1.054) | Collidable: False
-[ 75] Rock_75      | Model #7 | Pos: (  1.341,   6.285,  1.308) | Collidable: False
-[ 76] Rock_76      | Model #7 | Pos: (  1.699,   2.517,  1.495) | Collidable: False
-[ 77] Rock_77      | Model #1 | Pos: (-12.694,   2.435,  0.779) | Collidable: True
-[ 78] Rock_78      | Model #2 | Pos: ( -3.220,   8.178,  1.107) | Collidable: True
-[ 79] Rock_79      | Model #9 | Pos: ( -9.938,   9.960,  1.021) | Collidable: False
-[ 80] Rock_80      | Model #8 | Pos: (  5.796,  -0.852,  1.529) | Collidable: True
-[ 81] Rock_81      | Model #4 | Pos: ( -1.858,   8.858,  0.819) | Collidable: False
-[ 82] Rock_82      | Model #9 | Pos: ( -3.729,   3.647,  1.171) | Collidable: True
-[ 83] Rock_83      | Model #2 | Pos: ( 12.734,   8.819,  1.676) | Collidable: False
-[ 84] Rock_84      | Model #2 | Pos: ( -3.397,  -2.217,  1.452) | Collidable: True
-[ 85] Rock_85      | Model #8 | Pos: (  5.555,   2.270,  1.139) | Collidable: True
-[ 86] Rock_86      | Model #7 | Pos: ( -7.742,   7.673,  1.240) | Collidable: True
-[ 87] Rock_87      | Model #9 | Pos: (-10.542,  -9.331,  0.707) | Collidable: True
-[ 88] Rock_88      | Model #5 | Pos: ( -7.887,  -1.277,  1.323) | Collidable: False
-[ 89] Rock_89      | Model #4 | Pos: ( -2.376,   0.290,  0.876) | Collidable: True
-[ 90] Rock_90      | Model #8 | Pos: ( -2.530,  -6.253,  1.097) | Collidable: False
-[ 91] Rock_91      | Model #1 | Pos: (  2.920,  -6.491,  0.244) | Collidable: True
-[ 92] Rock_92      | Model #4 | Pos: ( -9.920,  -8.278,  0.871) | Collidable: False
-[ 93] Rock_93      | Model #7 | Pos: (  0.739,  -1.966,  1.443) | Collidable: False
-[ 94] Rock_94      | Model #3 | Pos: ( -4.274,   8.177,  1.211) | Collidable: True
-[ 95] Rock_95      | Model #2 | Pos: ( -1.795,   3.116,  0.945) | Collidable: True
-[ 96] Rock_96      | Model #4 | Pos: (  6.989,  -9.790,  1.921) | Collidable: True
-[ 97] Rock_97      | Model #4 | Pos: (-16.563,   9.021,  1.061) | Collidable: True
-[ 98] Rock_98      | Model #4 | Pos: ( -4.285,  -0.845,  1.354) | Collidable: True
-[ 99] Rock_99      | Model #3 | Pos: (  6.925,  -7.003,  1.681) | Collidable: False
-[100] Rock_100     | Model #8 | Pos: (-11.796,  -6.993,  0.843) | Collidable: True
-[101] Rock_101     | Model #3 | Pos: ( 11.773,   3.857,  1.174) | Collidable: True
-[102] Rock_102     | Model #4 | Pos: (-13.885,   4.749,  0.949) | Collidable: False
-[103] Rock_103     | Model #4 | Pos: (  2.065,   4.846,  1.362) | Collidable: False
-[104] Rock_104     | Model #1 | Pos: ( -4.120,  -8.149,  0.795) | Collidable: True
-[105] Rock_105     | Model #3 | Pos: (-11.154, -10.817,  0.837) | Collidable: False
-[106] Rock_106     | Model #4 | Pos: ( 10.331,   1.532,  1.466) | Collidable: False
-[107] Rock_107     | Model #6 | Pos: ( -7.785,  -9.005,  0.934) | Collidable: False
-[108] Rock_108     | Model #4 | Pos: ( -6.633,   3.599,  1.257) | Collidable: True
-[109] Rock_109     | Model #5 | Pos: (  2.316,   1.066,  1.526) | Collidable: True
-[110] Rock_110     | Model #2 | Pos: ( -7.130,  -3.497,  1.141) | Collidable: False
-[111] Rock_111     | Model #9 | Pos: ( 12.083,   7.785,  1.727) | Collidable: True
-[112] Rock_112     | Model #2 | Pos: (-12.983,  -5.895,  0.969) | Collidable: False
-[113] Rock_113     | Model #5 | Pos: (  0.831,   0.592,  0.975) | Collidable: False
-[114] Rock_114     | Model #3 | Pos: ( -1.395,  -2.477,  1.460) | Collidable: False
-[115] Rock_115     | Model #8 | Pos: (  1.175,  -4.184,  1.445) | Collidable: True
-[116] Rock_116     | Model #8 | Pos: (  1.017, -10.468,  1.652) | Collidable: False
-[117] Rock_117     | Model #8 | Pos: (  4.738, -10.563,  1.803) | Collidable: True
-[118] Rock_118     | Model #6 | Pos: (-16.364,  -7.754,  1.120) | Collidable: True
-[119] Rock_119     | Model #6 | Pos: ( -8.476,  -0.216,  1.050) | Collidable: True
-[120] Rock_120     | Model #7 | Pos: (  1.445,   8.291,  1.395) | Collidable: False
-[121] Rock_121     | Model #9 | Pos: ( 10.703,   9.686,  1.143) | Collidable: True
-[122] Rock_122     | Model #5 | Pos: (  0.605,   1.605,  1.044) | Collidable: True
-[123] Rock_123     | Model #9 | Pos: ( -0.465,  -6.838,  1.098) | Collidable: True
-[124] Rock_124     | Model #6 | Pos: (  8.451,  10.382,  1.348) | Collidable: False
-[125] Rock_125     | Model #2 | Pos: ( -0.192,   3.767,  1.413) | Collidable: True
-[126] Rock_126     | Model #1 | Pos: (-15.655,  -6.679,  1.088) | Collidable: True
-[127] Rock_127     | Model #2 | Pos: (-15.014,   4.723,  1.105) | Collidable: False
-[128] Rock_128     | Model #7 | Pos: (  8.604,   1.696,  1.183) | Collidable: True
-[129] Rock_129     | Model #8 | Pos: (  0.534,   2.734,  1.323) | Collidable: True
-[130] Rock_130     | Model #6 | Pos: (-11.191,  -1.563,  1.217) | Collidable: True
-[131] Rock_131     | Model #1 | Pos: ( 11.671,  10.985,  1.583) | Collidable: False
-[132] Rock_132     | Model #5 | Pos: (  1.620,  -6.200,  0.606) | Collidable: False
-[133] Rock_133     | Model #8 | Pos: (-13.284,   0.648,  0.816) | Collidable: False
-[134] Rock_134     | Model #9 | Pos: ( -6.831,  -0.155,  1.198) | Collidable: False
-[135] Rock_135     | Model #1 | Pos: (-12.757,  -9.893,  0.744) | Collidable: False
-[136] Rock_136     | Model #3 | Pos: (  4.341,  10.969,  1.431) | Collidable: False
-[137] Rock_137     | Model #3 | Pos: ( -5.664,   7.793,  1.237) | Collidable: False
-[138] Rock_138     | Model #6 | Pos: ( -2.704,   1.659,  0.768) | Collidable: True
-[139] Rock_139     | Model #4 | Pos: (  5.303,  -5.261,  1.526) | Collidable: False
-[140] Rock_140     | Model #2 | Pos: ( -9.166,  -6.545,  1.054) | Collidable: True
-[141] Rock_141     | Model #1 | Pos: (  4.198,  -5.968,  0.826) | Collidable: True
-[142] Rock_142     | Model #3 | Pos: (-18.980,   8.408,  1.261) | Collidable: False
-[143] Rock_143     | Model #5 | Pos: (  5.072,   8.551,  0.875) | Collidable: False
-[144] Rock_144     | Model #8 | Pos: (-12.725,   5.394,  1.071) | Collidable: True
-[145] Rock_145     | Model #1 | Pos: (  6.528,  -6.080,  1.604) | Collidable: True
-[146] Rock_146     | Model #8 | Pos: ( -9.781,  -3.443,  1.158) | Collidable: True
-[147] Rock_147     | Model #7 | Pos: ( 12.194,   1.520,  1.083) | Collidable: True
-[148] Rock_148     | Model #1 | Pos: ( -4.585,  -4.205,  1.336) | Collidable: True
-[149] Rock_149     | Model #6 | Pos: (-15.504,   0.216,  1.134) | Collidable: False
-[150] Rock_150     | Model #5 | Pos: (  2.312,   7.596,  1.079) | Collidable: False
-[151] Rock_151     | Model #8 | Pos: ( 10.923,   6.899,  1.688) | Collidable: True
-[152] Rock_152     | Model #2 | Pos: ( -0.639,  -5.394,  1.202) | Collidable: True
-[153] Rock_153     | Model #6 | Pos: ( -5.026,  10.169,  0.940) | Collidable: False
-[154] Rock_154     | Model #4 | Pos: (-15.045,  -9.748,  1.186) | Collidable: True
-[155] Rock_155     | Model #7 | Pos: ( -7.742,   3.628,  0.997) | Collidable: False
-[156] Rock_156     | Model #2 | Pos: ( -9.203, -10.269,  1.044) | Collidable: True
-[157] Rock_157     | Model #6 | Pos: (  6.704,   9.923,  0.931) | Collidable: True
-[158] Rock_158     | Model #5 | Pos: ( -8.149,  -6.644,  1.072) | Collidable: False
-[159] Rock_159     | Model #2 | Pos: (-12.967,   9.239,  1.043) | Collidable: False
-[160] Rock_160     | Model #1 | Pos: (-10.554,  -0.582,  0.963) | Collidable: True
-[161] Rock_161     | Model #1 | Pos: (-12.655,  -0.254,  1.032) | Collidable: True
-[162] Rock_162     | Model #9 | Pos: (-14.820,  -8.284,  1.081) | Collidable: False
-[163] Rock_163     | Model #2 | Pos: ( 12.742,   2.362,  1.417) | Collidable: True
-[164] Rock_164     | Model #4 | Pos: (  6.199,  -7.706,  1.307) | Collidable: True
-[165] Rock_165     | Model #7 | Pos: (  4.779,  -1.237,  1.582) | Collidable: False
-[166] Rock_166     | Model #6 | Pos: (  4.353,   0.967,  1.391) | Collidable: True
-[167] Rock_167     | Model #5 | Pos: (  2.994, -10.970,  1.652) | Collidable: True
-[168] Rock_168     | Model #3 | Pos: (  9.976,   7.804,  1.340) | Collidable: False
-[169] Rock_169     | Model #6 | Pos: (-10.462,  -6.589,  1.014) | Collidable: True
-[170] Rock_170     | Model #4 | Pos: ( -2.195,   9.818,  0.900) | Collidable: True
-[171] Rock_171     | Model #3 | Pos: (  9.487,  10.904,  1.563) | Collidable: False
-[172] Rock_172     | Model #2 | Pos: (  4.259,  -4.663,  1.490) | Collidable: False
-[173] Rock_173     | Model #1 | Pos: (-14.257,  -5.505,  1.084) | Collidable: True
-[174] Rock_174     | Model #9 | Pos: ( -0.076, -10.288,  1.658) | Collidable: False
-[175] Rock_175     | Model #1 | Pos: (-13.761,  -9.938,  0.987) | Collidable: True
-[176] Rock_176     | Model #4 | Pos: ( -7.547,  -5.819,  1.158) | Collidable: False
-[177] Rock_177     | Model #2 | Pos: (  5.057,   3.426,  1.930) | Collidable: True
-[178] Rock_178     | Model #7 | Pos: ( -4.642,   0.474,  1.324) | Collidable: False
-[179] Rock_179     | Model #3 | Pos: ( 11.574,   5.938,  1.505) | Collidable: False
-[180] Rock_180     | Model #7 | Pos: (  3.033,   3.557,  1.553) | Collidable: False
-[181] Rock_181     | Model #5 | Pos: ( -8.883,  -1.817,  1.282) | Collidable: False
-[182] Rock_182     | Model #5 | Pos: ( 10.277,   4.414,  1.329) | Collidable: True
-[183] Rock_183     | Model #7 | Pos: (-10.318,   2.808,  0.738) | Collidable: True
-[184] Rock_184     | Model #3 | Pos: ( -9.548,   8.675,  1.217) | Collidable: True
-[185] Rock_185     | Model #7 | Pos: ( -1.705,   1.873,  0.729) | Collidable: False
-[186] Rock_186     | Model #5 | Pos: ( -6.973,  10.381,  0.954) | Collidable: True
-[187] Rock_187     | Model #3 | Pos: (-16.044,   1.703,  1.207) | Collidable: True
-[188] Rock_188     | Model #2 | Pos: ( -4.736, -10.796,  1.387) | Collidable: True
-[189] Rock_189     | Model #3 | Pos: (-16.780,  -5.057,  1.182) | Collidable: False
-[190] Rock_190     | Model #9 | Pos: (  1.992,  -0.003,  1.500) | Collidable: False
-[191] Rock_191     | Model #2 | Pos: (  2.629,  -3.557,  1.604) | Collidable: False
-[192] Rock_192     | Model #4 | Pos: (  2.139,   9.185,  1.440) | Collidable: True
-[193] Rock_193     | Model #6 | Pos: (-11.663,  -0.596,  0.992) | Collidable: True
-[194] Rock_194     | Model #4 | Pos: (  6.193,   8.121,  0.887) | Collidable: True
-[195] Rock_195     | Model #6 | Pos: (-10.777,   9.310,  1.132) | Collidable: False
-[196] Rock_196     | Model #5 | Pos: ( -0.206,  -2.528,  1.468) | Collidable: True
-[197] Rock_197     | Model #5 | Pos: (-16.912,  -6.755,  1.122) | Collidable: False
-[198] Rock_198     | Model #2 | Pos: ( -3.395,  -4.066,  1.423) | Collidable: False
-[199] Rock_199     | Model #6 | Pos: (  5.407,  -9.380,  1.492) | Collidable: True
-[200] Rock_200     | Model #3 | Pos: (-11.767,   0.985,  0.775) | Collidable: True
-[201] Rock_201     | Model #4 | Pos: (-11.289,   5.171,  1.031) | Collidable: True
-[202] Rock_202     | Model #8 | Pos: (  2.001,  -1.005,  1.553) | Collidable: False
-[203] Rock_203     | Model #3 | Pos: ( -5.503,   1.745,  1.337) | Collidable: True
-[204] Rock_204     | Model #5 | Pos: (-14.367,   0.407,  0.914) | Collidable: False
-[205] Rock_205     | Model #5 | Pos: (  9.954,   2.532,  1.372) | Collidable: True
-[206] Rock_206     | Model #5 | Pos: (  6.931,   0.170,  1.339) | Collidable: False
-[207] Rock_207     | Model #2 | Pos: (-13.240,  -4.128,  1.126) | Collidable: True
-[208] Rock_208     | Model #1 | Pos: (-11.174,   3.807,  0.770) | Collidable: False
-[209] Rock_209     | Model #2 | Pos: ( 11.498,   2.626,  1.171) | Collidable: False
-[210] Rock_210     | Model #9 | Pos: ( -5.859,  10.900,  0.892) | Collidable: False
-[211] Rock_211     | Model #7 | Pos: ( -0.993,  10.257,  1.306) | Collidable: True
-[212] Rock_212     | Model #7 | Pos: (  3.544,   7.311,  0.803) | Collidable: False
-[213] Rock_213     | Model #9 | Pos: ( -1.933,  -7.433,  1.029) | Collidable: True
-[214] Rock_214     | Model #3 | Pos: ( 12.826,   5.899,  1.634) | Collidable: False
-[215] Rock_215     | Model #1 | Pos: (  4.028,  -3.574,  1.673) | Collidable: True
-[216] Rock_216     | Model #3 | Pos: (  4.951,   4.469,  2.031) | Collidable: False
-[217] Rock_217     | Model #2 | Pos: (-18.314,   6.911,  1.167) | Collidable: True
-[218] Rock_218     | Model #7 | Pos: (  0.996,  -9.143,  1.192) | Collidable: True
-[219] Rock_219     | Model #6 | Pos: ( -0.434,  -1.186,  0.959) | Collidable: True
-[220] Rock_220     | Model #9 | Pos: ( 10.711,   3.368,  1.450) | Collidable: False
-[221] Rock_221     | Model #9 | Pos: ( -8.544,   5.032,  1.241) | Collidable: False
-[222] Rock_222     | Model #2 | Pos: ( -3.484,   7.071,  1.267) | Collidable: False
-[223] Rock_223     | Model #2 | Pos: ( -5.236,  -8.150,  0.967) | Collidable: False
-[224] Rock_224     | Model #3 | Pos: (-17.143,   7.313,  1.154) | Collidable: True
-[225] Rock_225     | Model #3 | Pos: (  8.292,   6.085,  1.403) | Collidable: False
-[226] Rock_226     | Model #1 | Pos: (-11.401,  -5.746,  1.037) | Collidable: True
-[227] Rock_227     | Model #7 | Pos: ( -2.680,   4.945,  1.344) | Collidable: True
-[228] Rock_228     | Model #7 | Pos: ( -7.107, -10.911,  1.215) | Collidable: False
-[229] Rock_229     | Model #6 | Pos: (  2.543,   6.412,  0.939) | Collidable: False
-[230] Rock_230     | Model #7 | Pos: (  3.564,  -8.171,  0.820) | Collidable: True
-[231] Rock_231     | Model #8 | Pos: ( -3.404,  10.842,  0.938) | Collidable: False
-[232] Rock_232     | Model #1 | Pos: (-13.928,   8.856,  1.078) | Collidable: True
-[233] Rock_233     | Model #6 | Pos: (  5.392,   6.530,  1.711) | Collidable: True
-[234] Rock_234     | Model #4 | Pos: (  9.082,   8.348,  1.151) | Collidable: True
-[235] Rock_235     | Model #8 | Pos: (-17.627,   8.447,  1.071) | Collidable: False
-[236] Rock_236     | Model #4 | Pos: ( -3.728, -10.999,  1.606) | Collidable: False
-[237] Rock_237     | Model #4 | Pos: ( -1.163,   1.006,  0.805) | Collidable: True
-[238] Rock_238     | Model #8 | Pos: (-10.166,  -1.764,  1.267) | Collidable: False
-[239] Rock_239     | Model #4 | Pos: (  3.393,   8.669,  0.905) | Collidable: True
-[240] Rock_240     | Model #8 | Pos: (-12.198, -10.768,  0.965) | Collidable: False
-[241] Rock_241     | Model #7 | Pos: ( -1.887,   7.031,  1.315) | Collidable: False
-[242] Rock_242     | Model #1 | Pos: ( -5.900,  -3.273,  1.327) | Collidable: True
-[243] Rock_243     | Model #7 | Pos: (-11.656,  -9.859,  0.915) | Collidable: False
-[244] Rock_244     | Model #1 | Pos: ( -8.559,   1.724,  0.676) | Collidable: True
-[245] Rock_245     | Model #7 | Pos: (-16.376,   7.987,  1.124) | Collidable: True
-[246] Rock_246     | Model #5 | Pos: (-15.781,   2.802,  1.203) | Collidable: True
-[247] Rock_247     | Model #2 | Pos: (-12.743,  -7.431,  0.831) | Collidable: False
-[248] Rock_248     | Model #1 | Pos: ( -6.561,   1.380,  1.307) | Collidable: True
-[249] Rock_249     | Model #2 | Pos: ( -8.763,  -7.515,  0.898) | Collidable: False
-[250] Rock_250     | Model #3 | Pos: ( -1.049,  -7.920,  1.137) | Collidable: False
-[251] Rock_251     | Model #6 | Pos: (  6.471,   1.609,  0.883) | Collidable: True
-[252] Rock_252     | Model #8 | Pos: (  9.371,   5.191,  1.000) | Collidable: False
-[253] Rock_253     | Model #1 | Pos: (-10.214, -10.473,  0.946) | Collidable: False
-[254] Rock_254     | Model #1 | Pos: (  0.216,  -4.870,  1.220) | Collidable: False
-[255] Rock_255     | Model #9 | Pos: (  4.012,   3.866,  1.783) | Collidable: False
-[256] Rock_256     | Model #4 | Pos: ( -8.842,   3.738,  0.803) | Collidable: False
-[257] Rock_257     | Model #4 | Pos: (  0.878,  -6.893,  0.823) | Collidable: False
-[258] Rock_258     | Model #8 | Pos: (  3.196,  -4.651,  1.225) | Collidable: True
-[259] Rock_259     | Model #8 | Pos: (  3.595,   1.646,  1.518) | Collidable: True
-[260] Rock_260     | Model #8 | Pos: (  5.142,  -7.183,  0.754) | Collidable: False
-[261] Rock_261     | Model #5 | Pos: (  0.411,   5.579,  1.413) | Collidable: True
-[262] Rock_262     | Model #4 | Pos: (  0.266,  -7.900,  1.144) | Collidable: True
-[263] Rock_263     | Model #9 | Pos: (-11.061,   1.923,  0.707) | Collidable: True
-[264] Rock_264     | Model #7 | Pos: (-11.819,   8.753,  1.137) | Collidable: True
-[265] Rock_265     | Model #5 | Pos: ( -6.894,  -7.025,  1.066) | Collidable: True
-[266] Rock_266     | Model #4 | Pos: ( -1.834,  -5.479,  1.227) | Collidable: True
-[267] Rock_267     | Model #7 | Pos: ( -3.407,   0.816,  0.925) | Collidable: False
-[268] Rock_268     | Model #2 | Pos: ( -0.831,  -4.376,  1.493) | Collidable: False
-[269] Rock_269     | Model #1 | Pos: ( -4.222,   9.304,  1.015) | Collidable: False
-[270] Rock_270     | Model #2 | Pos: ( -1.753,  10.938,  1.298) | Collidable: True
-[271] Rock_271     | Model #3 | Pos: ( -8.605,   8.255,  1.179) | Collidable: True
-[272] Rock_272     | Model #4 | Pos: (  9.473,   3.532,  1.081) | Collidable: False
-[273] Rock_273     | Model #3 | Pos: (-17.053,  -9.639,  1.164) | Collidable: False
-[274] Rock_274     | Model #8 | Pos: (  7.551,   1.070,  1.142) | Collidable: False
-[275] Rock_275     | Model #5 | Pos: ( -7.098,  -4.524,  1.268) | Collidable: True
-[276] Rock_276     | Model #4 | Pos: ( -1.345,   4.706,  1.402) | Collidable: False
-[277] Rock_277     | Model #4 | Pos: ( -2.149,  -9.441,  1.596) | Collidable: True
-[278] Rock_278     | Model #9 | Pos: (-15.739,  -5.029,  1.072) | Collidable: False
-[279] Rock_279     | Model #6 | Pos: (  4.627,  -0.153,  1.526) | Collidable: True
-[280] Rock_280     | Model #2 | Pos: (  3.919,  -9.220,  1.346) | Collidable: False
-[281] Rock_281     | Model #2 | Pos: (-13.867, -10.974,  1.261) | Collidable: False
-[282] Rock_282     | Model #5 | Pos: ( -6.187, -10.489,  1.146) | Collidable: False
-[283] Rock_283     | Model #6 | Pos: ( -8.914,  -5.212,  1.005) | Collidable: False
-[284] Rock_284     | Model #3 | Pos: (  1.198,   7.295,  1.352) | Collidable: False
-[285] Rock_285     | Model #8 | Pos: ( -4.019,  -9.321,  1.169) | Collidable: True
-[286] Rock_286     | Model #3 | Pos: ( -4.984,   3.536,  1.281) | Collidable: False
-[287] Rock_287     | Model #6 | Pos: ( -3.839,  -5.155,  1.259) | Collidable: True
-[288] Rock_288     | Model #2 | Pos: (  6.845,  -1.115,  1.538) | Collidable: False
-[289] Rock_289     | Model #2 | Pos: ( -0.738,   9.153,  1.258) | Collidable: False
-[290] Rock_290     | Model #3 | Pos: ( -9.447,   0.296,  0.750) | Collidable: True
+Rock ID Map (odd=collidable, even=non-collidable) -- read this for blacklisting:
+  rock_id= 1 [collidable    ] -> mesh=rock_1  L=0.471 m  W=0.289 m  H=0.600 m
+  rock_id= 2 [non-collidable] -> mesh=rock_6  L=0.151 m  W=0.084 m  H=0.081 m
+  rock_id= 3 [collidable    ] -> mesh=rock_2  L=1.029 m  W=0.359 m  H=0.502 m
+  rock_id= 4 [non-collidable] -> mesh=rock_7  L=0.104 m  W=0.057 m  H=0.098 m
+  rock_id= 5 [collidable    ] -> mesh=rock_3  L=0.651 m  W=0.490 m  H=0.645 m
+  rock_id= 6 [non-collidable] -> mesh=rock_8  L=0.115 m  W=0.037 m  H=0.082 m
+  rock_id= 7 [collidable    ] -> mesh=rock_4  L=0.484 m  W=0.171 m  H=0.254 m
+  rock_id= 8 [non-collidable] -> mesh=rock_9  L=0.111 m  W=0.077 m  H=0.112 m
+  rock_id= 9 [collidable    ] -> mesh=rock_5  L=0.311 m  W=0.155 m  H=0.257 m
+  rock_id=10 [non-collidable] -> mesh=rock_6  L=0.151 m  W=0.084 m  H=0.081 m
+
+[  1] Rock_1       | rock_id= 4 (non-collidable) | Pos: ( -3.060,   2.473,  0.737) | yaw= 2.251
+[  2] Rock_2       | rock_id= 3 (collidable) | Pos: ( -8.572,   4.818,  0.936) | yaw=-1.093
+[  3] Rock_3       | rock_id= 4 (non-collidable) | Pos: ( -3.483,  27.426,  0.394) | yaw= 2.035
+[  4] Rock_4       | rock_id= 3 (collidable) | Pos: (  7.492,  26.182,  0.759) | yaw=-0.904
+[  5] Rock_5       | rock_id= 6 (non-collidable) | Pos: ( -7.456,   4.398,  0.721) | yaw= 2.274
+[  6] Rock_6       | rock_id= 5 (collidable) | Pos: (  5.929,  24.993,  0.713) | yaw=-0.514
+[  7] Rock_7       | rock_id= 6 (non-collidable) | Pos: ( 12.948,  30.172,  0.251) | yaw=-0.368
+[  8] Rock_8       | rock_id= 5 (collidable) | Pos: (  8.851,  26.619,  0.620) | yaw=-0.852
+[  9] Rock_9       | rock_id= 7 (collidable) | Pos: (  5.957,   2.415,  0.910) | yaw= 2.295
+[ 10] Rock_10      | rock_id= 8 (non-collidable) | Pos: ( -9.638,   6.706,  0.444) | yaw= 1.539
+[ 11] Rock_11      | rock_id=10 (non-collidable) | Pos: (  9.939,  28.217,  0.271) | yaw=-1.229
+[ 12] Rock_12      | rock_id= 9 (collidable) | Pos: (  2.892,  25.688,  0.650) | yaw=-0.374
+[ 13] Rock_13      | rock_id= 3 (collidable) | Pos: (-10.471,   8.045,  0.605) | yaw=-1.318
+[ 14] Rock_14      | rock_id= 4 (non-collidable) | Pos: (  4.227,   0.816,  0.632) | yaw=-2.054
+[ 15] Rock_15      | rock_id= 5 (collidable) | Pos: (-13.170,  10.528,  0.706) | yaw= 2.813
+[ 16] Rock_16      | rock_id= 9 (collidable) | Pos: (-11.500,   9.640,  0.437) | yaw= 2.519
+[ 17] Rock_17      | rock_id= 3 (collidable) | Pos: ( -4.921,   2.272,  0.557) | yaw=-1.685
+[ 18] Rock_18      | rock_id= 5 (collidable) | Pos: ( -1.493,   2.867,  0.525) | yaw=-1.309
+[ 19] Rock_19      | rock_id= 5 (collidable) | Pos: (  3.372,   9.718,  0.571) | yaw=-2.712
+[ 20] Rock_20      | rock_id= 7 (collidable) | Pos: (  0.953,   8.255,  0.564) | yaw=-0.527
+[ 21] Rock_21      | rock_id= 3 (collidable) | Pos: (-11.334,   7.414,  0.874) | yaw= 2.864
+[ 22] Rock_22      | rock_id= 3 (collidable) | Pos: (-12.644,   9.128,  0.426) | yaw= 2.736
+[ 23] Rock_23      | rock_id= 6 (non-collidable) | Pos: (  8.399,  10.785,  0.227) | yaw=-0.695
+[ 24] Rock_24      | rock_id= 1 (collidable) | Pos: ( -8.605,   5.869,  0.471) | yaw=-2.756
+[ 25] Rock_25      | rock_id= 8 (non-collidable) | Pos: (-12.986,  12.697,  0.309) | yaw=-2.562
+[ 26] Rock_26      | rock_id=10 (non-collidable) | Pos: (  7.989,  13.129,  0.218) | yaw=-2.411
+[ 27] Rock_27      | rock_id= 3 (collidable) | Pos: (  2.048,   8.520,  0.617) | yaw= 1.248
+[ 28] Rock_28      | rock_id=10 (non-collidable) | Pos: ( -7.245,  12.117,  0.218) | yaw=-0.583
+[ 29] Rock_29      | rock_id= 5 (collidable) | Pos: ( 11.886,  29.713,  0.569) | yaw=-0.523
+[ 30] Rock_30      | rock_id= 1 (collidable) | Pos: (  1.369,   6.808,  0.596) | yaw=-1.001
+[ 31] Rock_31      | rock_id= 9 (collidable) | Pos: (  3.954,  25.034,  0.450) | yaw= 2.972
+[ 32] Rock_32      | rock_id= 7 (collidable) | Pos: ( -9.984,   5.338,  0.711) | yaw=-1.030
+[ 33] Rock_33      | rock_id= 2 (non-collidable) | Pos: (  7.720,   7.821,  0.189) | yaw= 0.392
+[ 34] Rock_34      | rock_id= 3 (collidable) | Pos: (  4.160,   2.466,  0.473) | yaw= 0.782
+[ 35] Rock_35      | rock_id= 7 (collidable) | Pos: ( -5.908,   3.399,  0.783) | yaw=-0.926
+[ 36] Rock_36      | rock_id=10 (non-collidable) | Pos: (  5.247,   1.111,  0.518) | yaw=-3.077
+[ 37] Rock_37      | rock_id= 6 (non-collidable) | Pos: (-10.840,   6.538,  0.812) | yaw=-2.491
+[ 38] Rock_38      | rock_id= 7 (collidable) | Pos: (-11.521,   8.619,  0.753) | yaw=-0.853
+[ 39] Rock_39      | rock_id= 7 (collidable) | Pos: ( -1.355,  14.410,  0.295) | yaw= 1.831
+[ 40] Rock_40      | rock_id= 9 (collidable) | Pos: (  3.428,   1.475,  0.510) | yaw= 2.806
+[ 41] Rock_41      | rock_id=10 (non-collidable) | Pos: (  2.962,  12.447,  0.188) | yaw=-0.558
+[ 42] Rock_42      | rock_id= 6 (non-collidable) | Pos: ( -3.936,   1.592,  0.304) | yaw= 2.780
+[ 43] Rock_43      | rock_id= 6 (non-collidable) | Pos: (  6.679,   3.193,  0.721) | yaw=-3.129
+[ 44] Rock_44      | rock_id= 1 (collidable) | Pos: ( -4.614,   3.395,  0.940) | yaw=-2.202
+[ 45] Rock_45      | rock_id= 6 (non-collidable) | Pos: (  3.207,  11.280,  0.251) | yaw= 0.207
+[ 46] Rock_46      | rock_id= 1 (collidable) | Pos: (  8.347,  25.650,  0.449) | yaw=-1.160
+[ 47] Rock_47      | rock_id= 9 (collidable) | Pos: ( 11.102,  28.907,  0.470) | yaw= 1.225
+[ 48] Rock_48      | rock_id= 2 (non-collidable) | Pos: ( -7.039,   3.121,  0.228) | yaw= 0.596
+[ 49] Rock_49      | rock_id= 8 (non-collidable) | Pos: (  1.825,  25.700,  0.441) | yaw=-3.049
+[ 50] Rock_50      | rock_id= 7 (collidable) | Pos: (-13.569,  11.863,  0.325) | yaw=-1.002
+[ 51] Rock_51      | rock_id= 5 (collidable) | Pos: (  5.809,  26.206,  0.508) | yaw=-2.485
+[ 52] Rock_52      | rock_id= 8 (non-collidable) | Pos: ( -2.416,  26.607,  0.240) | yaw=-0.804
+[ 53] Rock_53      | rock_id= 5 (collidable) | Pos: (  5.183,   3.061,  0.515) | yaw=-0.362
+[ 54] Rock_54      | rock_id= 9 (collidable) | Pos: ( 13.596,  30.936,  0.379) | yaw= 1.425
+[ 55] Rock_55      | rock_id= 6 (non-collidable) | Pos: ( -6.071,   4.450,  0.203) | yaw=-0.197
+[ 57] Rock_57      | rock_id= 8 (non-collidable) | Pos: (  7.156,  25.042,  0.311) | yaw=-2.908
+[ 58] Rock_58      | rock_id=10 (non-collidable) | Pos: (  9.037,  27.771,  0.210) | yaw= 1.585
+[ 59] Rock_59      | rock_id= 2 (non-collidable) | Pos: ( -6.376,  12.647,  0.241) | yaw=-2.373
+[ 60] Rock_60      | rock_id= 7 (collidable) | Pos: (-12.041,  10.503,  0.480) | yaw=-1.935
+[ 61] Rock_61      | rock_id= 8 (non-collidable) | Pos: (  8.606,   5.369,  0.235) | yaw=-1.779
+[ 65] Rock_65      | rock_id= 3 (collidable) | Pos: (  8.526,  11.917,  0.398) | yaw=-2.290
+[ 66] Rock_66      | rock_id= 4 (non-collidable) | Pos: (  4.774,  26.166,  0.201) | yaw=-2.228
+[ 68] Rock_68      | rock_id= 2 (non-collidable) | Pos: (  2.276,   6.013,  0.237) | yaw= 2.541
+[ 72] Rock_72      | rock_id= 8 (non-collidable) | Pos: (-12.275,  11.613,  0.371) | yaw=-1.418
+[ 74] Rock_74      | rock_id= 4 (non-collidable) | Pos: ( -2.884,   1.330,  0.234) | yaw= 0.566
+[ 82] Rock_82      | rock_id= 7 (collidable) | Pos: (  6.902,   2.064,  0.667) | yaw=-0.092
+[ 83] Rock_83      | rock_id= 2 (non-collidable) | Pos: (  4.169,  10.731,  0.225) | yaw=-0.582
+[ 87] Rock_87      | rock_id= 1 (collidable) | Pos: (  2.175,   7.451,  0.445) | yaw=-0.856
+[ 88] Rock_88      | rock_id=10 (non-collidable) | Pos: (  8.332,   9.520,  0.223) | yaw= 0.011
+[ 89] Rock_89      | rock_id= 9 (collidable) | Pos: ( -7.993,  10.872,  0.318) | yaw=-0.283
+[ 90] Rock_90      | rock_id= 5 (collidable) | Pos: ( -3.487,   3.425,  0.472) | yaw=-1.050
+[ 93] Rock_93      | rock_id= 2 (non-collidable) | Pos: ( -8.247,   3.778,  0.205) | yaw=-0.785
+[ 96] Rock_96      | rock_id= 3 (collidable) | Pos: (  2.507,  24.668,  0.404) | yaw= 1.468
+[ 98] Rock_98      | rock_id= 5 (collidable) | Pos: (  6.950,   4.247,  0.482) | yaw= 0.365
+[114] Rock_114     | rock_id= 2 (non-collidable) | Pos: (-12.381,   8.094,  0.189) | yaw=-2.918
+[118] Rock_118     | rock_id= 5 (collidable) | Pos: (  1.341,   9.310,  0.433) | yaw= 0.889
+
+(mesh + dimensions for each rock_id are in the Rock ID Map above, not repeated per-instance)

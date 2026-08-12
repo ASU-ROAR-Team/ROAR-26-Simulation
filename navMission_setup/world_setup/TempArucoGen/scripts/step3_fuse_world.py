@@ -2,6 +2,8 @@ import numpy as np
 import os
 import xml.etree.ElementTree as ET
 
+import argparse
+
 # ==========================================
 # 1. LANDMARK-TO-MODEL MAPPING CONFIGURATION
 # ==========================================
@@ -28,9 +30,16 @@ LANDMARK_MODELS = {
 # ==========================================
 script_dir = os.path.dirname(os.path.abspath(__file__))
 dir_path = os.path.dirname(script_dir)
-base_world_path = "/home/saif/Desktop/ROAR/simulation_ws/src/marsyards/worlds/worlds/world_Rotated.world"
-npy_path = os.path.join(dir_path, "aruco_data", "aruco_data.npy")
-output_world_path = os.path.join(dir_path, "world", "world_Rotated_Aruco.world")
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--base-world', required=True)
+parser.add_argument('--output-world', required=True)
+parser.add_argument('--npy-data', required=True)
+args = parser.parse_args()
+
+base_world_path = args.base_world
+output_world_path = args.output_world
+npy_path = args.npy_data
 
 # Load mapped coordinates / markers dataset
 raw_data = np.load(npy_path, allow_pickle=True)

@@ -10,14 +10,14 @@ from pathlib import Path
 def _make_runtime_world(context, *args, **kwargs):
     pkg = FindPackageShare('marsyard').find('marsyard')
     models_path = os.path.join(pkg, 'models')
-    model_sdf = os.path.join(models_path, 'mars_yard', 'model.sdf')
+    model_sdf = os.path.join(models_path, 'erc_marsyard_2026', 'model.sdf')
 
     # Build a runtime world with an absolute file:// model.sdf include.
     # This avoids Ignition resource-path guessing issues.
     runtime_world = '/tmp/marsyard_runtime.world'
     world_xml = f"""<?xml version="1.0"?>
 <sdf version="1.7">
-  <world name="marsyard">
+  <world name="erc_marsyard_2026_world">
     <gravity>0 0 -9.81</gravity>
 
     <physics name="dart_physics" type="ignored">
@@ -37,17 +37,18 @@ def _make_runtime_world(context, *args, **kwargs):
       <shadows>false</shadows>
     </scene>
 
+    <!-- ERC Mars Yard 2026 terrain: origin = survey point S1 -->
     <light type="directional" name="sun">
       <cast_shadows>false</cast_shadows>
       <pose>0 0 30 0 0 0</pose>
-      <diffuse>1 1 1 1</diffuse>
-      <specular>0.15 0.15 0.15 1</specular>
-      <direction>-0.35 0.1 -0.93</direction>
+      <diffuse>0.9 0.85 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.3 0.3 -0.9</direction>
     </light>
 
     <include>
       <uri>file://{model_sdf}</uri>
-      <name>mars_yard</name>
+      <name>erc_marsyard_2026</name>
       <pose>0 0 0 0 0 0</pose>
     </include>
   </world>
@@ -112,8 +113,8 @@ def _make_runtime_world(context, *args, **kwargs):
     gazebo_env['GZ_SIM_SYSTEM_PLUGIN_PATH'] = system_plugin_path
 
     return [
-        LogInfo(msg=f'Mars Yard runtime world: {runtime_world}'),
-        LogInfo(msg=f'Mars Yard model.sdf: {model_sdf}'),
+        LogInfo(msg=f'ERC Mars Yard 2026 runtime world: {runtime_world}'),
+        LogInfo(msg=f'ERC Mars Yard 2026 model.sdf: {model_sdf}'),
         ExecuteProcess(
             cmd=['ign', 'gazebo', '-v', '4', '-r', runtime_world],
             additional_env=gazebo_env,

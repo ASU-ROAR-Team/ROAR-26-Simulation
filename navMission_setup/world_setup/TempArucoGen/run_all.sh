@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-WORKSPACE_DIR="/home/saif/Desktop/ROAR/simulation_ws"
-TEMP_DIR="$WORKSPACE_DIR/src/navMission_setup/world_setup/TempArucoGen"
+WORKSPACE_DIR="/home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion"
+TEMP_DIR="$WORKSPACE_DIR/navMission_setup/world_setup/TempArucoGen"
 EXPORT_WORLD_DIR="$TEMP_DIR/world"
 
 echo "=== Cleaning Up Old Generated Assets ==="
@@ -16,8 +16,13 @@ mkdir -p "$TEMP_DIR/costmap"
 mkdir -p "$TEMP_DIR/aruco_data"
 mkdir -p "$EXPORT_WORLD_DIR"
 
-echo "=== Step 1: Generating Heightmap & Costmap ==="
-bash "$TEMP_DIR/scripts/step1_heightmap.sh"
+echo "=== Skipping Step 1: Using Pre-baked Maps from world_1 ==="
+# bash "$TEMP_DIR/scripts/step1_heightmap.sh"
+cp "$WORKSPACE_DIR/navMission_setup/outputs/world_1/heightmap/"*.npz "$TEMP_DIR/heightmap/newhight.npz" || true
+cp "$WORKSPACE_DIR/navMission_setup/outputs/world_1/heightmap/"*.png "$TEMP_DIR/heightmap/newhight.png" || true
+cp "$WORKSPACE_DIR/navMission_setup/outputs/world_1/costmap/"*.npz "$TEMP_DIR/costmap/costmap.npz" || true
+cp "$WORKSPACE_DIR/navMission_setup/outputs/world_1/costmap/"*.png "$TEMP_DIR/costmap/costmap.png" || true
+cp -r "$WORKSPACE_DIR/navMission_setup/outputs/world_1/costmap/csv" "$TEMP_DIR/costmap/" || true
 
 echo "=== Step 2: Generating Mapped npy/yaml Data ==="
 python3 "$TEMP_DIR/scripts/step2_generate_npy.py"
@@ -64,19 +69,17 @@ Models Directory        : models/
 EOF
 
 echo "=== Step 5: Integrating files into Workspace packages ==="
-# Copy world to marsyards package
-cp "$EXPORT_WORLD_DIR/world_Rotated_Aruco.world" "$WORKSPACE_DIR/src/marsyards/worlds/worlds/world_Rotated_Aruco.world" 2>/dev/null || true
+# Copy world to dev_environment
+cp "$EXPORT_WORLD_DIR/world_Rotated_Aruco.world" "$WORKSPACE_DIR/dev_environment/worlds/world_Rotated_Aruco.world" 2>/dev/null || true
 
 # Copy custom models so Gazebo can discover model://aruco_*
-cp -r "$TEMP_DIR"/models/aruco_* "$WORKSPACE_DIR/src/marsyards/marsyard/models/" 2>/dev/null || true
-mkdir -p "$WORKSPACE_DIR/src/marsyards/worlds/models/aruco"
-cp -r "$TEMP_DIR"/models/aruco_* "$WORKSPACE_DIR/src/marsyards/worlds/models/aruco/" 2>/dev/null || true
+cp -r "$TEMP_DIR"/models/aruco_* "$WORKSPACE_DIR/marsyards/marsyard/models/" 2>/dev/null || true
 
-echo "=== Step 6: Building Workspace (if ROS 2 present) ==="
+echo "=== Step 6: Building Workspace ==="
 if [ -f "/opt/ros/humble/setup.bash" ]; then
     source /opt/ros/humble/setup.bash
-    cd "$WORKSPACE_DIR"
-    colcon build --packages-select marsyard worlds --symlink-install || true
+    cd "$WORKSPACE_DIR/dev_environment"
+    colcon build --paths rover/* || true
 fi
 
 echo "=========================================================="

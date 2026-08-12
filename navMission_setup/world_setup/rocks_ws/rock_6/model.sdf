@@ -3,7 +3,6 @@
   <model name="rock_6">
     <static>true</static>
     <link name="rock_link">
-
       <!-- Visual -->
       <visual name="visual">
         <geometry>
@@ -21,7 +20,6 @@
           </pbr>
         </material>
       </visual>
-
       <!-- Collision -->
       <collision name="collision">
         <geometry>
@@ -30,7 +28,6 @@
           </mesh>
         </geometry>
       </collision>
-
     </link>
   </model>
 </sdf>

@@ -2,9 +2,9 @@
 set -e
 
 # Paths
-WORKSPACE_DIR="/home/saif/Desktop/ROAR/simulation_ws"
-WORLD_PATH="$WORKSPACE_DIR/src/marsyards/worlds/worlds/world_Rotated.world"
-TEMP_DIR="$WORKSPACE_DIR/src/navMission_setup/world_setup/TempArucoGen"
+WORKSPACE_DIR="/home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion"
+WORLD_PATH="$WORKSPACE_DIR/navMission_setup/outputs/world_1/world/world_1_d0.008_c0.50.world"
+TEMP_DIR="$WORKSPACE_DIR/navMission_setup/world_setup/TempArucoGen"
 
 HEIGHTMAP_GEN="$TEMP_DIR/scripts/heightmap_generator.py"
 COSTMAP_GEN="$TEMP_DIR/scripts/costmap_generator.py"

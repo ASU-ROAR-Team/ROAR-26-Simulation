@@ -11,8 +11,8 @@ import numpy as np
 # 1. CONFIGURATION PARAMETERS
 # ==========================================
 # Offset mapping: x_sim = x_pdf + OFFSET_X, y_sim = y_pdf + OFFSET_Y
-OFFSET_X = -16.0
-OFFSET_Y = -6.0
+OFFSET_X = 0.0
+OFFSET_Y = 0.0
 
 DEFAULT_SIZE_M = 0.20
 DEFAULT_FRAME_ID = "map"
@@ -21,21 +21,21 @@ DEFAULT_FRAME_ID = "map"
 # 2. LANDMARK PDF COORDINATES (L1 to L15)
 # ==========================================
 LANDMARKS = [
-    {"id": 1,  "name": "ArUco_1",  "x": 3.1374,  "y": 4.3246,  "yaw": 0.0},
-    {"id": 2,  "name": "ArUco_2",  "x": 9.0888,  "y": -4.5555, "yaw": 0.0},
-    {"id": 3,  "name": "ArUco_3",  "x": 8.2731,  "y": 2.2478,  "yaw": 0.0},
-    {"id": 4,  "name": "ArUco_4",  "x": 13.5552, "y": 3.3260,  "yaw": 0.0},
-    {"id": 5,  "name": "ArUco_5",  "x": 17.6623, "y": -2.7646, "yaw": 0.0},
-    {"id": 6,  "name": "ArUco_6",  "x": 23.8746, "y": -2.3014, "yaw": 0.0},
-    {"id": 7,  "name": "ArUco_7",  "x": 27.7097, "y": 2.7192,  "yaw": 0.0},
-    {"id": 8,  "name": "ArUco_8",  "x": 28.3320, "y": 8.6813,  "yaw": 0.0},
-    {"id": 9,  "name": "ArUco_9",  "x": 25.8693, "y": 7.3461,  "yaw": 0.0},
-    {"id": 10, "name": "ArUco_10", "x": 18.6570, "y": 4.5163,  "yaw": 0.0},
-    {"id": 11, "name": "ArUco_11", "x": 14.9031, "y": 6.1368,  "yaw": 0.0},
-    {"id": 12, "name": "ArUco_12", "x": 13.2623, "y": 11.3769, "yaw": 0.0},
-    {"id": 13, "name": "ArUco_13", "x": 10.0015, "y": 5.6827,  "yaw": 0.0},
-    {"id": 14, "name": "ArUco_14", "x": 8.0354,  "y": 12.9120, "yaw": 0.0},
-    {"id": 15, "name": "ArUco_15", "x": 2.7876,  "y": 13.5601, "yaw": 0.0}
+    {"id": 1,  "name": "ArUco_1",  "x": 3.183,   "y": 8.012,   "yaw": 0.0},
+    {"id": 2,  "name": "ArUco_2",  "x": 7.269,   "y": 9.482,   "yaw": 0.0},
+    {"id": 3,  "name": "ArUco_3",  "x": 7.878,   "y": 17.583,  "yaw": 0.0},
+    {"id": 4,  "name": "ArUco_4",  "x": 9.225,   "y": 22.389,  "yaw": 0.0},
+    {"id": 5,  "name": "ArUco_5",  "x": 3.518,   "y": 23.990,  "yaw": 0.0},
+    {"id": 6,  "name": "ArUco_6",  "x": 0.882,   "y": 16.870,  "yaw": 0.0},
+    {"id": 7,  "name": "ArUco_7",  "x": -3.944,  "y": 21.415,  "yaw": 0.0},
+    {"id": 8,  "name": "ArUco_8",  "x": -5.491,  "y": 16.334,  "yaw": 0.0},
+    {"id": 9,  "name": "ArUco_9",  "x": -7.695,  "y": 13.528,  "yaw": 0.0},
+    {"id": 10, "name": "ArUco_10", "x": -1.610,  "y": 12.602,  "yaw": 0.0},
+    {"id": 11, "name": "ArUco_11", "x": -7.715,  "y": 9.721,   "yaw": 0.0},
+    {"id": 12, "name": "ArUco_12", "x": -4.311,  "y": 4.442,   "yaw": 0.0},
+    {"id": 13, "name": "ArUco_13", "x": -5.720,  "y": 28.118,  "yaw": 0.0},
+    {"id": 14, "name": "ArUco_14", "x": -11.438, "y": 5.230,   "yaw": 0.0},
+    {"id": 15, "name": "ArUco_15", "x": 6.483,   "y": 1.102,   "yaw": 0.0}
 ]
 
 
@@ -61,11 +61,16 @@ def euler_to_quaternion(roll=0.0, pitch=0.0, yaw=0.0):
     }
 
 
+import argparse
+
 def main():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    temp_dir = os.path.dirname(script_dir)
-    heightmap_path = os.path.join(temp_dir, "heightmap", "newhight.npz")
-    output_dir = os.path.join(temp_dir, "aruco_data")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--heightmap', required=True)
+    parser.add_argument('--output-dir', required=True)
+    args = parser.parse_args()
+
+    heightmap_path = args.heightmap
+    output_dir = args.output_dir
     os.makedirs(output_dir, exist_ok=True)
 
     output_npy_path = os.path.join(output_dir, "aruco_data.npy")

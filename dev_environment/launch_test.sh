@@ -98,7 +98,9 @@ echo "[dev_env] Launching simulation..."
 # Set environment
 export QT_QPA_PLATFORM=xcb
 MODELS_DIR="${SCRIPT_DIR}/models"
-export IGN_GAZEBO_RESOURCE_PATH="${MODELS_DIR}:${SCRIPT_DIR}/install:${IGN_GAZEBO_RESOURCE_PATH}"
+ERC_MODELS_DIR="${SCRIPT_DIR}/../marsyards/marsyard/models"
+ROCKS_DIR="${SCRIPT_DIR}/../navMission_setup/world_setup/rocks_ws"
+export IGN_GAZEBO_RESOURCE_PATH="${ERC_MODELS_DIR}:${ROCKS_DIR}:${MODELS_DIR}:${SCRIPT_DIR}/install:${IGN_GAZEBO_RESOURCE_PATH}"
 export GZ_SIM_RESOURCE_PATH="${MODELS_DIR}:${SCRIPT_DIR}/install:${GZ_SIM_RESOURCE_PATH}"
 export IGN_GAZEBO_SYSTEM_PLUGIN_PATH="/opt/ros/humble/lib"
 

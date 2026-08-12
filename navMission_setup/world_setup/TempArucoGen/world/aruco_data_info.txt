@@ -4,18 +4,18 @@ Total Markers : 15
 Frame ID      : map
 Marker Size   : 0.2 m
 
-[ 1] ArUco_1    | Pos: (-12.8626, -1.6754,  1.1724) | Size: 0.20 m | Frame: map
-[ 2] ArUco_2    | Pos: (-6.9112, -10.5555,  1.1742) | Size: 0.20 m | Frame: map
-[ 3] ArUco_3    | Pos: (-7.7269, -3.7522,  1.1445) | Size: 0.20 m | Frame: map
-[ 4] ArUco_4    | Pos: (-2.4448, -2.6740,  1.4944) | Size: 0.20 m | Frame: map
-[ 5] ArUco_5    | Pos: ( 1.6623, -8.7646,  1.2080) | Size: 0.20 m | Frame: map
-[ 6] ArUco_6    | Pos: ( 7.8746, -8.3014,  1.9224) | Size: 0.20 m | Frame: map
-[ 7] ArUco_7    | Pos: (11.7097, -3.2808,  1.2173) | Size: 0.20 m | Frame: map
-[ 8] ArUco_8    | Pos: (12.3320,  2.6813,  1.2706) | Size: 0.20 m | Frame: map
-[ 9] ArUco_9    | Pos: ( 9.8693,  1.3461,  1.4321) | Size: 0.20 m | Frame: map
-[10] ArUco_10   | Pos: ( 2.6570, -1.4837,  1.5868) | Size: 0.20 m | Frame: map
-[11] ArUco_11   | Pos: (-1.0969,  0.1368,  0.8390) | Size: 0.20 m | Frame: map
-[12] ArUco_12   | Pos: (-2.7377,  5.3769,  1.3454) | Size: 0.20 m | Frame: map
-[13] ArUco_13   | Pos: (-5.9985, -0.3173,  1.3624) | Size: 0.20 m | Frame: map
-[14] ArUco_14   | Pos: (-7.9646,  6.9120,  1.2799) | Size: 0.20 m | Frame: map
-[15] ArUco_15   | Pos: (-13.2124,  7.5601,  1.1864) | Size: 0.20 m | Frame: map
+[ 1] ArUco_1    | Pos: ( 3.1830,  8.0120,  0.0848) | Size: 0.20 m | Frame: map
+[ 2] ArUco_2    | Pos: ( 7.2690,  9.4820,  0.1802) | Size: 0.20 m | Frame: map
+[ 3] ArUco_3    | Pos: ( 7.8780, 17.5830, -0.0338) | Size: 0.20 m | Frame: map
+[ 4] ArUco_4    | Pos: ( 9.2250, 22.3890, -0.0094) | Size: 0.20 m | Frame: map
+[ 5] ArUco_5    | Pos: ( 3.5180, 23.9900, -0.2141) | Size: 0.20 m | Frame: map
+[ 6] ArUco_6    | Pos: ( 0.8820, 16.8700, -0.0291) | Size: 0.20 m | Frame: map
+[ 7] ArUco_7    | Pos: (-3.9440, 21.4150, -0.4839) | Size: 0.20 m | Frame: map
+[ 8] ArUco_8    | Pos: (-5.4910, 16.3340, -0.1219) | Size: 0.20 m | Frame: map
+[ 9] ArUco_9    | Pos: (-7.6950, 13.5280, -0.1686) | Size: 0.20 m | Frame: map
+[10] ArUco_10   | Pos: (-1.6100, 12.6020, -0.0891) | Size: 0.20 m | Frame: map
+[11] ArUco_11   | Pos: (-7.7150,  9.7210, -0.1552) | Size: 0.20 m | Frame: map
+[12] ArUco_12   | Pos: (-4.3110,  4.4420, -0.0941) | Size: 0.20 m | Frame: map
+[13] ArUco_13   | Pos: (-5.7200, 28.1180, -0.5995) | Size: 0.20 m | Frame: map
+[14] ArUco_14   | Pos: (-11.4380,  5.2300, -0.0011) | Size: 0.20 m | Frame: map
+[15] ArUco_15   | Pos: ( 6.4830,  1.1020,  0.2112) | Size: 0.20 m | Frame: map

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="erc_marsyard_2026">
+    <static>true</static><self_collide>false</self_collide>
+    <link name="terrain_link">
+      <visual name="terrain_visual">
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <mesh>
+            <uri>model://erc_marsyard_2026/meshes/marsyard_visual.obj</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <double_sided>true</double_sided>
+          <pbr>
+            <metal>
+              <albedo_map>model://erc_marsyard_2026/materials/textures/marsyard_orthophoto.jpg</albedo_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <collision name="terrain_collision">
+        <geometry><mesh><uri>model://erc_marsyard_2026/meshes/marsyard_collision.obj</uri></mesh></geometry>
+        <surface>
+          <friction><ode><mu>1.20</mu><mu2>1.15</mu2><slip1>0.008</slip1><slip2>0.012</slip2></ode></friction>
+          <contact><ode><kp>25000000</kp><kd>3</kd><max_vel>0.05</max_vel><min_depth>0.001</min_depth></ode></contact>
+          <bounce><restitution_coefficient>0.0</restitution_coefficient><threshold>100000</threshold></bounce>
+        </surface>
+      </collision>
+    </link>
+  </model>
+</sdf>

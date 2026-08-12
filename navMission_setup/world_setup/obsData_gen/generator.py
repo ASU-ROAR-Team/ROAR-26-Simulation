@@ -26,6 +26,13 @@ from pathlib import Path
 
 import numpy as np
 
+# Fixed ArUco marker locations to avoid rock collisions
+ARUCO_MARKERS = [
+    (3.183, 8.012), (7.269, 9.482), (7.878, 17.583), (9.225, 22.389),
+    (3.518, 23.990), (0.882, 16.870), (-3.944, 21.415), (-5.491, 16.334),
+    (-7.695, 13.528), (-1.610, 12.602), (-7.715, 9.721), (-4.311, 4.442),
+    (-5.720, 28.118), (-11.438, 5.230), (6.483, 1.102)
+]
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Heightmap Sampler
@@ -166,14 +173,10 @@ class HeightmapSampler:
 _ROCK_DIM_CACHE: dict[str, dict[int, dict[str, float]]] = {}
 
 
-def _read_obj_extents(obj_path: Path) -> tuple[float, float, float]:
+def _read_obj_extents(obj_path: Path) -> dict:
     """
     Parses vertex lines ('v x y z ...') out of a Wavefront .obj file and
-    returns the axis-aligned bounding box size (length, width, height) in
-    the mesh's own X/Y/Z coordinate frame.
-
-    No mesh library dependency (trimesh, etc.) required -- this is a plain
-    line scan, which is all that's needed for a bounding box.
+    returns the axis-aligned bounding box size and limits in the mesh's own X/Y/Z coordinate frame.
     """
     min_v = [math.inf, math.inf, math.inf]
     max_v = [-math.inf, -math.inf, -math.inf]
@@ -183,7 +186,6 @@ def _read_obj_extents(obj_path: Path) -> tuple[float, float, float]:
             if not line.startswith("v "):
                 continue
             parts = line.split()
-            # 'v x y z' -- ignore any trailing w/color components
             if len(parts) < 4:
                 continue
             x, y, z = float(parts[1]), float(parts[2]), float(parts[3])
@@ -196,10 +198,14 @@ def _read_obj_extents(obj_path: Path) -> tuple[float, float, float]:
     if any(math.isinf(v) for v in min_v):
         raise ValueError(f"No vertex data found in {obj_path}")
 
-    length = max_v[0] - min_v[0]
-    width = max_v[1] - min_v[1]
-    height = max_v[2] - min_v[2]
-    return length, width, height
+    return {
+        "length": max_v[0] - min_v[0],
+        "width": max_v[1] - min_v[1],
+        "height": max_v[2] - min_v[2],
+        "min_x": min_v[0], "max_x": max_v[0],
+        "min_y": min_v[1], "max_y": max_v[1],
+        "min_z": min_v[2], "max_z": max_v[2]
+    }
 
 
 def discover_rock_ids(rocks_dir: Path) -> list[int]:
@@ -238,11 +244,10 @@ def get_rock_dimensions(rocks_dir: Path) -> dict[int, dict[str, float]]:
     for rock_id in discover_rock_ids(rocks_dir):
         obj_path = rocks_dir / f"rock_{rock_id}" / "meshes" / f"rock_{rock_id}.obj"
         try:
-            length, width, height = _read_obj_extents(obj_path)
+            dims[rock_id] = _read_obj_extents(obj_path)
         except Exception as exc:
             print(f"  [Warning] Could not read mesh for rock_{rock_id} ({obj_path}): {exc}")
             continue
-        dims[rock_id] = {"length": length, "width": width, "height": height}
 
     _ROCK_DIM_CACHE[key] = dims
     return dims
@@ -411,8 +416,11 @@ def generate_obstacle_data(
         min_roughness=min_roughness,
     )
 
-    x_min, x_max = x_range
-    y_min, y_max = y_range
+    x_min, x_max, y_min, y_max = sampler.terrain_bounds()
+    x_min += 0.5
+    x_max -= 0.5
+    y_min += 0.5
+    y_max -= 0.5
 
     if output_file is None:
         script_dir = Path(__file__).resolve().parent
@@ -484,12 +492,14 @@ def generate_obstacle_data(
                 z = min_terrain_height
             chosen_model_id = random.choice(barrier_pool)
             mesh_id = model_map[chosen_model_id]["mesh_id"]
+            z_offset = rock_dimensions[int(mesh_id)]["min_z"]
+
             rock_entry = {
                 "id": idx,
                 "name": f"Rock_{idx}",
                 "x": float(bx),
                 "y": float(by),
-                "z": float(z),
+                "z": float(z - z_offset),
                 "roll": 0.0,
                 "pitch": 0.0,
                 "yaw": float(random.uniform(-math.pi, math.pi)),
@@ -515,7 +525,24 @@ def generate_obstacle_data(
             if not sampler.is_valid_terrain(cand_x, cand_y):
                 continue
 
-            if (7.0 <= cand_x <= 14.0) and (-11.0 <= cand_y <= 1.0):
+            # Original exclusion zone
+            if (7.0 <= cand_x <= 14.0) and (-5.0 <= cand_y <= 5.0):
+                continue
+
+            # Prevent rocks from spawning exactly where the rover drops in (0, 0, 2.5)
+            if (-2.5 <= cand_x <= 2.5) and (-2.5 <= cand_y <= 2.5):
+                continue
+
+            # Prevent rocks from spawning exactly where the rover drops in (0, 0, 2.5)
+            if (-2.5 <= cand_x <= 2.5) and (-2.5 <= cand_y <= 2.5):
+                continue
+
+            # Prevent rocks from spawning on top of ArUco markers (1.0m exclusion radius)
+            too_close_to_aruco = any(
+                math.hypot(cand_x - ax, cand_y - ay) < 1.0
+                for ax, ay in ARUCO_MARKERS
+            )
+            if too_close_to_aruco:
                 continue
 
             too_close = any(
@@ -549,13 +576,14 @@ def generate_obstacle_data(
 
         mesh_id = model_map[chosen_model_id]["mesh_id"]
         is_collidable = model_map[chosen_model_id]["is_collidable"]
+        z_offset = rock_dimensions[int(mesh_id)]["min_z"]
 
         rock_entry = {
             "id": idx,
             "name": f"Rock_{idx}",
             "x": float(best_x),
             "y": float(best_y),
-            "z": float(best_z),
+            "z": float(best_z - z_offset),
             "roll": 0.0,
             "pitch": 0.0,
             "yaw": float(random.uniform(-math.pi, math.pi)),
