@@ -3,6 +3,7 @@ import os
 import sys
 import argparse
 import datetime
+import copy
 import xml.etree.ElementTree as ET
 import numpy as np
 
@@ -165,13 +166,35 @@ def fuse_obstacle_data_into_world(input_npy_path=None, world_name="marsyard.worl
         is_collidable = bool(r.get('is_collidable', True))
         model_name = str(r.get('name', f"Rock_{i}"))
 
-        inc_el = ET.SubElement(world_elem, 'include')
-        name_el = ET.SubElement(inc_el, 'name')
-        name_el.text = model_name
-        pose_el = ET.SubElement(inc_el, 'pose')
+        # Inline the selected model so the generated instance can faithfully
+        # honor is_collidable.  Visual and collision still use the exact same
+        # source mesh and local frame from the rock model template.
+        model_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), '..', 'rocks_ws', f'rock_{mesh_id}')
+        )
+        model_sdf = os.path.join(model_dir, 'model.sdf')
+        if not os.path.isfile(model_sdf):
+            raise FileNotFoundError(f"Rock model template not found: {model_sdf}")
+        model_root = ET.parse(model_sdf).getroot()
+        template = model_root.find('model') if model_root.tag != 'model' else model_root
+        if template is None:
+            raise ValueError(f"Rock model template has no <model>: {model_sdf}")
+
+        model_el = copy.deepcopy(template)
+        model_el.set('name', model_name)
+        old_pose = model_el.find('pose')
+        if old_pose is not None:
+            model_el.remove(old_pose)
+        pose_el = ET.Element('pose')
         pose_el.text = f"{x:.4f} {y:.4f} {z:.4f} {roll:.4f} {pitch:.4f} {yaw:.4f}"
-        uri_el = ET.SubElement(inc_el, 'uri')
-        uri_el.text = f"model://rock_{mesh_id}"
+        model_el.insert(1 if model_el.find('static') is not None else 0, pose_el)
+
+        if not is_collidable:
+            for link_el in model_el.findall('link'):
+                for collision_el in list(link_el.findall('collision')):
+                    link_el.remove(collision_el)
+
+        world_elem.append(model_el)
 
     ET.indent(tree, space="  ", level=0)
 
@@ -237,4 +260,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

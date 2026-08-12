@@ -24,6 +24,7 @@ All outputs land in:
 
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
@@ -65,6 +66,37 @@ WORLDS = [
 SCRIPT_DIR  = Path(__file__).resolve().parent
 ADD_WORLD   = SCRIPT_DIR / "add_world.py"
 OUTPUTS_DIR = SCRIPT_DIR / "outputs"
+BASE_WORLD = SCRIPT_DIR / "world_setup" / "initial_inputs" / "i_world" / "marsyard.world"
+BASE_HEIGHTMAP = SCRIPT_DIR / "world_setup" / "initial_inputs" / "i_heightmap" / "heightmap.npz"
+BASE_HEIGHTMAP_PREVIEW = BASE_HEIGHTMAP.with_suffix(".png")
+HEIGHTMAP_GENERATOR = SCRIPT_DIR / "world_setup" / "heightMap_gen" / "heightmap_generator.py"
+MARSYARD_MODELS = SCRIPT_DIR.parent / "marsyards" / "marsyard" / "models"
+NEW_MARSYARD_URI = "model://erc_marsyard_2026"
+
+
+def refresh_base_heightmap() -> None:
+    """Bake placement heights from the exact 2026 collision model Gazebo loads."""
+    root = ET.parse(BASE_WORLD).getroot()
+    world = root.find("world") if root.tag != "world" else root
+    uris = [(node.findtext("uri") or "").strip() for node in world.findall("include")]
+    if uris.count(NEW_MARSYARD_URI) != 1:
+        raise RuntimeError(
+            f"{BASE_WORLD} must include exactly one {NEW_MARSYARD_URI}; found {uris}"
+        )
+
+    command = [
+        sys.executable,
+        str(HEIGHTMAP_GENERATOR),
+        str(BASE_WORLD),
+        "--output", str(BASE_HEIGHTMAP),
+        "--preview", str(BASE_HEIGHTMAP_PREVIEW),
+        "--resolution", "0.1",
+        "--model-path", str(MARSYARD_MODELS),
+        "--model", "erc_marsyard_2026",
+        "--fill-nan",
+    ]
+    print("  Refreshing placement heightmap from the new Mars Yard collision mesh")
+    subprocess.run(command, cwd=SCRIPT_DIR, check=True)
 
 
 def separator(title: str) -> None:
@@ -106,6 +138,8 @@ def main() -> None:
     separator("ERC Mars Yard 2026 — Batch World Generator")
     print(f"  Pipeline root : {SCRIPT_DIR}")
     print(f"  Outputs dir   : {OUTPUTS_DIR}")
+    print(f"  Terrain model : {NEW_MARSYARD_URI}")
+    refresh_base_heightmap()
     print()
     print(f"  Generating {len(WORLDS)} worlds:")
     for w in WORLDS:
@@ -119,6 +153,8 @@ def main() -> None:
         success = run_world(cfg)
         results[cfg["name"]] = "✅ OK" if success else "⚠️  Skipped / Failed"
 
+    failed = [name for name, status in results.items() if status != "✅ OK"]
+
     # Final report
     separator("BATCH COMPLETE — Summary")
     for name, status in results.items():
@@ -126,6 +162,8 @@ def main() -> None:
     print()
     print(f"  Output folder: {OUTPUTS_DIR}")
     print("=" * 78)
+    if failed:
+        raise SystemExit(f"World generation failed for: {', '.join(failed)}")
 
 
 if __name__ == "__main__":

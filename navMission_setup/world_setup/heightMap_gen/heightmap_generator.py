@@ -587,6 +587,7 @@ def write_npz(
     resolution: float,
     world_path: str,
     geometry_count: int,
+    terrain_mesh_path: str = "",
 ) -> None:
     os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
     np.savez_compressed(
@@ -598,6 +599,9 @@ def write_npz(
         origin_x=np.float64(xs[0]),
         origin_y=np.float64(ys[0]),
         world_path=np.asarray(os.path.abspath(world_path)),
+        terrain_mesh_path=np.asarray(
+            os.path.abspath(terrain_mesh_path) if terrain_mesh_path else ""
+        ),
         geometry_count=np.int64(geometry_count),
     )
 
@@ -868,6 +872,7 @@ def generate_heightmap_for_world(
         resolution=resolution,
         world_path=world_path,
         geometry_count=len(sources) + (1 if hm_src is not None else 0),
+        terrain_mesh_path=(base_source.mesh_path if base_source is not None else ""),
     )
     if preview_path:
         preview_path = os.path.abspath(os.path.expanduser(preview_path))
@@ -970,6 +975,7 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
             resolution=args.resolution,
             world_path=mesh_path,
             geometry_count=1,
+            terrain_mesh_path=mesh_path,
         )
         if args.preview:
             write_preview(args.preview, grid)

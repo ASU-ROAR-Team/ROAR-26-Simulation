@@ -193,6 +193,7 @@ class HeightmapSampler:
 # Populated once per rocks_dir the first time it's needed, so a run placing
 # hundreds of rock instances never re-parses the same .obj more than once.
 _ROCK_DIM_CACHE: dict[str, dict[int, dict[str, float]]] = {}
+_ROCK_VERTEX_CACHE: dict[str, np.ndarray] = {}
 
 
 def _read_obj_extents(obj_path: Path) -> dict:
@@ -228,6 +229,59 @@ def _read_obj_extents(obj_path: Path) -> dict:
         "min_y": min_v[1], "max_y": max_v[1],
         "min_z": min_v[2], "max_z": max_v[2]
     }
+
+
+def _read_obj_vertices(obj_path: Path) -> np.ndarray:
+    """Return mesh vertices, cached for terrain-support Z calculations."""
+    key = str(obj_path.resolve())
+    cached = _ROCK_VERTEX_CACHE.get(key)
+    if cached is not None:
+        return cached
+    vertices = []
+    with open(obj_path, "r", errors="ignore") as mesh_file:
+        for line in mesh_file:
+            if line.startswith("v "):
+                parts = line.split()
+                if len(parts) >= 4:
+                    vertices.append((float(parts[1]), float(parts[2]), float(parts[3])))
+    if not vertices:
+        raise ValueError(f"No vertex data found in {obj_path}")
+    result = np.asarray(vertices, dtype=np.float64)
+    _ROCK_VERTEX_CACHE[key] = result
+    return result
+
+
+def calculate_supported_rock_z(
+    sampler: HeightmapSampler,
+    rocks_dir: Path,
+    mesh_id: int,
+    x: float,
+    y: float,
+    yaw: float,
+) -> float:
+    """Place a yawed mesh on the collision surface without footprint burial.
+
+    The required model-origin Z is the maximum ``terrain_z - vertex_z`` over
+    the yawed mesh footprint.  Thus at least one mesh vertex contacts the
+    terrain and no sampled mesh vertex is below it.  Roll/pitch remain exactly
+    zero, preserving the generator's existing orientation rule.
+    """
+    obj_path = rocks_dir / f"rock_{mesh_id}" / "meshes" / f"rock_{mesh_id}.obj"
+    vertices = _read_obj_vertices(obj_path)
+    cosine = math.cos(yaw)
+    sine = math.sin(yaw)
+    requirements = []
+    for local_x, local_y, local_z in vertices:
+        world_x = x + cosine * local_x - sine * local_y
+        world_y = y + sine * local_x + cosine * local_y
+        terrain_z = sampler.get_height(world_x, world_y)
+        if not math.isnan(terrain_z):
+            requirements.append(terrain_z - local_z)
+    if not requirements:
+        raise RuntimeError(
+            f"No terrain samples under rock_{mesh_id} at ({x:.3f}, {y:.3f})"
+        )
+    return float(max(requirements))
 
 
 def discover_rock_ids(rocks_dir: Path) -> list[int]:
@@ -514,22 +568,22 @@ def generate_obstacle_data(
         barrier_pool = collidable_model_ids or list(model_map.keys())
         for idx, bx in enumerate(barrier_xs[:num_barrier], 1):
             by = 2.5
-            z = sampler.get_height(bx, by)
-            if math.isnan(z):
-                z = min_terrain_height
             chosen_model_id = random.choice(barrier_pool)
             mesh_id = model_map[chosen_model_id]["mesh_id"]
-            z_offset = rock_dimensions[int(mesh_id)]["min_z"]
+            yaw = float(random.uniform(-math.pi, math.pi))
+            supported_z = calculate_supported_rock_z(
+                sampler, rocks_dir, int(mesh_id), float(bx), float(by), yaw
+            )
 
             rock_entry = {
                 "id": idx,
                 "name": f"Rock_{idx}",
                 "x": float(bx),
                 "y": float(by),
-                "z": float(z - z_offset),
+                "z": supported_z,
                 "roll": 0.0,
                 "pitch": 0.0,
-                "yaw": float(random.uniform(-math.pi, math.pi)),
+                "yaw": yaw,
                 "rock_id": int(chosen_model_id),
                 "mesh_id": int(mesh_id),
                 "is_collidable": True,
@@ -542,7 +596,7 @@ def generate_obstacle_data(
     # Random rocks
     start_idx = len(rock_data_list) + 1
     for idx in range(start_idx, num_rocks + 1):
-        best_x = best_y = best_z = None
+        best_x = best_y = None
         max_attempts = 1000
 
         for _ in range(max_attempts):
@@ -580,7 +634,6 @@ def generate_obstacle_data(
                 continue
 
             best_x, best_y = cand_x, cand_y
-            best_z = sampler.get_height(cand_x, cand_y)
             break
 
         if best_x is None:
@@ -603,17 +656,20 @@ def generate_obstacle_data(
 
         mesh_id = model_map[chosen_model_id]["mesh_id"]
         is_collidable = model_map[chosen_model_id]["is_collidable"]
-        z_offset = rock_dimensions[int(mesh_id)]["min_z"]
+        yaw = float(random.uniform(-math.pi, math.pi))
+        supported_z = calculate_supported_rock_z(
+            sampler, rocks_dir, int(mesh_id), float(best_x), float(best_y), yaw
+        )
 
         rock_entry = {
             "id": idx,
             "name": f"Rock_{idx}",
             "x": float(best_x),
             "y": float(best_y),
-            "z": float(best_z - z_offset),
+            "z": supported_z,
             "roll": 0.0,
             "pitch": 0.0,
-            "yaw": float(random.uniform(-math.pi, math.pi)),
+            "yaw": yaw,
             "rock_id": int(chosen_model_id),
             "mesh_id": int(mesh_id),
             "is_collidable": is_collidable,
