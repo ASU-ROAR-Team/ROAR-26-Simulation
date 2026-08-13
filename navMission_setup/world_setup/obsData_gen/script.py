@@ -65,7 +65,7 @@ def main() -> None:
     parser.add_argument("--min-collidable-size", type=float, default=0.15)
     parser.add_argument("--spacing", "-s", type=float, default=1.0)
     parser.add_argument("--min-roughness", type=float, default=0.02)
-    parser.add_argument("--min-terrain-height", type=float, default=-1.3)
+    parser.add_argument("--min-terrain-height", type=float, default=-1.5)
     parser.add_argument("--deadends", action="store_true")
     parser.add_argument("--no-balance-model-pools", dest="balance_model_pools",
                          action="store_false", default=True)

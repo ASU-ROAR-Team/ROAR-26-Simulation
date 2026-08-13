@@ -59,7 +59,7 @@ class HeightmapSampler:
     region you want rocks scattered across.
     """
 
-    def __init__(self, npz_path: str, min_terrain_height: float = -1.3,
+    def __init__(self, npz_path: str, min_terrain_height: float = -1.5,
                  min_roughness: float = 0.02, require_roughness: bool = False):
         if not os.path.isfile(npz_path):
             raise FileNotFoundError(
@@ -430,7 +430,7 @@ def generate_obstacle_data(
     spacing=1.0,
     x_range=(-19.0, 13.0),
     y_range=(-11.0, 11.0),
-    min_terrain_height=-1.3,
+    min_terrain_height=-1.5,
     min_roughness=0.02,
     require_roughness=False,
     deadends=False,
@@ -772,8 +772,8 @@ def parse_args():
              "regardless of density.",
     )
     parser.add_argument(
-        "--min-terrain-height", type=float, default=-1.3,
-        help="Minimum Z to consider valid terrain (default: -1.3, tuned for this "
+        "--min-terrain-height", type=float, default=-1.5,
+        help="Minimum Z to consider valid terrain (default: -1.5, tuned for this "
              "heightmap's Z origin -- adjust if you switch heightmaps with a "
              "different Z reference).",
     )

@@ -280,7 +280,7 @@ def main() -> None:
     parser.add_argument(
         "--min-terrain-height",
         type=float,
-        default=0.15,
+        default=-1.5,
     )
 
     parser.add_argument(

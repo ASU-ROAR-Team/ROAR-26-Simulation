@@ -6,7 +6,7 @@ Total Placed    : 0
 Density         : 0.0 rocks/m²
 Collidable Ratio: 0.5
 Spacing Min     : 1.0 m
-Min Terrain Z   : 0.15 m
+Min Terrain Z   : -1.5 m
 Min Roughness   : 0.02 m (not enforced)
 Deadends        : False
 Min Collidable Height: 0.15 m
