@@ -61,6 +61,7 @@ def main() -> None:
     parser.add_argument("--heightmap", type=Path)
     parser.add_argument("--rocks-dir", type=Path)
     parser.add_argument("--density", type=float, default=0.012)
+    parser.add_argument("--num-rocks", type=int, default=None)
     parser.add_argument("--collidable-ratio", "-c", type=float, default=0.5)
     parser.add_argument("--min-collidable-size", type=float, default=0.15)
     parser.add_argument("--spacing", "-s", type=float, default=1.0)
@@ -96,6 +97,7 @@ def main() -> None:
     generate_obstacle_data(
         world_name=args.world_name,
         density=args.density,
+        num_rocks_override=args.num_rocks,
         collidable_ratio=args.collidable_ratio,
         spacing=args.spacing,
         min_terrain_height=args.min_terrain_height,

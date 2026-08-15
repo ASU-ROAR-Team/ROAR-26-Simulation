@@ -1,8 +1,8 @@
 {
     "generator_version": "2.1.0",
-    "timestamp": "2026-08-13T19:31:18.532991",
+    "timestamp": "2026-08-15T23:12:42.916576",
     "maps_processed": [],
-    "wp_count": 201,
+    "wp_count": 290,
     "rover_config": {
         "rover_length_m": 1.3,
         "rover_width_m": 1.2,
@@ -10,20 +10,20 @@
         "grid_resolution_m": 0.25
     },
     "constraints": {
-        "candidate_count": 700,
-        "min_spacing_cells": 87.13326253503882,
-        "max_spacing_cells": 319.8707927273136,
-        "boundary_margin_cells": 3,
-        "duplicate_distance_threshold": 15.0,
+        "candidate_count": 2500,
+        "min_spacing_cells": 9.22405550720506,
+        "max_spacing_cells": 80.71048568804427,
+        "boundary_margin_cells": 7,
+        "duplicate_distance_threshold": 6.0,
         "points_per_mission": 5,
         "target_mission_count": 300,
         "target_wp_count": 10,
-        "max_attempts": 1000,
+        "max_attempts": 10000,
         "seed": 50,
-        "boundary_margin_ratio": 0.01,
-        "min_spacing_ratio": 0.152,
-        "max_spacing_ratio": 0.558,
-        "max_turn_angle_deg": 80.0,
-        "min_start_end_dist": 60.0
+        "boundary_margin_ratio": 0.05,
+        "min_spacing_ratio": 0.04,
+        "max_spacing_ratio": 0.35,
+        "max_turn_angle_deg": 90.0,
+        "min_start_end_dist": 30.0
     }
 }

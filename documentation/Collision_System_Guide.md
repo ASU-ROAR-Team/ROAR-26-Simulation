@@ -32,7 +32,7 @@ The alarm node uses a programmable blacklist to intelligently filter out harmles
 When a collision occurs, the message contains the names of the two objects that touched (e.g., `wheel_rhs_front_collision` and `mars_yard_collision`). The Python node evaluates these names against a safe-list:
 
 ```python
-# Inside collision_alarm_node.py
+# Inside collision_alarm_node.pys
 c1 = contact.collision1.name.lower()
 c2 = contact.collision2.name.lower()
 

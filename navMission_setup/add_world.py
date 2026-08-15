@@ -258,6 +258,12 @@ def main() -> None:
     )
 
     parser.add_argument(
+        "--num-rocks",
+        type=int,
+        default=None,
+    )
+
+    parser.add_argument(
         "--collidable-ratio",
         "-c",
         type=float,
@@ -414,12 +420,24 @@ def main() -> None:
             str(obstacle_output),
         ]
 
+        if args.num_rocks is not None:
+            obs_command.extend(["--num-rocks", str(args.num_rocks)])
+
         if args.deadends:
             obs_command.append("--deadends")
 
         run_stage(
             obs_command,
             "Stage 1/4 — Obstacle Data Generation",
+        )
+
+        run_stage(
+            [
+                sys.executable,
+                os.path.expanduser("~/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/navMission_setup/dynamic_rock_dropper.py"),
+                tag,
+            ],
+            "Stage 1.5/4 — Dynamic Physics Drop",
         )
 
         run_stage(

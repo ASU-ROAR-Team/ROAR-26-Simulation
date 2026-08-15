@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-WORKSPACE_DIR="/home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion"
+WORKSPACE_DIR="$HOME/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion"
 TEMP_DIR="$WORKSPACE_DIR/navMission_setup/world_setup/TempArucoGen"
 EXPORT_WORLD_DIR="$TEMP_DIR/world"
 

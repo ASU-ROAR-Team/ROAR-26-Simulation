@@ -1,8 +1,19 @@
 <?xml version="1.0" ?>
 <sdf version="1.9">
   <model name="rock_4">
-    <static>true</static>
+    <static>false</static>
     <link name="rock_link">
+      <inertial>
+        <mass>5000.0</mass>
+        <inertia>
+          <ixx>1000.0</ixx>
+          <ixy>0.0</ixy>
+          <ixz>0.0</ixz>
+          <iyy>1000.0</iyy>
+          <iyz>0.0</iyz>
+          <izz>1000.0</izz>
+        </inertia>
+      </inertial>
       <!-- Visual -->
       <visual name="visual">
         <geometry>

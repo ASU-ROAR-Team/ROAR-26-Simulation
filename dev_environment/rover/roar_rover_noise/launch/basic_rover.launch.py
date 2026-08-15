@@ -25,9 +25,17 @@ def generate_launch_description():
     world_file_arg = DeclareLaunchArgument(
         'world_file', default_value=default_world,
         description='Path to the SDF world file to load')
+    spawn_x_arg = DeclareLaunchArgument(
+        'spawn_x', default_value='0.0',
+        description='Initial spawn X coordinate')
+    spawn_y_arg = DeclareLaunchArgument(
+        'spawn_y', default_value='0.0',
+        description='Initial spawn Y coordinate')
     use_sim_time = LaunchConfiguration('use_sim_time')
     start_rviz   = LaunchConfiguration('start_rviz')
     world_file   = LaunchConfiguration('world_file')
+    spawn_x      = LaunchConfiguration('spawn_x')
+    spawn_y      = LaunchConfiguration('spawn_y')
 
     # ── 2. Resource paths ─────────────────────────────────────────────────────
     install_dir      = os.path.abspath(os.path.join(pkg_roar_rover_noise, '..'))
@@ -96,7 +104,11 @@ def generate_launch_description():
         package='ros_gz_sim',
         executable='create',
         arguments=['-topic', 'robot_description',
-                   '-name', 'roar_rover', '-z', '2.5', '-Y', '1.5707'],
+                   '-name', 'roar_rover',
+                   '-x', spawn_x,
+                   '-y', spawn_y,
+                   '-z', '0.5',
+                   '-Y', '1.5707'],
         output='screen',
         parameters=[{'use_sim_time': use_sim_time}]
     )
@@ -197,6 +209,8 @@ def generate_launch_description():
         use_sim_time_arg,
         start_rviz_arg,
         world_file_arg,
+        spawn_x_arg,
+        spawn_y_arg,
 
         # Gazebo server (headless, software GL for sensors)
         gazebo_server,

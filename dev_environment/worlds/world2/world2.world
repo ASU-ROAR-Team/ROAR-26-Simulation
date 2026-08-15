@@ -58,7 +58,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_8/meshes/rock_8.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_2">
       <static>true</static>
@@ -80,7 +80,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_8/meshes/rock_8.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_3">
       <static>true</static>
@@ -102,7 +102,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_7/meshes/rock_7.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_4">
       <static>true</static>
@@ -182,7 +182,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_7">
       <static>true</static>
@@ -233,7 +233,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_7/meshes/rock_7.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_9">
       <static>true</static>
@@ -284,7 +284,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_9/meshes/rock_9.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_11">
       <static>true</static>
@@ -306,7 +306,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_7/meshes/rock_7.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_12">
       <static>true</static>
@@ -386,7 +386,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_15">
       <static>true</static>
@@ -437,7 +437,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_17">
       <static>true</static>
@@ -488,7 +488,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_19">
       <static>true</static>
@@ -510,7 +510,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_20">
       <static>true</static>
@@ -590,7 +590,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_23">
       <static>true</static>
@@ -815,7 +815,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_31">
       <static>true</static>
@@ -837,7 +837,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_32">
       <static>true</static>
@@ -917,7 +917,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_35">
       <static>true</static>
@@ -968,7 +968,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_37">
       <static>true</static>
@@ -1019,7 +1019,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_9/meshes/rock_9.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_39">
       <static>true</static>
@@ -1070,7 +1070,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_41">
       <static>true</static>
@@ -1121,7 +1121,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_43">
       <static>true</static>
@@ -1172,7 +1172,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_45">
       <static>true</static>
@@ -1223,7 +1223,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_7/meshes/rock_7.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_47">
       <static>true</static>
@@ -1245,7 +1245,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_48">
       <static>true</static>
@@ -1296,7 +1296,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_50">
       <static>true</static>
@@ -1405,7 +1405,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_54">
       <static>true</static>
@@ -1456,7 +1456,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_56">
       <static>true</static>
@@ -1536,7 +1536,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_59">
       <static>true</static>
@@ -1616,7 +1616,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_62">
       <static>true</static>
@@ -1638,7 +1638,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_8/meshes/rock_8.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_63">
       <static>true</static>
@@ -1660,7 +1660,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_9/meshes/rock_9.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_65">
       <static>true</static>
@@ -1711,7 +1711,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_7/meshes/rock_7.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_68">
       <static>true</static>
@@ -1733,7 +1733,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_6/meshes/rock_6.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_70">
       <static>true</static>
@@ -1813,7 +1813,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_7/meshes/rock_7.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_78">
       <static>true</static>
@@ -1835,7 +1835,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_7/meshes/rock_7.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_79">
       <static>true</static>
@@ -1886,7 +1886,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_8/meshes/rock_8.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="Rock_85">
       <static>true</static>
@@ -2082,7 +2082,7 @@
             </pbr>
           </material>
         </visual>
-      </link>
+      <collision name="collision"><geometry><mesh><uri>model://rock_8/meshes/rock_8.obj</uri></mesh></geometry></collision></link>
     </model>
     <model name="ArUco_51">
       <static>true</static>

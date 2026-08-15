@@ -107,9 +107,12 @@ export IGN_GAZEBO_SYSTEM_PLUGIN_PATH="/opt/ros/humble/lib"
 
 echo "[dev_env] Resource path: ${IGN_GAZEBO_RESOURCE_PATH}"
 
-# Launch — pass the world file path to the launch file
+SPAWN_X="${4:-0.0}"
+SPAWN_Y="${5:-0.0}"
+
+# Launch — pass world file and initial spawn pose to launch file
 if [ "$USE_RVIZ" = "rviz" ]; then
-    ros2 launch "$PKG" basic_rover.launch.py world_file:="$WORLD_FILE" start_rviz:=true
+    ros2 launch "$PKG" basic_rover.launch.py world_file:="$WORLD_FILE" start_rviz:=true spawn_x:="$SPAWN_X" spawn_y:="$SPAWN_Y"
 else
-    ros2 launch "$PKG" basic_rover.launch.py world_file:="$WORLD_FILE"
+    ros2 launch "$PKG" basic_rover.launch.py world_file:="$WORLD_FILE" spawn_x:="$SPAWN_X" spawn_y:="$SPAWN_Y"
 fi

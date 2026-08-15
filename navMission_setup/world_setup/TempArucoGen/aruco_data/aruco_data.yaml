@@ -3,7 +3,7 @@ markers:
     position:
       x: 3.1830
       y: 8.0120
-      z: 0.0848
+      z: 0.0436
     orientation:
       x: 0.0000
       y: 0.0000
@@ -15,7 +15,7 @@ markers:
     position:
       x: 7.2690
       y: 9.4820
-      z: 0.1802
+      z: 0.1664
     orientation:
       x: 0.0000
       y: 0.0000
@@ -27,7 +27,7 @@ markers:
     position:
       x: 7.8780
       y: 17.5830
-      z: -0.0338
+      z: -0.0192
     orientation:
       x: 0.0000
       y: 0.0000
@@ -39,7 +39,7 @@ markers:
     position:
       x: 9.2250
       y: 22.3890
-      z: -0.0094
+      z: -0.0382
     orientation:
       x: 0.0000
       y: 0.0000
@@ -51,7 +51,7 @@ markers:
     position:
       x: 3.5180
       y: 23.9900
-      z: -0.2141
+      z: -0.2291
     orientation:
       x: 0.0000
       y: 0.0000
@@ -63,7 +63,7 @@ markers:
     position:
       x: 0.8820
       y: 16.8700
-      z: -0.0291
+      z: -0.0882
     orientation:
       x: 0.0000
       y: 0.0000
@@ -75,7 +75,7 @@ markers:
     position:
       x: -3.9440
       y: 21.4150
-      z: -0.4839
+      z: -0.4407
     orientation:
       x: 0.0000
       y: 0.0000
@@ -87,7 +87,7 @@ markers:
     position:
       x: -5.4910
       y: 16.3340
-      z: -0.1219
+      z: -0.1752
     orientation:
       x: 0.0000
       y: 0.0000
@@ -99,7 +99,7 @@ markers:
     position:
       x: -7.6950
       y: 13.5280
-      z: -0.1686
+      z: -0.2078
     orientation:
       x: 0.0000
       y: 0.0000
@@ -111,7 +111,7 @@ markers:
     position:
       x: -1.6100
       y: 12.6020
-      z: -0.0891
+      z: -0.0469
     orientation:
       x: 0.0000
       y: 0.0000
@@ -123,7 +123,7 @@ markers:
     position:
       x: -7.7150
       y: 9.7210
-      z: -0.1552
+      z: -0.1750
     orientation:
       x: 0.0000
       y: 0.0000
@@ -135,7 +135,7 @@ markers:
     position:
       x: -4.3110
       y: 4.4420
-      z: -0.0941
+      z: -0.0557
     orientation:
       x: 0.0000
       y: 0.0000
@@ -147,7 +147,7 @@ markers:
     position:
       x: -5.7200
       y: 28.1180
-      z: -0.5995
+      z: -0.6285
     orientation:
       x: 0.0000
       y: 0.0000
@@ -159,7 +159,7 @@ markers:
     position:
       x: -11.4380
       y: 5.2300
-      z: -0.0011
+      z: -0.0173
     orientation:
       x: 0.0000
       y: 0.0000
@@ -171,7 +171,7 @@ markers:
     position:
       x: 6.4830
       y: 1.1020
-      z: 0.2112
+      z: 0.2320
     orientation:
       x: 0.0000
       y: 0.0000

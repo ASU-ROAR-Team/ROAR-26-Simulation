@@ -187,7 +187,14 @@ def fuse_obstacle_data_into_world(input_npy_path=None, world_name="marsyard.worl
             model_el.remove(old_pose)
         pose_el = ET.Element('pose')
         pose_el.text = f"{x:.4f} {y:.4f} {z:.4f} {roll:.4f} {pitch:.4f} {yaw:.4f}"
-        model_el.insert(1 if model_el.find('static') is not None else 0, pose_el)
+        
+        static_el = model_el.find('static')
+        if static_el is None:
+            static_el = ET.Element('static')
+            model_el.insert(0, static_el)
+        static_el.text = 'true'
+        
+        model_el.insert(1, pose_el)
 
         if not is_collidable:
             for link_el in model_el.findall('link'):

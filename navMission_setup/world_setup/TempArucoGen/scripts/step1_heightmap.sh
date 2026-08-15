@@ -2,7 +2,7 @@
 set -e
 
 # Paths
-WORKSPACE_DIR="/home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion"
+WORKSPACE_DIR="$HOME/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion"
 WORLD_PATH="$WORKSPACE_DIR/navMission_setup/outputs/world_1/world/world_1_d0.008_c0.50.world"
 TEMP_DIR="$WORKSPACE_DIR/navMission_setup/world_setup/TempArucoGen"
 

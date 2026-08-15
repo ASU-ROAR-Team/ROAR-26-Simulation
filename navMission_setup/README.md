@@ -1,79 +1,89 @@
 # Navigation Mission Setup (`navMission_setup`)
 
-This package provides a automated pipeline for generating parameterized Mars Yard environments for simulation testing. It takes a clean base world and elevation map, generates random obstacle configurations (rocks), fuses them into a standalone Gazebo world, and computes corresponding metric heightmaps and costmaps.
+This package provides a fully automated pipeline for generating parameterized Mars Yard environments for simulation testing. It generates random obstacle configurations (rocks), computes safe-collision logic, places ArUco markers, and syncs everything seamlessly to the evaluation workspace.
 
 ---
 
 ## 🗺️ Pipeline Flow Overview
 
-The orchestrator script `add_world.py` runs each step of the pipeline sequentially using native, self-contained Python generators inside `world_setup/` (with zero external dependencies on ROS 2 package builds or `history/` scripts). All obstacle data generated matches the exact schema and layout of `worldData_example`.
+The orchestrator scripts `build_full_worlds.sh` and `master_pipeline.sh` manage the entire lifecycle of world generation and syncing.
 
 ```mermaid
 graph TD
-    A[0. Initial Inputs] -->|Copy Base World & Heightmap| B(Stage 1: Obstacle Gen)
-    B -->|Generate Placements| C[obstacle_data.npy]
-    C -->|Copy to World Gen inputs| D(Stage 2: World Fusion)
-    A -->|Copy Base World| D
-    D -->|Fuse World| E[world{index}.world]
-    E -->|Copy to Heightmap Gen inputs| F(Stage 3: Heightmap Gen)
-    F -->|Generate elevation NPZ| G[heightmap.npz]
-    G -->|Copy to Costmap Gen inputs| H(Stage 4: Costmap Gen)
-    H -->|Calculate slope & roughness| I[costmap.npz & CSVs]
-    I -->|Gather all outputs| J[outputs/world{index}/]
-    E -->|Gather all outputs| J
-    G -->|Gather all outputs| J
-    C -->|Gather all outputs| J
+    %% Generation Pipeline
+    subgraph "navMission_setup (Generation)"
+        A[build_full_worlds.sh] -->|Generates Rocks| B(obsData_gen)
+        B -->|Flags Flat Rocks Safe| C[obstacle_data.npy]
+        B -->|Places 15 ArUcos| D(world_gen)
+        C --> D
+        D -->|Fuses XML| E[world1.world, world2.world, world3.world]
+    end
+
+    %% Syncing Pipeline
+    subgraph "Syncing & Waypoints"
+        F[master_pipeline.sh] -->|Reads| C
+        F -->|Generates Path| G(waypoints_setup/wp_generator.py)
+        G -->|Outputs| H[wp01.npy, wp02.npy]
+    end
+    
+    %% Target Environments
+    E -.->|Copies to| I[dev_environment/worlds/]
+    C -.->|Copies to| I
+    E -.->|Copies to| J[Navigation_Mission_Workspace/missions/]
+    C -.->|Copies to| J
+    H -.->|Copies to| J
 ```
 
 ---
 
-## 🚀 How to Run the Pipeline
+## 🚀 How to Generate New Worlds
 
-Run the orchestrator script `add_world.py` using Python 3, passing the desired rock density, collidable percentage, and output world index:
+To wipe the existing layouts and generate completely fresh randomized rocks and ArUco markers for all 3 worlds, run the world builder script:
 
 ```bash
-python3 add_world.py <density> <percentage> <index> [options]
+bash build_full_worlds.sh
 ```
 
-### Parameters
-- **`density`** (float): Target rock density in rocks per square meter (e.g. `0.012` for ~8 rocks in a 704m² area).
-- **`percentage`** (float): Percentage of rocks that are solid/collidable (e.g. `50` for 50%). Values > 1.0 are automatically converted to a decimal ratio.
-- **`index`** (int): Unique integer suffix for the generated dataset folder (e.g. `1` to output to `world1`).
-
-### Optional CLI Arguments
-- `--name NAME`: Custom name for the world dataset (defaults to `world{index}`).
-- `--deadends`: Form barrier walls of rocks to create dead-ends in terrain.
-- `--heightmap-resolution RESOLUTION`: Cell resolution of the generated heightmap in meters (default: `0.25`).
-- `--gradient-scale SCALE`: Slope/gradient scale factor for cost mapping (default: `150.0`).
-- `--stability-scale SCALE`: Roughness/terrain stability scale factor for cost mapping (default: `90.0`).
-
-### Example Command
-```bash
-python3 add_world.py 0.025 60 1
-```
+**What this does:**
+1. Triggers `obsData_gen` for World 1 (8 rocks), World 2 (50 rocks), and World 3 (90 rocks).
+2. Uses the physics size of each rock mesh to flag it as Collidable or Non-Collidable (Meshes 5, 6, 7, 8, 9 are hardcoded as safe).
+3. Places 15 ArUco markers in each world.
+4. Fuses these assets into the `marsyard.world` template.
+5. Pushes the newly created datasets into `../dev_environment/worlds/` for testing.
 
 ---
 
-## 📁 Master Outputs Directory Layout
+## 🚀 How to Sync Worlds to the Navigation Engine
 
-Upon successful execution, a folder named `outputs/world{index}` is created containing:
+Once you have tested the worlds in the `dev_environment` and are satisfied with the layout, you must generate the waypoint paths and sync the assets to the headless evaluation engine.
+
+```bash
+bash master_pipeline.sh
+```
+
+**What this does:**
+1. Scans `dev_environment` for the newly generated `obstacle_data.npy`.
+2. Passes the data to `wp_generator.py`, which computes collision-free trajectories for the rover.
+3. Copies the `.world` files, the `obstacle_data.npy`, the `aruco_data.yaml`, and the `wpXX.npy` path files directly into `Navigation_Mission_Workspace/missions/`.
+
+---
+
+## 📁 Master Outputs Directory Layout (Navigation Workspace)
+
+After running `master_pipeline.sh`, the evaluation workspace will look like this:
+
 ```text
-outputs/world{index}/
-├── world{index}.world         # Standalone Gazebo world with fused rocks
-├── obstacle_data.npy          # NumPy coordinates of placed rocks
-├── obstacle_data_info.txt     # Placed rock statistics & parameters
-├── heightmap.npz              # Metric heightmap elevation matrix
-├── heightmap.png              # Grayscale elevation visualization
-├── costmap.npz                # Terrain traversability cost grid
-├── costmap.png                # Grayscale cost map visualization
-├── csv/                       # Folder containing cost grid CSVs:
-│   ├── total_cost.csv         # Fused traversability costs
-│   ├── cost_x.csv             # Slope cost component
-│   └── cost_y.csv             # Roughness cost component
-└── metadata.txt               # Dataset metadata log
+Navigation_Mission_Workspace/missions/mission_{index}/
+├── marsyard.world             # Standalone Gazebo world with fused rocks & ArUcos
+├── waypoints/
+│   ├── wp01.npy               # Generated mission waypoint path
+│   └── wp02.npy               # Generated mission waypoint path
+└── assets/
+    ├── obstacle_data.npy      # NumPy coordinates of placed rocks
+    └── aruco_data.yaml        # ArUco marker coordinates
 ```
 
 ---
 
 ## 🧹 Cleaning Behavior
-Each pipeline run automatically clears all files in the temporary `inputs/` and `outputs/` stage directories under `world_setup/` to guarantee a clean, isolated state. The `initial_inputs/` folder containing base world templates is **never** modified or touched.
+Both `build_full_worlds.sh` and `master_pipeline.sh` automatically clean up stale inputs and outputs before generating new ones. You do not need to manually delete old world files before running the pipeline.

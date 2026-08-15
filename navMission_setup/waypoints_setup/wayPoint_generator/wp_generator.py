@@ -71,7 +71,7 @@ def _compute_valid_map_mask(heightmaps: list, boundary_margin_cells: int = 5) ->
     h, w = heightmaps[0].shape
     universal_mask = np.ones((h, w), dtype=bool)
     for cmap in heightmaps:
-        padding_mask = (cmap == -1) | np.isnan(cmap)
+        padding_mask = (cmap == -1) | np.isnan(cmap) | (cmap <= -1.49)
         labeled_array, _ = label(padding_mask)
         border_labels = set()
         border_labels.update(labeled_array[0, :])
@@ -156,16 +156,20 @@ class InputLoader:
             else:
                 # Legacy obstacle format (list of dicts)
                 items = obs_raw.flat if isinstance(obs_raw, np.ndarray) else obs_raw
+                ox, oy = -18.431461, -7.687172
+                res = getattr(rover_cfg, "grid_resolution_m", 0.25)
+                h, w = heightmap.shape
                 for obj in items:
                     if isinstance(obj, dict) and (obj.get("is_collidable", True) or obj.get("is_barrier", False)):
-                        # Resolve coordinates using rover config resolution; fallback to 0.1m if unspecified
-                        res = getattr(rover_cfg, "grid_resolution_m", 0.1)
-                        h, w = heightmap.shape
-                        center_x, center_y = w / 2.0, h / 2.0
-                        px = int(round(center_x + obj.get("x", 0.0) / res))
-                        py = int(round(center_y + obj.get("y", 0.0) / res))
+                        px = int(round((obj.get("x", 0.0) - ox) / res))
+                        py = int(round((obj.get("y", 0.0) - oy) / res))
                         if 0 <= px < w and 0 <= py < h:
-                            rock_radius_cells = max(1, int(round(0.5 / res)))
+                            if obj.get("mesh_id") == -1:
+                                # ArUco markers need a much larger safety buffer (e.g., 2.0m radius)
+                                rock_radius_cells = max(1, int(round(2.0 / res)))
+                            else:
+                                # Standard rock buffer (0.5m radius)
+                                rock_radius_cells = max(1, int(round(0.5 / res)))
                             grid_y, grid_x = np.ogrid[:h, :w]
                             mask = (grid_x - px) ** 2 + (grid_y - py) ** 2 <= rock_radius_cells ** 2
                             if master_obstacles is None:
@@ -306,23 +310,24 @@ class waypointBuilder:
         self.min_start_end_dist = min_start_end_dist
         self._cos_limit = math.cos(math.radians(max_turn_angle_deg))
 
-    def build_waypoints(self, candidates: np.ndarray, target_count: int, max_attempts: int) -> np.ndarray:
-        if len(candidates) < 5:
-            logging.warning("Fewer than 5 candidates available. Cannot build 5‑point missions.")
+    def build_waypoints(self, candidates: np.ndarray, target_count: int, max_attempts: int, home_coord: tuple) -> np.ndarray:
+        if len(candidates) < 4:
+            logging.warning("Fewer than 4 candidates available. Cannot build missions.")
             return np.array([])
         missions = []
         num_cand = len(candidates)
         attempts = 0
         dead_ends = 0
-        short_end = 0
+        
+        home_pt = np.array(home_coord, dtype=np.float32)
+        
         while len(missions) < target_count and attempts < max_attempts:
             attempts += 1
-            start_idx = self.rng.integers(0, num_cand)
-            wp = [candidates[start_idx]]
-            visited = {start_idx}
+            wp = [home_pt]
+            visited = set()
             prev_vec = None
             success = True
-            for _ in range(4):  # need 4 additional points
+            for _ in range(4):  # 4 intermediate points
                 cur = wp[-1]
                 dists = np.linalg.norm(candidates - cur, axis=1)
                 valid = (dists >= self.min_spacing) & (dists <= self.max_spacing)
@@ -343,13 +348,10 @@ class waypointBuilder:
                 prev_vec = next_pt - cur
                 wp.append(next_pt)
             if success:
-                net_disp = np.linalg.norm(wp[-1] - wp[0])
-                if net_disp >= self.min_start_end_dist:
-                    missions.append(wp)
-                else:
-                    short_end += 1
+                wp.append(home_pt) # Return to home
+                missions.append(wp)
         logging.info(
-            f"build_waypoints: {attempts} attempts | {len(missions)} accepted | {dead_ends} dead‑ends | {short_end} short‑end rejects"
+            f"build_waypoints: {attempts} attempts | {len(missions)} accepted | {dead_ends} dead‑ends"
         )
         return np.array(missions, dtype=np.int32)
 
@@ -370,6 +372,8 @@ class waypointValidator:
             ok = True
             for i in range(len(wp)):
                 for j in range(i + 2, len(wp)):
+                    if i == 0 and j == len(wp) - 1:
+                        continue # Start and end (Home) are allowed to be the same
                     if np.linalg.norm(wp[i] - wp[j]) < half:
                         ok = False
                         break
@@ -478,10 +482,18 @@ def run_generator():
         max_turn_angle_deg=constraints.max_turn_angle_deg,
         min_start_end_dist=constraints.min_start_end_dist,
     )
+    
+    # Calculate Home coordinate (Gazebo X=0, Y=0) based on map origin
+    # Map origin for the expanded 1456m2 world is x=-18.431461, y=-7.687172, resolution=0.25
+    origin_x, origin_y = -18.431461, -7.687172
+    res = 0.25
+    home_coord = ((0.0 - origin_x) / res, (0.0 - origin_y) / res)
+    
     raw_missions = builder.build_waypoints(
         valid_candidates,
         constraints.target_mission_count,
         constraints.max_attempts,
+        home_coord=home_coord,
     )
     validated = waypointValidator.validate(raw_missions, constraints.min_spacing_cells)
     unique = SimilarityFilter.deduplicate(validated, constraints.duplicate_distance_threshold)

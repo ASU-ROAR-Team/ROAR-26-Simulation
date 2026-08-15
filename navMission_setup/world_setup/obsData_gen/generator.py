@@ -426,6 +426,7 @@ def get_heightmap_path():
 def generate_obstacle_data(
     world_name="marsyard.world",
     density=0.012,
+    num_rocks_override=None,
     collidable_ratio=0.5,
     spacing=1.0,
     x_range=(-19.0, 13.0),
@@ -495,10 +496,11 @@ def generate_obstacle_data(
     )
 
     x_min, x_max, y_min, y_max = sampler.terrain_bounds()
-    x_min += 0.5
-    x_max -= 0.5
-    y_min += 0.5
-    y_max -= 0.5
+    # Increase boundary margin to prevent rocks from spawning too close to the edges
+    x_min += 3.0
+    x_max -= 3.0
+    y_min += 3.0
+    y_max -= 3.0
 
     if output_file is None:
         script_dir = Path(__file__).resolve().parent
@@ -520,9 +522,12 @@ def generate_obstacle_data(
     output_dir_str = str(output_dir)
 
     area = (x_max - x_min) * (y_max - y_min)
-    num_rocks = int(round(density * area))
-    if density > 0:
-        num_rocks = max(1, num_rocks)
+    if num_rocks_override is not None:
+        num_rocks = num_rocks_override
+    else:
+        num_rocks = int(round(density * area))
+        if density > 0:
+            num_rocks = max(1, num_rocks)
 
     print("=" * 60)
     print("   Generating Obstacle Data File (.npy) — Heightmap Mode")
@@ -545,7 +550,10 @@ def generate_obstacle_data(
               f"L={d['length']:.3f} m  W={d['width']:.3f} m  H={d['height']:.3f} m")
     print(f"  Terrain Bounds (sampling): X=[{x_min:.1f}, {x_max:.1f}]  Y=[{y_min:.1f}, {y_max:.1f}]")
     print(f"  Calculated Area      : {area:.1f} m²")
-    print(f"  Rock Density         : {density} rocks/m²")
+    if num_rocks_override is not None:
+        print(f"  Rock Count Override  : {num_rocks_override} rocks")
+    else:
+        print(f"  Rock Density         : {density} rocks/m²")
     print(f"  Total Rocks (target) : {num_rocks}")
     print(f"  Collidable Ratio     : {collidable_ratio:.2f}")
     print(f"  Min Spacing          : {spacing:.2f} m")
@@ -604,6 +612,14 @@ def generate_obstacle_data(
             cand_y = random.uniform(y_min, y_max)
 
             if not sampler.is_valid_terrain(cand_x, cand_y):
+                continue
+
+            # True margin check: ensure we are at least 3.0 meters away from ANY edge of the terrain mesh
+            margin = 3.0
+            if not (sampler.is_valid_terrain(cand_x - margin, cand_y) and
+                    sampler.is_valid_terrain(cand_x + margin, cand_y) and
+                    sampler.is_valid_terrain(cand_x, cand_y - margin) and
+                    sampler.is_valid_terrain(cand_x, cand_y + margin)):
                 continue
 
             # Original exclusion zone
@@ -692,7 +708,27 @@ def generate_obstacle_data(
         rock["width"] = float(dimensions["width"])
         rock["height"] = float(dimensions["height"])
 
-    np.save(output_file, obs_array)
+    # INJECT ARUCO MARKERS AS OBSTACLES FOR WAYPOINT GENERATOR!
+    # By making them 'is_collidable', wp_generator.py will avoid them.
+    aruco_obs = []
+    for ax, ay in ARUCO_MARKERS:
+        aruco_obs.append({
+            "x": ax,
+            "y": ay,
+            "z": 0.0,
+            "mesh_id": -1,
+            "is_collidable": True,
+            "is_barrier": False,
+            "world_name": str(world_name),
+            "frame_id": "world",
+            "length": 1.0,
+            "width": 1.0,
+            "height": 1.0
+        })
+    final_obs_list = obs_array.tolist() + aruco_obs
+    final_obs_array = np.array(final_obs_list, dtype=object)
+
+    np.save(output_file, final_obs_array)
     print(f"  -> Saved: {output_file}")
 
     info_file = os.path.splitext(output_file)[0] + "_info.txt"
@@ -744,6 +780,10 @@ def parse_args():
     parser.add_argument(
         "--density", type=float, default=0.012,
         help="Rock density in rocks/m² (default: 0.012)",
+    )
+    parser.add_argument(
+        "--num-rocks", type=int, default=None,
+        help="Exact number of rocks to generate (overrides --density)",
     )
     parser.add_argument(
         "-c", "--collidable-ratio", type=float, default=0.5,
@@ -810,6 +850,7 @@ def main():
     generate_obstacle_data(
         world_name=args.world_name,
         density=args.density,
+        num_rocks_override=args.num_rocks,
         collidable_ratio=args.collidable_ratio,
         spacing=args.spacing,
         min_terrain_height=args.min_terrain_height,

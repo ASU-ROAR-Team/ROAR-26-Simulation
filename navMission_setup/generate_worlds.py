@@ -34,7 +34,8 @@ WORLDS = [
     {
         "name":             "world_1",
         "label":            "LOW density",
-        "density":          0.008,   # ~6 rocks  across ~704 m²
+        "density":          0.005,   # ~7 rocks  across ~1456 m²
+        "num_rocks":        8,
         "collidable_ratio": 0.50,    # 50 % solid
         "heightmap_resolution": 0.25,
         "gradient_scale":   150.0,
@@ -43,7 +44,8 @@ WORLDS = [
     {
         "name":             "world_2",
         "label":            "MODERATE density",
-        "density":          0.08,    # ~56 rocks  across ~704 m²
+        "density":          0.035,   # ~51 rocks  across ~1456 m²
+        "num_rocks":        50,
         "collidable_ratio": 0.60,    # 60 % solid
         "heightmap_resolution": 0.25,
         "gradient_scale":   150.0,
@@ -52,7 +54,8 @@ WORLDS = [
     {
         "name":             "world_3",
         "label":            "HIGH density",
-        "density":          0.15,    # ~106 rocks across ~704 m²
+        "density":          0.075,   # ~109 rocks across ~1456 m²
+        "num_rocks":        90,
         "collidable_ratio": 0.70,    # 70 % solid
         "heightmap_resolution": 0.25,
         "gradient_scale":   150.0,
@@ -93,7 +96,6 @@ def refresh_base_heightmap() -> None:
         "--resolution", "0.1",
         "--model-path", str(MARSYARD_MODELS),
         "--model", "erc_marsyard_2026",
-        "--fill-nan",
     ]
     print("  Refreshing placement heightmap from the new Mars Yard collision mesh")
     subprocess.run(command, cwd=SCRIPT_DIR, check=True)
@@ -120,10 +122,13 @@ def run_world(cfg: dict) -> bool:
         str(ADD_WORLD),
         "--name",                   cfg["name"],
         "--density",                str(cfg["density"]),
+        "--num-rocks",              str(cfg["num_rocks"]),
         "--collidable-ratio",       str(cfg["collidable_ratio"]),
         "--heightmap-resolution",   str(cfg["heightmap_resolution"]),
         "--gradient-scale",         str(cfg["gradient_scale"]),
         "--stability-scale",        str(cfg["stability_scale"]),
+        "--base-world",             str(BASE_WORLD),
+        "--base-heightmap",         str(BASE_HEIGHTMAP),
     ]
 
     print(f"  Command: {' '.join(cmd)}")
@@ -135,17 +140,45 @@ def run_world(cfg: dict) -> bool:
 # Main
 # ---------------------------------------------------------------------------
 def main() -> None:
+    global BASE_WORLD
     separator("ERC Mars Yard 2026 — Batch World Generator")
     print(f"  Pipeline root : {SCRIPT_DIR}")
     print(f"  Outputs dir   : {OUTPUTS_DIR}")
-    print(f"  Terrain model : {NEW_MARSYARD_URI}")
+    print()
+    
+    # Pre-fuse ArUco markers into the base world
+    print("=" * 78)
+    print("  Pre-fusing ArUco markers into the base world")
+    print("=" * 78)
+    aruco_dir = SCRIPT_DIR / "world_setup" / "TempArucoGen" / "aruco_data"
+    aruco_dir.mkdir(parents=True, exist_ok=True)
+    
+    subprocess.run([
+        sys.executable,
+        str(SCRIPT_DIR / "world_setup" / "TempArucoGen" / "scripts" / "step2_generate_npy.py"),
+        "--heightmap", str(BASE_HEIGHTMAP),
+        "--output-dir", str(aruco_dir)
+    ], check=True)
+    
+    base_world_with_arucos = SCRIPT_DIR / "world_setup" / "initial_inputs" / "i_world" / "marsyard_with_arucos.world"
+    subprocess.run([
+        sys.executable,
+        str(SCRIPT_DIR / "world_setup" / "TempArucoGen" / "scripts" / "step3_fuse_world.py"),
+        "--base-world", str(BASE_WORLD),
+        "--output-world", str(base_world_with_arucos),
+        "--npy-data", str(aruco_dir / "aruco_data.npy")
+    ], check=True)
+    
+    # Override BASE_WORLD for the rest of the pipeline
+    BASE_WORLD = base_world_with_arucos
+    
     refresh_base_heightmap()
     print()
     print(f"  Generating {len(WORLDS)} worlds:")
     for w in WORLDS:
-        rocks_est = int(w["density"] * 704)
-        print(f"    {w['name']:10s}  {w['label']:20s}  density={w['density']:.3f}  "
-              f"~{rocks_est} rocks  collidable={int(w['collidable_ratio']*100)}%")
+        rocks_est = w["num_rocks"]
+        print(f"    {w['name']:10s}  {w['label']:20s}  "
+              f"exactly {rocks_est} rocks  collidable={int(w['collidable_ratio']*100)}%")
 
     results = {}
     for cfg in WORLDS:

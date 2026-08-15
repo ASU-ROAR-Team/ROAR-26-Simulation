@@ -2,18 +2,18 @@ ROAR World Dataset
 ==================================================
 Dataset name            : world_1
 Naming mode             : custom
-Base world              : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_world/marsyard.world
-Base heightmap          : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_heightmap/heightmap.npz
-Requested density       : 0.008
+Base world              : /home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/navMission_setup/world_setup/initial_inputs/i_world/marsyard_with_arucos.world
+Base heightmap          : /home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/navMission_setup/world_setup/initial_inputs/i_heightmap/heightmap.npz
+Requested density       : 0.005
 Requested collidable    : 0.5
 Rock spacing            : 1.0
 Minimum roughness       : 0.02
-Minimum terrain height  : 0.15
+Minimum terrain height  : -1.5
 Dead-end generation     : False
 Heightmap resolution    : 0.25
 Gradient scale          : 150.0
 Stability scale         : 90.0
-Obstacle data           : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world_1/obstacle_data/obstacle_data.npy
-Generated world         : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world_1/world/world_1_d0.008_c0.50.world
-Generated heightmap     : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world_1/heightmap/world_1_d0.008_c0.50_heightmap.npz
-Generated costmap       : /home/omar/new_sim_tes/ROAR-26-Simulation/navMission_setup/outputs/world_1/costmap/world_1_d0.008_c0.50_costmap.npz
+Obstacle data           : /home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/navMission_setup/outputs/world_1/obstacle_data/obstacle_data_world_1.npy
+Generated world         : /home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/navMission_setup/outputs/world_1/world/world_1.world
+Generated heightmap     : /home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/navMission_setup/outputs/world_1/heightmap/heightmap_world_1.npz
+Generated costmap       : /home/draaven/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/navMission_setup/outputs/world_1/costmap/costmap_world_1.npz
