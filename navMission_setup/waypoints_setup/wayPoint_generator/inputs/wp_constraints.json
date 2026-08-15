@@ -6,7 +6,7 @@
     "duplicate_distance_threshold": 6.0,
     "target_wp_count": 10,
     "max_attempts": 10000,
-    "seed": 50,
+    "seed": 99,
     "boundary_margin_ratio": 0.05,
     "min_spacing_ratio": 0.04,
     "max_spacing_ratio": 0.35,
