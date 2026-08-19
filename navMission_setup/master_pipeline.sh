@@ -36,7 +36,7 @@ for w in 1 2 3; do
     python3 wp_generator.py
     
     # Sync to Mission Workspace
-    MISSION_DIR="$HOME/Navigation_Mission_Workspace/missions/mission_$w/waypoints"
+    MISSION_DIR="$HOME/Navigation_Mission_Workspace/src/ercNavigation_Mission/missions/mission_$w/waypoints"
     mkdir -p "$MISSION_DIR"
     
     # The output is in outputs/wpXX.npy
@@ -49,7 +49,7 @@ for w in 1 2 3; do
     done
     
     # Also sync the costmap to the assets directory for the GUI preview!
-    ASSETS_DIR="$HOME/Navigation_Mission_Workspace/missions/mission_$w/assets"
+    ASSETS_DIR="$HOME/Navigation_Mission_Workspace/src/ercNavigation_Mission/missions/mission_$w/assets"
     mkdir -p "$ASSETS_DIR"
     if [ -f "$DEV_WORLD/costmap.npz" ]; then
         cp "$DEV_WORLD/costmap.npz" "$ASSETS_DIR/costmap.npz"
