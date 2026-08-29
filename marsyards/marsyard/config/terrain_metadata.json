@@ -1,9 +1,0 @@
-{
-  "texture_reference": "MarsYard_CoordSys.PNG",
-  "mesh_source": "MARSball.obj",
-  "visual_res_m": 0.08,
-  "collision_res_m": 0.1,
-  "brick_boost_visual_m": 0.05,
-  "brick_boost_collision_m": 0.06,
-  "note": "brick heights are estimated boosts from dark curb lines; if ERC gives surveyed curb heights they should replace this."
-}
