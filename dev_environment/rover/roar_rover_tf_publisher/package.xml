@@ -4,10 +4,10 @@
   <name>roar_rover_tf_publisher</name>
   <version>1.0.0</version>
   <description>
-    Minimal ROS 2 node that publishes only the TF tree of the ROAR rover
-    (roar_rover_clean), parsed directly from its URDF. Fixed joints are
-    broadcast once on /tf_static; non-fixed joints are broadcast on /tf at
-    their zero position. No joint_states, Gazebo, or controllers required.
+    Minimal ROS 2 node that publishes only the TF tree of the ROAR rover,
+    using a hardcoded joint list (no URDF/xacro dependency). Fixed joints
+    are broadcast once on /tf_static; non-fixed joints are broadcast on /tf
+    at their zero position. No joint_states, Gazebo, or controllers required.
   </description>
   <author>TODO</author>
   <maintainer email="TODO@email.com">TODO</maintainer>
@@ -18,8 +18,6 @@
   <depend>rclpy</depend>
   <depend>tf2_ros</depend>
   <depend>geometry_msgs</depend>
-  <exec_depend>xacro</exec_depend>
-  <exec_depend>roar_rover_clean</exec_depend>
   <exec_depend>ros2launch</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
