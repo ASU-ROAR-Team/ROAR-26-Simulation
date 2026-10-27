@@ -7,21 +7,25 @@ from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
-# Sibling directory of this repo's own checkout
-_repo_root = Path(__file__).resolve().parents[2]
-_sibling_root = _repo_root.parent
-
-
 def _resolve_sim_ws():
     override = os.environ.get('ROAR_SIM_WS')
-    if override and os.path.exists(override):
-        return os.path.expanduser(override)
+    if override:
+        override_path = Path(override).expanduser().resolve()
+        if (override_path / 'dev_environment').is_dir():
+            return str(override_path)
+        sim_source = override_path / 'src' / 'roar2026'
+        if sim_source.is_dir():
+            return str(sim_source)
+
     current = Path(__file__).resolve()
-    for parent in [current] + list(current.parents):
-        cand = parent / "src" / "simulation"
-        if cand.is_dir():
-            return str(cand)
-    return str(_sibling_root / "ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion")
+    for parent in current.parents:
+        sim_source = parent / 'src' / 'roar2026'
+        if sim_source.is_dir():
+            return str(sim_source)
+
+    raise RuntimeError(
+        'Could not locate the simulation source. Set ROAR_SIM_WS to the '
+        'workspace root or src/roar2026 directory.')
 
 
 def launch_setup(context, *args, **kwargs):

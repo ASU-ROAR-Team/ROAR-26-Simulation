@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -7,7 +8,26 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 
+def _resolve_workspace_root():
+    override = os.environ.get('ROAR_WS')
+    if override:
+        return Path(override).expanduser().resolve()
+
+    current = Path(__file__).resolve()
+    for parent in current.parents:
+        if (parent / 'src' / 'navigation' / 'missions').is_dir():
+            return parent
+
+    raise RuntimeError(
+        'Could not locate the ROAR workspace. Set ROAR_WS to the workspace root.')
+
+
 def generate_launch_description():
+    workspace_root = _resolve_workspace_root()
+    mission_assets = (
+        workspace_root / 'src' / 'navigation' / 'missions' /
+        'mission_1' / 'assets')
+
     default_config = os.path.join(
         get_package_share_directory('roar_perception_testing'),
         'config', 'perception_benchmark.yaml')
@@ -28,14 +48,10 @@ def generate_launch_description():
         DeclareLaunchArgument('config', default_value=default_config),
         DeclareLaunchArgument(
             'ground_truth_path',
-            default_value=os.path.expanduser(
-                '~/new_sim_tes/ROAR-26-Simulation/dev_environment/worlds/'
-                'worldData_125/obstacle_data.npy')),
+            default_value=str(mission_assets / 'obstacle_data.npy')),
         DeclareLaunchArgument(
             'aruco_ground_truth_path',
-            default_value=os.path.expanduser(
-                '~/ROAR-26-Simulation/dev_environment/'
-                'worlds/world/aruco_data.yaml')),
+            default_value=str(mission_assets / 'aruco_data.yaml')),
         DeclareLaunchArgument('target_frame', default_value='map'),
         DeclareLaunchArgument('world_name', default_value='worldData_126'),
         DeclareLaunchArgument('output_directory', default_value=''),

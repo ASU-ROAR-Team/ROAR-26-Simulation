@@ -1,6 +1,6 @@
 # ASU ROAR Mission Control GUI
 
-**Location:** `Navigation_Mission_Workspace/src/ercNavigation_Mission/scripts/asu_roar_gui.py`
+**Location:** `Navigation_Mission_Workspace/src/navigation/scripts/asu_roar_gui.py`
 
 This GUI is the central hub for the Simulation & Testing Team to orchestrate and evaluate the Navigation pipeline. It provides a full PyQt5 interface for loading waypoints, queueing test runs, and generating Master Evaluation Reports.
 
@@ -40,10 +40,10 @@ In the **EVALUATION** and **REPORTS** tabs:
 - You can view these comprehensive HTML reports right from the interface by clicking the report buttons.
 
 ## How to Run
-Ensure both your Simulation and Navigation workspaces are built and sourced. Make sure the `ROAR_SIM_WS` environment variable is set or the simulation is at the default path (`~/ROAR-26-Simulation`).
+Ensure both your Simulation and Navigation workspaces are built and sourced. Make sure the `ROAR_SIM_WS` environment variable is set or the simulation is at the default path (`${ROAR_WS}/src/roar2026`).
 
 ```bash
-cd ~/Navigation_Mission_Workspace
+cd ${ROAR_WS}
 source install/setup.bash
-python3 src/ercNavigation_Mission/scripts/asu_roar_gui.py
+python3 src/navigation/scripts/asu_roar_gui.py
 ```

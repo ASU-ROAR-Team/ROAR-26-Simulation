@@ -1,6 +1,6 @@
 Obstacle Data Summary
 World Name      : marsyard.world
-Heightmap       : /home/saif/Desktop/ROAR/simulation_ws/src/navMission_setup/world_setup/obsData_gen/inputs/marsyard_heightmap.npz
+Heightmap       : ${ROAR_WS}/src/roar2026/navMission_setup/world_setup/obsData_gen/inputs/marsyard_heightmap.npz
 Total Placed    : 8
 Density         : 0.012 rocks/m²
 Collidable Ratio: 0.5

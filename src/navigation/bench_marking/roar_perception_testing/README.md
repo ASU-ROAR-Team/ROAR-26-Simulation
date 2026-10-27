@@ -23,8 +23,9 @@ source install/setup.bash
 
 ```bash
 ros2 launch roar_perception_testing perception_benchmark.launch.py \
-  ground_truth_path:="$HOME/new_sim_tes/test_sim/ROAR-26-Simulation/dev_environment/worlds/worldData_126/obstacle_data.npy" \
-  world_name:=worldData_126 \
+  ground_truth_path:="${ROAR_WS}/src/navigation/missions/mission_1/assets/obstacle_data.npy" \
+  aruco_ground_truth_path:="${ROAR_WS}/src/navigation/missions/mission_1/assets/aruco_data.yaml" \
+  world_name:=world1 \
   perception_topic:=/detection/lidar_clusters \
   aruco_topic:=/detection/aruco_3d \
   target_frame:=map

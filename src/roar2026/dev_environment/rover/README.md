@@ -90,7 +90,7 @@ Use `dev_environment/launch_test.sh` to launch any of the three standalone rover
 
 Ensure your workspace is compiled before launching:
 ```bash
-cd ~/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/dev_environment
+cd ${ROAR_WS}/src/roar2026/dev_environment
 colcon build --symlink-install
 source install/setup.bash
 ```

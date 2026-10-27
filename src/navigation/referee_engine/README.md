@@ -1,6 +1,6 @@
 # ⚖️ ROAR 2026 — Automated ERC Referee Scoring Engine
 
-[![Package](https://img.shields.io/badge/Package-referee__engine-E10600?logo=ros&logoColor=white)](file:///home/draaven/ROAR_2026/src/navigation/referee_engine)
+[![Package](https://img.shields.io/badge/Package-referee__engine-E10600?logo=ros&logoColor=white)](file://${ROAR_WS}/src/navigation/referee_engine)
 [![Rules](https://img.shields.io/badge/Rules-ERC_2026_Official-00D9FF)](https://roverchallenge.eu/)
 
 The `referee_engine` package implements an automated, deterministic scoring evaluator adhering strictly to the official **European Rover Challenge Navigation Task Rules** (Traverse Sub-Task: Maximum 300 Points).

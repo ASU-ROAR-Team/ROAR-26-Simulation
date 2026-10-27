@@ -1,7 +1,7 @@
 # 🔴 ROAR 2026 — Marsyard Terrain & ArUco Models
 
-[![Module](https://img.shields.io/badge/Module-roar2026-E10600?logo=gazebo&logoColor=white)](file:///home/draaven/ROAR_2026/src/roar2026)
-[![Terrain](https://img.shields.io/badge/Terrain-ERC_2026_Official-00D9FF)](file:///home/draaven/ROAR_2026/src/roar2026/marsyards/marsyard/models/erc_marsyard_2026)
+[![Module](https://img.shields.io/badge/Module-roar2026-E10600?logo=gazebo&logoColor=white)](file://${ROAR_WS}/src/roar2026)
+[![Terrain](https://img.shields.io/badge/Terrain-ERC_2026_Official-00D9FF)](file://${ROAR_WS}/src/roar2026/marsyards/marsyard/models/erc_marsyard_2026)
 
 This directory hosts the official 3D digital twin assets for the **European Rover Challenge 2026 Marsyard** in Kielce, Poland, alongside the official competition ArUco navigation markers.
 

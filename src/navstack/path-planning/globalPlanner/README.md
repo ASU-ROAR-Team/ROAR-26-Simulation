@@ -138,6 +138,6 @@ ros2 launch dstar_navigation bringup_full_stack.launch.py
 
 For in-depth details about implementation updates, test scripts, and visual path plots:
 
-*   **Changelog & Fixes**: Refer to [**`EDITS.md`**](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/EDITS.md) in the package root. It lists all the 12 bugs identified and repaired during development, modified files, and benchmark performance results.
-*   **Testing Suite Instructions**: Refer to [**`test/README.md`**](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/README.md) for detailed descriptions of all scenarios, launch arguments, and instructions to run the automated Python runners (`run_static_tests.py`, `run_dynamic_tests.py`, etc.).
-*   **Visual Trajectories Gallery**: Refer to the markdown visual artifact [**`visualizations.md`**](file:///home/amrtamer/.gemini/antigravity-cli/brain/2bcecdc1-a399-43a9-b5ff-8425d925b1b5/visualizations.md) to inspect matplotlib plots representing detours, goal changes, and LiDAR scanning cones.
+*   **Changelog & Fixes**: Refer to [**`EDITS.md`**](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/EDITS.md) in the package root. It lists all the 12 bugs identified and repaired during development, modified files, and benchmark performance results.
+*   **Testing Suite Instructions**: Refer to [**`test/README.md`**](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/README.md) for detailed descriptions of all scenarios, launch arguments, and instructions to run the automated Python runners (`run_static_tests.py`, `run_dynamic_tests.py`, etc.).
+*   **Visual Trajectories Gallery**: Refer to the markdown visual artifact [**`visualizations.md`**](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/visualizations.md) to inspect matplotlib plots representing detours, goal changes, and LiDAR scanning cones.

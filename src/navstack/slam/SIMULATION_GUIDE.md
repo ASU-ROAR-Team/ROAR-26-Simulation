@@ -12,14 +12,14 @@ troubleshooting table at the bottom is a failure we actually hit and solved.
 
 | Workspace | Path | What's in it |
 |---|---|---|
-| Marsyard sim | `~/ROAR-26-Simulation/` | marsyard world + roar_rover model + diff_drive (sim team's — NEVER modified) |
+| Marsyard sim | `${ROAR_WS}/src/roar2026/` | marsyard world + roar_rover model + diff_drive (sim team's — NEVER modified) |
 | SLAM | `~/roar_onsite_ws/` | the 5 SLAM packages (this repo's `slam/` folder) |
 
 ### First-time build
 
 ```bash
 # Sim workspace (once, or after sim team updates)
-cd ~/ROAR-26-Simulation
+cd ${ROAR_WS}/src/roar2026
 colcon build
 ```
 
@@ -47,7 +47,7 @@ Order matters: the sim must be publishing before the SLAM stack starts.
 
 ```bash
 source /opt/ros/humble/setup.bash
-source ~/ROAR-26-Simulation/install/setup.bash
+source ${ROAR_WS}/src/roar2026/install/setup.bash
 ros2 launch roar_simulation basic_rover_mars.launch.py
 ```
 
@@ -150,7 +150,7 @@ pass ≥ 85.
 |---|---|---|
 | Gazebo opens EMPTY flat world, no map | launched `basic_rover.launch.py` | use `basic_rover_mars.launch.py` |
 | Gazebo opens marsyard WITHOUT rover | launched `erc2025_remote_sim startsimulation.launch.py` (Husarion template leftovers) | use `roar_simulation basic_rover_mars.launch.py` |
-| `file ... not found in share directory` | wrong workspace sourced — the marsyard launch lives in `~/ROAR-26-Simulation`, not `~/roar_simulation` | `source ~/ROAR-26-Simulation/install/setup.bash` |
+| `file ... not found in share directory` | wrong workspace sourced — the marsyard launch lives in `${ROAR_WS}/src/roar2026`, not `~/roar_simulation` | `source ${ROAR_WS}/src/roar2026/install/setup.bash` |
 | `/odom` never publishes | SLAM stack listening to the wrong GT topic (empty vs marsyard) | check Terminal 2 startup lines say `marsyard`; fix `GT_TOPIC` in `slam_test.launch.py`, rebuild |
 | `/world/marsyard/pose/info` missing from `ros2 topic list` | bridge not running (Terminal 2 down) or Gazebo dead | `ign topic -l \| grep pose` to check Gazebo side; restart in order |
 | BOTH `/world/empty/...` AND `/world/marsyard/...` present | two Gazebo instances alive | kill everything: `pkill -f gz; pkill -f ros2`, restart in order |

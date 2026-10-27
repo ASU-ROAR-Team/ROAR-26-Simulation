@@ -1,7 +1,7 @@
 # 🏗️ ROAR 2026 — World & Waypoint Synthesis Pipeline
 
-[![Module](https://img.shields.io/badge/Module-roar2026-E10600?logo=gazebo&logoColor=white)](file:///home/draaven/ROAR_2026/src/roar2026)
-[![Automation](https://img.shields.io/badge/Automation-Fully_Scripted-00D9FF)](file:///home/draaven/ROAR_2026/src/roar2026/navMission_setup/master_pipeline.sh)
+[![Module](https://img.shields.io/badge/Module-roar2026-E10600?logo=gazebo&logoColor=white)](file://${ROAR_WS}/src/roar2026)
+[![Automation](https://img.shields.io/badge/Automation-Fully_Scripted-00D9FF)](file://${ROAR_WS}/src/roar2026/navMission_setup/master_pipeline.sh)
 
 The `navMission_setup` subsystem provides an automated, mathematically rigorous pipeline to generate synthetic Marsyard worlds, compute traversability costmaps, and generate valid navigation waypoint missions for the European Rover Challenge.
 
@@ -61,7 +61,7 @@ src/roar2026/navMission_setup/
 To rebuild all three competition worlds and synchronize waypoints to `src/navigation/missions`:
 
 ```bash
-cd ~/ROAR_2026
+cd ${ROAR_WS}
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 

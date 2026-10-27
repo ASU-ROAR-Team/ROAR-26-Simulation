@@ -30,25 +30,25 @@ This document lists all the structural repairs, algorithmic fixes, parameters, a
 ## 2. File Modified / Created List
 
 ### Modified Package Files
-*   [`src/dstar_node.cpp`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/src/dstar_node.cpp) (Core planner, preemption, replan triggers, snapping, fallback validation)
-*   [`dstar_navigation/path_simulator.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/dstar_navigation/path_simulator.py) (Lookahead pure pursuit, speed parameter)
-*   [`CMakeLists.txt`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/CMakeLists.txt) (Registered all new programs, scripts, and launch directories)
-*   [`test/README.md`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/README.md) (Fully rewritten with updated commands and implemented scenarios)
-*   [`test/maps/dynamic_map_publisher.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/maps/dynamic_map_publisher.py) (Added corridor blocking triggers and dynamic goal change map layouts)
-*   [`test/harness/test_harness_dynamic.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/harness/test_harness_dynamic.py) (Added deferred plotting and increased timeout)
+*   [`src/dstar_node.cpp`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/src/dstar_node.cpp) (Core planner, preemption, replan triggers, snapping, fallback validation)
+*   [`dstar_navigation/path_simulator.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/dstar_navigation/path_simulator.py) (Lookahead pure pursuit, speed parameter)
+*   [`CMakeLists.txt`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/CMakeLists.txt) (Registered all new programs, scripts, and launch directories)
+*   [`test/README.md`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/README.md) (Fully rewritten with updated commands and implemented scenarios)
+*   [`test/maps/dynamic_map_publisher.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/maps/dynamic_map_publisher.py) (Added corridor blocking triggers and dynamic goal change map layouts)
+*   [`test/harness/test_harness_dynamic.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/harness/test_harness_dynamic.py) (Added deferred plotting and increased timeout)
 
 ### Created Package Files
-*   [`launch/test_hybrid.launch.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/launch/test_hybrid.launch.py) (Launch configurations for Phase 3)
-*   [`launch/test_terrain.launch.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/launch/test_terrain.launch.py) (Launch configurations for Phase 4)
-*   [`launch/test_erc.launch.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/launch/test_erc.launch.py) (Launch configurations for Phase 5)
-*   [`test/harness/test_harness_hybrid.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/harness/test_harness_hybrid.py) (Hybrid harness, mid-flight preemption goal tracking)
-*   [`test/harness/test_harness_terrain.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/harness/test_harness_terrain.py) (Terrain harness, slope/detour cost assertions)
-*   [`test/harness/test_harness_erc.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/harness/test_harness_erc.py) (ERC harness, large scale metrics, markdown report generator)
-*   [`test/maps/terrain_map_generator.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/maps/terrain_map_generator.py) (Continuous cost and linear gradient publisher)
-*   [`test/maps/erc_map_generator.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/maps/erc_map_generator.py) (400x400 map, canyons, gravel fields)
-*   [`test/run_hybrid_tests.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/run_hybrid_tests.py) (Automated Phase 3 runner script)
-*   [`test/run_terrain_tests.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/run_terrain_tests.py) (Automated Phase 4 runner script)
-*   [`test/erc_simulation.py`](file:///home/amrtamer/ROAR-Nouveau-Autonomous-System/Path-planning/dstar_navigation/test/erc_simulation.py) (Automated Phase 5 runner script)
+*   [`launch/test_hybrid.launch.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/launch/test_hybrid.launch.py) (Launch configurations for Phase 3)
+*   [`launch/test_terrain.launch.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/launch/test_terrain.launch.py) (Launch configurations for Phase 4)
+*   [`launch/test_erc.launch.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/launch/test_erc.launch.py) (Launch configurations for Phase 5)
+*   [`test/harness/test_harness_hybrid.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/harness/test_harness_hybrid.py) (Hybrid harness, mid-flight preemption goal tracking)
+*   [`test/harness/test_harness_terrain.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/harness/test_harness_terrain.py) (Terrain harness, slope/detour cost assertions)
+*   [`test/harness/test_harness_erc.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/harness/test_harness_erc.py) (ERC harness, large scale metrics, markdown report generator)
+*   [`test/maps/terrain_map_generator.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/maps/terrain_map_generator.py) (Continuous cost and linear gradient publisher)
+*   [`test/maps/erc_map_generator.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/maps/erc_map_generator.py) (400x400 map, canyons, gravel fields)
+*   [`test/run_hybrid_tests.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/run_hybrid_tests.py) (Automated Phase 3 runner script)
+*   [`test/run_terrain_tests.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/run_terrain_tests.py) (Automated Phase 4 runner script)
+*   [`test/erc_simulation.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/test/erc_simulation.py) (Automated Phase 5 runner script)
 
 ---
 
@@ -99,18 +99,18 @@ This document lists all the structural repairs, algorithmic fixes, parameters, a
 Three shell scripts and three ROS 2 launch files added for standalone module development and integration testing:
 
 ### Shell Scripts (workspace root)
-*   [`run_global.sh`](file:///home/amrtamer/nav-stack_2026/run_global.sh) — Launches D* Lite global planner standalone. Args: `map_scenario:=open`, `start_x:=0.5`, `start_y:=0.5`.
-*   [`run_local.sh`](file:///home/amrtamer/nav-stack_2026/run_local.sh) — Launches MPPI local controller standalone. Subscribes to `/global_plan` and waits.
-*   [`run_both.sh`](file:///home/amrtamer/nav-stack_2026/run_both.sh) — Launches both modules together as a full integrated navigation stack.
+*   [`run_global.sh`](file://${ROAR_WS}/src/navstack/run_global.sh) — Launches D* Lite global planner standalone. Args: `map_scenario:=open`, `start_x:=0.5`, `start_y:=0.5`.
+*   [`run_local.sh`](file://${ROAR_WS}/src/navstack/run_local.sh) — Launches MPPI local controller standalone. Subscribes to `/global_plan` and waits.
+*   [`run_both.sh`](file://${ROAR_WS}/src/navstack/run_both.sh) — Launches both modules together as a full integrated navigation stack.
 
 ### Bringup Launch Files
-*   [`launch/bringup_global_planner.launch.py`](file:///home/amrtamer/nav-stack_2026/path-planning/globalPlanner/launch/bringup_global_planner.launch.py) — D* Lite + dynamic map + path simulator + RViz.
-*   [`launch/bringup_local_controller.launch.py`](file:///home/amrtamer/nav-stack_2026/path-planning/globalPlanner/launch/bringup_local_controller.launch.py) — MPPI controller server + fake robot + map server + lifecycle manager + RViz.
-*   [`launch/bringup_full_stack.launch.py`](file:///home/amrtamer/nav-stack_2026/path-planning/globalPlanner/launch/bringup_full_stack.launch.py) — Full composed stack with a single RViz instance.
+*   [`launch/bringup_global_planner.launch.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/launch/bringup_global_planner.launch.py) — D* Lite + dynamic map + path simulator + RViz.
+*   [`launch/bringup_local_controller.launch.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/launch/bringup_local_controller.launch.py) — MPPI controller server + fake robot + map server + lifecycle manager + RViz.
+*   [`launch/bringup_full_stack.launch.py`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/launch/bringup_full_stack.launch.py) — Full composed stack with a single RViz instance.
 
 ### Interactive Test Menu
-*   [`empty_test/test_menu.py`](file:///home/amrtamer/nav-stack_2026/empty_test/test_menu.py) — Extended with `b1`/`b2`/`b3` module bringup choices (launch in background, print PID) above the existing MPPI scenario list.
+*   [`empty_test/test_menu.py`](file://${ROAR_WS}/src/navstack/empty_test/test_menu.py) — Extended with `b1`/`b2`/`b3` module bringup choices (launch in background, print PID) above the existing MPPI scenario list.
 
 ### RViz Camera Fix
-*   [`config/rviz/dstar_test.rviz`](file:///home/amrtamer/nav-stack_2026/path-planning/globalPlanner/config/rviz/dstar_test.rviz) — `Target Frame` changed from `<Fixed Frame>` to `base_link` so the camera follows the rover automatically.
+*   [`config/rviz/dstar_test.rviz`](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner/config/rviz/dstar_test.rviz) — `Target Frame` changed from `<Fixed Frame>` to `base_link` so the camera follows the rover automatically.
 

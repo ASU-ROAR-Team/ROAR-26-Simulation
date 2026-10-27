@@ -228,7 +228,7 @@ def test_numpy_output_format():
 def test_yaml_waypoint_loading():
     """Test loading waypoints from the navstack YAML parameter file"""
     ws_root = os.environ.get('ROAR_WS', str(Path(__file__).resolve().parents[4]))
-    yaml_path = os.path.join(ws_root, 'src', 'navStack_2026', 'navstack_nav2', 'config', 'roar_nav2_sim.yaml')
+    yaml_path = os.path.join(ws_root, 'src', 'navstack', 'navstack_nav2', 'config', 'roar_nav2_sim.yaml')
     if not os.path.exists(yaml_path):
         print("  [SKIP] YAML file not found, skipping YAML loading test")
         return

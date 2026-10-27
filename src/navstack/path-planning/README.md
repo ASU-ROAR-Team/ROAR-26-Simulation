@@ -1,6 +1,6 @@
 # 🗺️ ROAR 2026 — D* Lite Global Path Planner
 
-[![Package](https://img.shields.io/badge/Package-dstar__navigation-E10600?logo=ros&logoColor=white)](file:///home/draaven/ROAR_2026/src/navstack/path-planning/globalPlanner)
+[![Package](https://img.shields.io/badge/Package-dstar__navigation-E10600?logo=ros&logoColor=white)](file://${ROAR_WS}/src/navstack/path-planning/globalPlanner)
 [![Algorithm](https://img.shields.io/badge/Algorithm-D*_Lite_Replanning-00D9FF)](https://www.cs.cmu.edu/~maxim/files/dlite_aaai02.pdf)
 
 The `dstar_navigation` package provides dynamic global path planning across the 2.5D Marsyard terrain. It implements the **D* Lite** algorithm (Koenig & Likhachev), enabling rapid replanning from scratch whenever the rover's on-board LiDAR detects new or moving obstacles.

@@ -13,7 +13,7 @@ A Python utility script for the ROAR-26-Simulation environment. It batch convert
 The script is located in the `navMission_setup` package and expects the following structure:
 
 ```text
-~/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/waypoints_setup/waypoint_converter/
+${ROAR_WS}/src/roar2026/navMission_setup/waypoints_setup/waypoint_converter/
 ├── convert_waypoints.py     # The conversion script
 ├── inputs/                  # Place your source wpXX.npy files here
 └── outputs/                 # The script generates the wpXX.csv files here
@@ -24,7 +24,7 @@ The script is located in the `navMission_setup` package and expects the followin
 
 1. **Navigate to the workspace directory:**
 ```bash
-cd ~/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/waypoints_setup/waypoint_converter/
+cd ${ROAR_WS}/src/roar2026/navMission_setup/waypoints_setup/waypoint_converter/
 
 ```
 

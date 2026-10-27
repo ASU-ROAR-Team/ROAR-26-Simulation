@@ -44,7 +44,7 @@ The standalone testing environment consists of 5 modular ROS 2 nodes running tog
 source /opt/ros/humble/setup.bash
 
 # 2. Navigate to workspace root
-cd /home/kassab/ros_ws/navStack_2026
+cd ${ROAR_WS}/src/navstack
 
 # 3. Build the global planner package
 colcon build --packages-select dstar_navigation

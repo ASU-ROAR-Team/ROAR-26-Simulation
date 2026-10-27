@@ -23,7 +23,7 @@ src/roar2026/
 ## 🚀 Running Simulations
 
 ```bash
-cd ~/ROAR_2026
+cd ${ROAR_WS}
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 

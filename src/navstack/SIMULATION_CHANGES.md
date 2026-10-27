@@ -1,7 +1,7 @@
 # Simulation repo changes
 
 Changes made to the external simulation repo
-(`~/ROAR_erc/sim/src/ROAR-26-Simulation`), extracted out of `CHANGELOG.md`
+(`${ROAR_WS}`), extracted out of `CHANGELOG.md`
 (which covers `nav-stack_2026` itself) since that repo is separate from
 this one. Context/reasoning for *why* these exist lives in
 `CHANGELOG.md` at this repo's root — this file just tracks what actually

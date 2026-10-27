@@ -2,8 +2,8 @@ ROAR World Dataset
 ==================================================
 Dataset name            : world3
 Naming mode             : custom
-Base world              : ~/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_world/marsyard.world
-Base heightmap          : ~/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_heightmap/marsyard_heightmap.npz
+Base world              : ${ROAR_WS}/src/roar2026/navMission_setup/world_setup/initial_inputs/i_world/marsyard.world
+Base heightmap          : ${ROAR_WS}/src/roar2026/navMission_setup/world_setup/initial_inputs/i_heightmap/marsyard_heightmap.npz
 Requested density       : 0.012
 Requested collidable    : 0.9
 Rock spacing            : 0.7
@@ -22,9 +22,9 @@ ArUco count             : 15
 ArUco ID start          : 1
 ArUco seed              : 103
 ArUco marker size       : 0.21
-Obstacle data           : ~/ROAR-26-Simulation/navMission_setup/outputs/world3/obstacle_data.npy
-ArUco GT YAML           : ~/ROAR-26-Simulation/navMission_setup/outputs/world3/aruco_data.yaml
-ArUco GT NPY            : ~/ROAR-26-Simulation/navMission_setup/outputs/world3/aruco_data.npy
-Generated world         : ~/ROAR-26-Simulation/navMission_setup/outputs/world3/world3.world
-Generated heightmap     : ~/ROAR-26-Simulation/navMission_setup/outputs/world3/heightmap.npz
-Generated costmap       : ~/ROAR-26-Simulation/navMission_setup/outputs/world3/costmap.npz
+Obstacle data           : ${ROAR_WS}/src/roar2026/navMission_setup/outputs/world3/obstacle_data.npy
+ArUco GT YAML           : ${ROAR_WS}/src/roar2026/navMission_setup/outputs/world3/aruco_data.yaml
+ArUco GT NPY            : ${ROAR_WS}/src/roar2026/navMission_setup/outputs/world3/aruco_data.npy
+Generated world         : ${ROAR_WS}/src/roar2026/navMission_setup/outputs/world3/world3.world
+Generated heightmap     : ${ROAR_WS}/src/roar2026/navMission_setup/outputs/world3/heightmap.npz
+Generated costmap       : ${ROAR_WS}/src/roar2026/navMission_setup/outputs/world3/costmap.npz

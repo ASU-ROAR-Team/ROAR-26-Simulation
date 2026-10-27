@@ -1,7 +1,7 @@
 # 🎛️ ROAR 2026 — Maintenance Panel Sub-Task Digital Twin
 
-[![Module](https://img.shields.io/badge/Module-roar2026-E10600?logo=gazebo&logoColor=white)](file:///home/draaven/ROAR_2026/src/roar2026)
-[![Task](https://img.shields.io/badge/Task-ERC_Maintenance_Panel-BB86FC)](file:///home/draaven/ROAR_2026/src/roar2026/panel)
+[![Module](https://img.shields.io/badge/Module-roar2026-E10600?logo=gazebo&logoColor=white)](file://${ROAR_WS}/src/roar2026)
+[![Task](https://img.shields.io/badge/Task-ERC_Maintenance_Panel-BB86FC)](file://${ROAR_WS}/src/roar2026/panel)
 
 This subsystem models the European Rover Challenge **Maintenance Panel**, featuring interactive toggle switches, continuous rotary knobs, power sockets, status LEDs, and electromagnetic interfaces manipulated by the rover's 6-DOF robotic arm.
 

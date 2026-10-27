@@ -35,12 +35,13 @@ def _resolve_ws_root():
     if override and os.path.exists(override):
         return os.path.abspath(os.path.expanduser(override))
     current = Path(__file__).resolve()
-    for parent in [current] + list(current.parents):
-        if (parent / 'src' / 'ercNavigation_Mission').is_dir() and (parent / 'src' / 'simulation').is_dir():
+    for parent in current.parents:
+        if ((parent / 'src' / 'navigation' / 'missions').is_dir() and
+                (parent / 'src' / 'roar2026' / 'dev_environment').is_dir()):
             return str(parent)
-        if (parent / 'missions').is_dir() and (parent / 'reports').is_dir():
-            return str(parent)
-    return str(current.parents[4] if len(current.parents) >= 5 else current.parents[2])
+
+    raise RuntimeError(
+        'Could not locate the ROAR workspace. Set ROAR_WS to the workspace root.')
 
 EVAL_WS = _resolve_ws_root()
 
@@ -131,6 +132,8 @@ def launch_setup(context, *args, **kwargs):
 
     mission_assets = os.path.join(
         EVAL_WS,
+        'src',
+        'navigation',
         'missions',
         f'mission_{world_num}',
         'assets'

@@ -1,7 +1,7 @@
 Obstacle Data Summary
 World Name      : marsyard.world
-Heightmap       : /home/misara/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_heightmap/heightmap.npz
-Rocks Dir       : /home/misara/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/world_setup/rocks_ws
+Heightmap       : ${ROAR_WS}/src/roar2026/navMission_setup/world_setup/initial_inputs/i_heightmap/heightmap.npz
+Rocks Dir       : ${ROAR_WS}/src/roar2026/navMission_setup/world_setup/rocks_ws
 Total Placed    : 31
 Density         : 0.02 rocks/m²
 Collidable Ratio: 0.5

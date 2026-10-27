@@ -9,8 +9,8 @@ Welcome! This `USE_ME.md` guide provides step-by-step instructions for launching
 To open the master PyQt GUI orchestrator:
 
 ```bash
-cd ~/Navigation_Mission_Workspace
-python3 src/ercNavigation_Mission/scripts/asu_roar_gui.py
+cd ROAR-26-Simulation/src
+./start_gui.sh
 ```
 
 ---
@@ -32,7 +32,7 @@ To preview waypoints overlaid on terrain elevation heatmaps, safe pebbles, and c
 You can also generate preview maps directly from the terminal without opening the GUI:
 
 ```bash
-python3 src/ercNavigation_Mission/scripts/preview_mission.py --world 1 --wp 0 --save /tmp/preview_w1_wp0.png
+python3 src/navigation/scripts/preview_mission.py --world 1 --wp 0 --save /tmp/preview_w1_wp0.png
 xdg-open /tmp/preview_w1_wp0.png
 ```
 
@@ -47,7 +47,7 @@ xdg-open /tmp/preview_w1_wp0.png
 4. Click **RUN BATCH PIPELINE**.
 5. The GUI will orchestrate launching Gazebo simulation, the Nav2 stack, `erc_waypoint_follower.py`, and `referee_engine` headlessly.
 6. Upon completion, the interactive HTML evaluation report opens automatically in your browser:
-   `~/Navigation_Mission_Workspace/reports/master_report_*.html`
+   `${ROAR_WS}/reports/master_report_*.html`
 
 ### Option B: Manual Terminal Execution
 Follow the 4-step sequence in individual terminal windows:
@@ -56,7 +56,7 @@ Follow the 4-step sequence in individual terminal windows:
 3. **Terminal 3 (Referee Engine)**: `ros2 launch referee_engine referee.launch.py`
 4. **Terminal 4 (Waypoint Follower)**:
    ```bash
-   python3 ~/navStack_2026_Workspace/src/navStack_2026/path-planning/globalPlanner/scripts/erc_waypoint_follower.py --auto --params ~/navStack_2026_Workspace/src/navStack_2026/navstack_nav2/config/roar_nav2_sim.yaml
+   python3 ${ROAR_WS}/src/navstack/path-planning/globalPlanner/scripts/erc_waypoint_follower.py --auto --params ${ROAR_WS}/src/navstack/navstack_nav2/config/roar_nav2_sim.yaml
    ```
 
 ---
@@ -77,5 +77,5 @@ ros2 launch adaptive_pure_pursuit mppi_control_nodes.launch.py test:=TC-04 use_c
 
 ## 🔗 Related Documentation
 - 🎛️ [Navigation Mission Workspace README](./README.md)
-- 🌍 [Simulation Workspace USE_ME Guide](../ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/USE_ME.md)
-- 🧭 [ROS 2 Navigation Stack README](../navStack_2026_Workspace/README.md)
+- 🌍 [Simulation Workspace USE_ME Guide](${ROAR_WS}/src/roar2026/USE_ME.md)
+- 🧭 [ROS 2 Navigation Stack README](../navstack/README.md)

@@ -1,6 +1,6 @@
 # 🎮 ROAR 2026 — Model Predictive Path Integral (MPPI) Local Controller
 
-[![Package](https://img.shields.io/badge/Package-nav2__mppi__controller-E10600?logo=ros&logoColor=white)](file:///home/draaven/ROAR_2026/src/navstack/control/nav2_mppi_controller)
+[![Package](https://img.shields.io/badge/Package-nav2__mppi__controller-E10600?logo=ros&logoColor=white)](file://${ROAR_WS}/src/navstack/control/nav2_mppi_controller)
 [![Math](https://img.shields.io/badge/Optimization-SIMD_MPPI-00D9FF)](https://navigation.ros.org/configuration/packages/configuring-mppi-controller.html)
 
 The `nav2_mppi_controller` package provides high-frequency local trajectory optimization for differential-drive navigation over rough Martian terrain. It samples thousands of potential control sequences in parallel, scores them using mathematical cost critics, and computes the optimal control command.

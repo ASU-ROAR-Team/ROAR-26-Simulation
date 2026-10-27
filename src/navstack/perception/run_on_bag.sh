@@ -3,14 +3,14 @@
 #  Run ROAR Perception Pipeline on ZED2i ROS2 Bag
 #
 #  Usage:
-#    bash ~/new_roar_repo/nav-stack_2026/perception/run_on_bag.sh [path/to/bag] [rate]
+#    bash ${ROAR_WS}/src/navstack/perception/run_on_bag.sh [path/to/bag] [rate]
 #
 #  Defaults:
 #    bag  → most-recent bag in ~/zed2i_bags/
 #    rate → 0.5
 #
 #  What it does (in order):
-#    1. Sources ROS2 + the perception_module workspace (nav-stack_2026)
+#    1. Sources ROS2 + the unified ROAR workspace
 #    2. Launches RViz2 with the perception pipeline config
 #    3. Launches the perception stack (lidar_cluster, aruco,
 #       obstacle_publisher, bev_visualizer) with use_sim_time=true
@@ -20,7 +20,7 @@
 
 # ── Resolve workspace root relative to this script's location ────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PERCEPTION_WS="$(cd "$SCRIPT_DIR/.." && pwd)"   # nav-stack_2026/
+PERCEPTION_WS="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'

@@ -1,6 +1,6 @@
 # 👁️ ROAR 2026 — GPU LiDAR Perception & 3D ArUco Detection
 
-[![Package](https://img.shields.io/badge/Package-perception__module-E10600?logo=ros&logoColor=white)](file:///home/draaven/ROAR_2026/src/navstack/perception/perception_module)
+[![Package](https://img.shields.io/badge/Package-perception__module-E10600?logo=ros&logoColor=white)](file://${ROAR_WS}/src/navstack/perception/perception_module)
 [![Hardware](https://img.shields.io/badge/Compute-CUDA_Accelerated-76B900?logo=nvidia&logoColor=white)](https://developer.nvidia.com/cuda-zone)
 
 The `perception_module` package processes real-time sensor streams from the **16-beam 3D LiDAR** and the **ZED 2i Stereo Camera** to extract 3D obstacle bounding boxes and calculate 6-DOF poses of competition ArUco navigation markers.

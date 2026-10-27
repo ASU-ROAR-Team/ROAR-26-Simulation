@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
@@ -10,6 +11,28 @@ from launch_ros.actions import Node
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
 from launch_ros.parameter_descriptions import ParameterValue
+
+
+def _resolve_sim_source():
+    override = os.environ.get('ROAR_SIM_WS')
+    if override:
+        override_path = Path(override).expanduser().resolve()
+        if (override_path / 'dev_environment').is_dir():
+            return override_path
+        sim_source = override_path / 'src' / 'roar2026'
+        if sim_source.is_dir():
+            return sim_source
+
+    current = Path(__file__).resolve()
+    for parent in current.parents:
+        if ((parent / 'marsyards' / 'marsyard' / 'models').is_dir() and
+                (parent / 'navMission_setup' / 'world_setup' / 'rocks_ws').is_dir()):
+            return parent
+
+    raise RuntimeError(
+        'Could not locate the simulation source. Set ROAR_SIM_WS to the '
+        'workspace root or src/roar2026 directory.')
+
 
 def generate_launch_description():
     pkg_roar_simulation_full = get_package_share_directory('roar_simulation_full')
@@ -42,10 +65,19 @@ def generate_launch_description():
     spawn_y      = LaunchConfiguration('spawn_y')
 
     # ── 2. Resource paths ─────────────────────────────────────────────────────
-    install_dir      = os.path.abspath(os.path.join(pkg_roar_simulation_full, '..'))
-    gz_resource_path = install_dir
-    if 'IGN_GAZEBO_RESOURCE_PATH' in os.environ:
-        gz_resource_path = os.environ['IGN_GAZEBO_RESOURCE_PATH'] + ':' + install_dir
+    install_dir = os.path.abspath(os.path.join(pkg_roar_simulation_full, '..'))
+    sim_source = _resolve_sim_source()
+    resource_paths = [
+        str(sim_source / 'marsyards' / 'marsyard' / 'models'),
+        str(sim_source / 'navMission_setup' / 'world_setup' / 'rocks_ws'),
+        install_dir,
+    ]
+    existing_resource_path = os.environ.get(
+        'IGN_GAZEBO_RESOURCE_PATH',
+        os.environ.get('GZ_SIM_RESOURCE_PATH', ''))
+    if existing_resource_path:
+        resource_paths.insert(0, existing_resource_path)
+    gz_resource_path = os.pathsep.join(resource_paths)
 
     # ── 3. URDF / robot_description ──────────────────────────────────────────
     xacro_file = os.path.join(

@@ -23,12 +23,12 @@ src/navigation/
 
 ## 🎮 Launching Mission Control GUI
 
-```bash
-cd ~/ROAR_2026
-source /opt/ros/humble/setup.bash
-source install/setup.bash
+From the cloned repository's `src` directory, run the portable launcher. It
+detects the workspace root automatically and builds the workspace on first use:
 
-python3 src/navigation/scripts/asu_roar_gui.py
+```bash
+cd ROAR-26-Simulation/src
+./start_gui.sh
 ```
 
 The Mission Control GUI provides:

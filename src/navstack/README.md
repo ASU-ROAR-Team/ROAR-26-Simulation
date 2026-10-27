@@ -30,7 +30,7 @@ src/navstack/
 ## 🚀 Running Nav2 Stack
 
 ```bash
-cd ~/ROAR_2026
+cd ${ROAR_WS}
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 

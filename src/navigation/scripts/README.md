@@ -1,7 +1,7 @@
 # 🖥️ ROAR 2026 — Mission Control GUI & Utility Scripts
 
-[![Module](https://img.shields.io/badge/Module-navigation-E10600?logo=ros&logoColor=white)](file:///home/draaven/ROAR_2026/src/navigation)
-[![GUI](https://img.shields.io/badge/GUI-PyQt5_Livery-E10600?logo=qt&logoColor=white)](file:///home/draaven/ROAR_2026/src/navigation/scripts/asu_roar_gui.py)
+[![Module](https://img.shields.io/badge/Module-navigation-E10600?logo=ros&logoColor=white)](file://${ROAR_WS}/src/navigation)
+[![GUI](https://img.shields.io/badge/GUI-PyQt5_Livery-E10600?logo=qt&logoColor=white)](file://${ROAR_WS}/src/navigation/scripts/asu_roar_gui.py)
 
 This directory contains the primary operator interfaces and visualization utilities for the ASU ROAR rover system.
 
@@ -12,7 +12,7 @@ This directory contains the primary operator interfaces and visualization utilit
 A full-featured PyQt5 desktop application inspired by Formula 1 telemetry dashboards, designed for competition command and control.
 
 ```bash
-cd ~/ROAR_2026
+cd ${ROAR_WS}
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 

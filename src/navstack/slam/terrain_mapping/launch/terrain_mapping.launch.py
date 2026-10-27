@@ -13,9 +13,8 @@ def generate_launch_description():
         default_heightmap_file = os.path.join(
             get_package_share_directory("terrain_mapping"), "working_heightmaps", "heightmap_mars_yard.npz"
         )
-    except Exception:
-        default_heightmap_file = "", "navStack_2026", "slam", "worlds", "world1", "heightmap.npz"
-    )
+    except PackageNotFoundError:
+        default_heightmap_file = ""
 
     # Default to roar_localization's ArUco marker map, the same file used for
     # its landmark-correction localization, so mapping and localization never

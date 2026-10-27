@@ -10,7 +10,7 @@ Use the provided `launch_test.sh` script to start the simulation.
 It requires two arguments: the **rover configuration** and the **world name**.
 
 ```bash
-cd ~/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/dev_environment
+cd ${ROAR_WS}/src/roar2026/dev_environment
 
 # Format: bash launch_test.sh <clean|noise|full> <world_folder_name> [rviz]
 
@@ -43,7 +43,7 @@ Once the simulation is running, open a **new terminal tab**.
 You need to source the dev environment workspace and then run the teleop node.
 
 ```bash
-cd ~/ROAR-26-Simulation-Rover_Arm_Marsyard_Simualtion/dev_environment
+cd ${ROAR_WS}/src/roar2026/dev_environment
 source install/setup.bash
 
 # Run the teleop script corresponding to the config you launched:

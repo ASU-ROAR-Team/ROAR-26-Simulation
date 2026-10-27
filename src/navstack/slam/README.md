@@ -1,7 +1,7 @@
 # 🧭 ROAR 2026 — SLAM, IESKF Localization & Active Mapping
 
-[![Module](https://img.shields.io/badge/Module-navstack-E10600?logo=ros&logoColor=white)](file:///home/draaven/ROAR_2026/src/navstack)
-[![Filter](https://img.shields.io/badge/Filter-IESKF_Fusion-00D9FF)](file:///home/draaven/ROAR_2026/src/navstack/slam/roar_localization)
+[![Module](https://img.shields.io/badge/Module-navstack-E10600?logo=ros&logoColor=white)](file://${ROAR_WS}/src/navstack)
+[![Filter](https://img.shields.io/badge/Filter-IESKF_Fusion-00D9FF)](file://${ROAR_WS}/src/navstack/slam/roar_localization)
 
 This subsystem provides robust state estimation and real-time 2.5D elevation mapping for the ROAR rover over rough Martian terrain where GPS is unavailable.
 

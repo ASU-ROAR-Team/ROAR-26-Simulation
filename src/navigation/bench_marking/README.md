@@ -1,7 +1,7 @@
 # 📈 ROAR 2026 — Rover Benchmarking & Telemetry Evaluator Suite
 
-[![Module](https://img.shields.io/badge/Module-navigation-E10600?logo=ros&logoColor=white)](file:///home/draaven/ROAR_2026/src/navigation)
-[![Benchmarking](https://img.shields.io/badge/Metrics-ATE_|_RPE_|_Precision-00D9FF)](file:///home/draaven/ROAR_2026/reports)
+[![Module](https://img.shields.io/badge/Module-navigation-E10600?logo=ros&logoColor=white)](file://${ROAR_WS}/src/navigation)
+[![Benchmarking](https://img.shields.io/badge/Metrics-ATE_|_RPE_|_Precision-00D9FF)](file://${ROAR_WS}/reports)
 
 The `bench_marking` directory hosts specialized evaluation nodes designed to scientifically measure the accuracy, drift, and perception efficacy of the rover navigation stack against simulated ground truth.
 

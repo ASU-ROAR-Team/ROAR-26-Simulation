@@ -1,7 +1,7 @@
 # 🗺️ ROAR 2026 — Competition Mission Datasets & Ground Truth Assets
 
-[![Module](https://img.shields.io/badge/Module-navigation-E10600?logo=ros&logoColor=white)](file:///home/draaven/ROAR_2026/src/navigation)
-[![Dataset](https://img.shields.io/badge/Datasets-Worlds_1__3-00D9FF)](file:///home/draaven/ROAR_2026/src/navigation/missions)
+[![Module](https://img.shields.io/badge/Module-navigation-E10600?logo=ros&logoColor=white)](file://${ROAR_WS}/src/navigation)
+[![Dataset](https://img.shields.io/badge/Datasets-Worlds_1__3-00D9FF)](file://${ROAR_WS}/src/navigation/missions)
 
 The `missions` directory houses the ground truth terrain data, obstacle fields, and pre-computed waypoint missions for Worlds 1, 2, and 3.
 

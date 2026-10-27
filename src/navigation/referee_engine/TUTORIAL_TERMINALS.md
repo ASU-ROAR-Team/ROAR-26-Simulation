@@ -12,7 +12,7 @@ This terminal spins up the 3D physics engine, spawns the Marsyard environment, a
 1. Open a new terminal.
 2. Navigate to your Dev Environment:
    ```bash
-   cd ~/ROAR-26-Simulation/dev_environment
+   cd ${ROAR_WS}/src/roar2026/dev_environment
    ```
 3. Run the automated testing script. We will launch the `noise` rover configuration in `world1` with `rviz` enabled:
    ```bash
@@ -28,7 +28,7 @@ This terminal acts as the "judge." It runs silently in the background, watching 
 1. Open a second terminal.
 2. Navigate to the Navigation workspace and **build the referee engine**:
    ```bash
-   cd ~/Navigation_Mission_Workspace
+   cd ${ROAR_WS}
    colcon build --packages-select referee_engine --symlink-install
    source install/setup.bash
    ```
@@ -46,7 +46,7 @@ Because you don't have a fully autonomous Navigation Stack driving the rover yet
 1. Open a third terminal.
 2. Source your Dev Environment:
    ```bash
-   source ~/ROAR-26-Simulation/dev_environment/install/setup.bash
+   source ${ROAR_WS}/install/setup.bash
    ```
 3. Run your custom teleop GUI:
    ```bash

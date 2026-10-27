@@ -80,7 +80,7 @@ coordinate_bridge/
 From the simulation workspace:
 
 ```bash
-cd ~/Simulation_ws
+cd ${ROAR_WS}
 colcon build --symlink-install --packages-select coordinate_bridge
 source install/setup.bash
 ```

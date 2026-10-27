@@ -11,7 +11,7 @@ pip install numpy matplotlib pandas scipy reportlab
 
 Build the package using `colcon`:
 ```bash
-cd ~/Navigation_Mission_Workspace
+cd ${ROAR_WS}
 colcon build --packages-select roar_slam_testing
 source install/setup.bash
 ```
@@ -46,7 +46,7 @@ publishers with no error from ROS 2.
 #### Example with custom parameters
 
 ```bash
-ros2 run roar_slam_testing slam_evaluator --ros-args -p output_dir:=/home/user/slam_reports -p odom_topic:=/slam_odom
+ros2 run roar_slam_testing slam_evaluator --ros-args -p output_dir:=${ROAR_WS}/reports/slam -p odom_topic:=/slam_odom
 ```
 
 ## Features

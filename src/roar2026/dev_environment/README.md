@@ -1,8 +1,8 @@
 # 🧪 ROAR Dev Environment — Multi-World Testing & Rover Control Guide
 
-[![Module](https://img.shields.io/badge/Module-roar2026-E10600?logo=gazebo&logoColor=white)](file:///home/draaven/ROAR_2026/src/roar2026)
+[![Module](https://img.shields.io/badge/Module-roar2026-E10600?logo=gazebo&logoColor=white)](file://${ROAR_WS}/src/roar2026)
 [![ROS 2](https://img.shields.io/badge/ROS_2-Humble-22314E?logo=ros&logoColor=white)](https://docs.ros.org/en/humble/)
-[![Control](https://img.shields.io/badge/Control-Base_&_6--DOF_Arm-00D9FF)](file:///home/draaven/ROAR_2026/src/roar2026/dev_environment)
+[![Control](https://img.shields.io/badge/Control-Base_&_6--DOF_Arm-00D9FF)](file://${ROAR_WS}/src/roar2026/dev_environment)
 
 The development environment allows standalone testing of rover physics, sensor degradation, multi-world terrain traversal, and 6-DOF robotic manipulator control.
 
@@ -29,7 +29,7 @@ dev_environment/
 
 Before launching, source your workspace:
 ```bash
-cd ~/ROAR_2026
+cd ${ROAR_WS}
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 ```
@@ -37,7 +37,7 @@ source install/setup.bash
 Launch any rover configuration across Worlds 1, 2, or 3 using `launch_test.sh`:
 
 ```bash
-cd ~/ROAR_2026/src/roar2026/dev_environment
+cd ${ROAR_WS}/src/roar2026/dev_environment
 # Usage: bash launch_test.sh <rover_config> <world_name> [rviz]
 
 # 1. Clean simulation (ideal physics, zero noise):
