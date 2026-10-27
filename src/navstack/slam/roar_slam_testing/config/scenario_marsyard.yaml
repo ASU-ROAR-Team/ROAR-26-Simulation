@@ -1,0 +1,77 @@
+# scenario_marsyard.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+# SLAM test scenario for the marsyard2024 teleoperated simulation.
+#
+# MISSION SHAPE (mirrors ERC navigation task):
+#   start at `start` (which is ALSO the end point), visit the 4 waypoints in
+#   order, STOP at each one (that's when scoring happens + ZUPT fires), then
+#   return to start and stop.
+#
+# The driver teleoperates; there is no planner/controller in this test.
+#
+# WAYPOINTS were chosen so that every leg of the route passes within ArUco
+# detection range (~8 m) of at least one marker:
+#   leg start→WP1  : markers 0 (0,-3), 1 (5,-3), 7 (11,5)
+#   leg WP1→WP2    : markers 7 (11,5), 6 (11,15)
+#   leg WP2→WP3    : markers 5 (5,25), 8 (10,29), 4 (-3,25)
+#   leg WP3→WP4    : markers 3 (-5,17), 2 (-7,5)
+#   leg WP4→start  : markers 9 (-6,-1), 0 (0,-3)
+#
+# VIRTUAL OBSTACLES: the marsyard world has NO obstacle models — only terrain
+# and markers. These obstacles exist only for the mapping module test: the
+# obstacle_simulator publishes fake detections of them (in the map frame),
+# active_mapping builds its map from those, and the evaluator compares the
+# resulting map against these same ground-truth positions. The rover can
+# physically drive through them — avoid doing so for realism, but nothing
+# breaks if you clip one.
+# ──────────────────────────────────────────────────────────────────────────────
+
+scenario:
+  name: "marsyard_teleop_slam_test_v1"
+
+  # Start location 1 from start_locations.yaml (also the END point)
+  start:
+    x: 0.0
+    y: -2.0
+    yaw_deg: 90.0        # facing +Y (north)
+
+  # Waypoints in visit order. Scoring = distance between rover stop position
+  # and the waypoint. z is ignored (ground points).
+  waypoints:
+    - {id: 1, x:  6.0, y:  4.0}
+    - {id: 2, x:  7.0, y: 21.0}
+    - {id: 3, x: -4.0, y: 20.0}
+    - {id: 4, x: -5.0, y:  2.0}
+
+  # ── Stop detection (used by the evaluator) ──────────────────────────────────
+  # A "waypoint stop" is registered when ground-truth speed stays below
+  # stop_speed_threshold for at least stop_duration seconds while within
+  # waypoint_capture_radius of the next expected waypoint (or the start/end).
+  stop_speed_threshold: 0.03      # [m/s]
+  stop_duration: 2.0              # [s]
+  waypoint_capture_radius: 2.5    # [m]
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Virtual obstacles (for the mapping module). class_id: 1 = rock.
+# Spread along the route so the camera "sees" them while driving.
+# dims = bounding box (x, y, z) in meters. z position = dim_z/2 (sitting on
+# nominal ground plane; marsyard terrain height variations are ignored for
+# the virtual obstacles — mapping starts from a flat height map anyway).
+# ──────────────────────────────────────────────────────────────────────────────
+obstacles:
+  - {id: 1, x:  3.0, y:  1.0, dim_x: 0.6, dim_y: 0.6, dim_z: 0.5, class_id: 1}
+  - {id: 2, x:  8.0, y: 10.0, dim_x: 0.8, dim_y: 0.8, dim_z: 0.6, class_id: 1}
+  - {id: 3, x:  2.0, y: 15.0, dim_x: 0.5, dim_y: 0.5, dim_z: 0.4, class_id: 1}
+  - {id: 4, x: -2.0, y: 22.0, dim_x: 0.7, dim_y: 0.7, dim_z: 0.5, class_id: 1}
+  - {id: 5, x: -6.0, y: 10.0, dim_x: 0.6, dim_y: 0.6, dim_z: 0.5, class_id: 1}
+  - {id: 6, x:  0.0, y:  6.0, dim_x: 0.5, dim_y: 0.5, dim_z: 0.4, class_id: 1}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# SLAM benchmark targets (from ERC Marsyard Module-Based Benchmarking Criteria)
+# Used by the evaluator to compute sub-scores.
+# ──────────────────────────────────────────────────────────────────────────────
+targets:
+  pose_error_avg: 0.30       # [m]
+  yaw_error_avg: 5.0         # [deg]
+  map_alignment: 0.20        # [m]
+  localization_dropout_max_gap: 0.5   # [s] no odom for longer than this = dropout

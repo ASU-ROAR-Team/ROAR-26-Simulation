@@ -1,0 +1,453 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.7">
+  <world name="rover_world">
+    <gravity>0 0 -9.81</gravity>
+    <physics name="dart_physics" type="ignored">
+      <max_step_size>0.003</max_step_size>
+      <real_time_update_rate>333</real_time_update_rate>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics" />
+    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands" />
+    <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster" />
+    <plugin filename="ignition-gazebo-contact-system" name="ignition::gazebo::systems::Contact" />
+    <plugin filename="ignition-gazebo-pose-publisher-system" name="ignition::gazebo::systems::PosePublisher">
+      <publish_link_pose>false</publish_link_pose>
+      <publish_nested_model_pose>false</publish_nested_model_pose>
+      <use_pose_vector_msg>true</use_pose_vector_msg>
+      <update_frequency>50</update_frequency>
+    </plugin>
+    <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu" />
+    <plugin filename="ignition-gazebo-magnetometer-system" name="ignition::gazebo::systems::Magnetometer" />
+    <scene>
+      <ambient>0.95 0.95 0.95 1</ambient>
+      <background>0.70 0.70 0.70 1</background>
+      <shadows>false</shadows>
+    </scene>
+    <light type="directional" name="sun">
+      <cast_shadows>false</cast_shadows>
+      <pose>0 0 30 0 0 0</pose>
+      <diffuse>0.9 0.85 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.3 0.3 -0.9</direction>
+    </light>
+    <include>
+      <uri>model://erc_marsyard_2026</uri>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+    <model name="Rock_1">
+      <static>true</static>
+      <pose>-4.3772 35.3945 -1.0812 0.0000 0.0000 0.3447</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_7/meshes/rock_7.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_2">
+      <static>true</static>
+      <pose>-1.5955 21.5624 -0.3954 0.0000 0.0000 0.5754</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_3">
+      <static>true</static>
+      <pose>2.1398 27.1248 -0.3924 0.0000 0.0000 0.3072</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_5/meshes/rock_5.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_4">
+      <static>true</static>
+      <pose>13.0135 15.6691 -0.4991 0.0000 0.0000 0.4798</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_5">
+      <static>true</static>
+      <pose>0.2218 2.6722 0.2307 0.0000 0.0000 2.2915</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_2/meshes/rock_2_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_2/meshes/rock_2.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_6">
+      <static>true</static>
+      <pose>10.0915 -6.1988 -0.2588 0.0000 0.0000 0.4279</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_7">
+      <static>true</static>
+      <pose>12.6412 31.5417 0.2547 0.0000 0.0000 -2.2307</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_3/meshes/rock_3_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_3/meshes/rock_3.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_8">
+      <static>true</static>
+      <pose>-2.9712 26.7710 0.6160 0.0000 0.0000 0.3636</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_1/meshes/rock_1_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_1/meshes/rock_1.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_9">
+      <static>true</static>
+      <pose>4.7094 -3.4165 0.0358 0.0000 0.0000 0.9778</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_4/meshes/rock_4_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_10">
+      <static>true</static>
+      <pose>-8.9618 18.0004 -0.3882 0.0000 0.0000 -2.5468</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_9/meshes/rock_9.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="Rock_11">
+      <static>true</static>
+      <pose>2.9794 19.8628 -0.2408 0.0000 0.0000 -2.5884</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_4/meshes/rock_4_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>model://rock_4/meshes/rock_4.obj</uri>
+            </mesh>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="Rock_12">
+      <static>true</static>
+      <pose>2.4726 15.4686 -0.3075 0.0000 0.0000 1.4021</pose>
+      <link name="rock_link">
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>model://rock_6/meshes/rock_6.obj</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>model://rock_5/meshes/rock_small_diffuse.jpg</albedo_map>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="ArUco_51">
+      <static>true</static>
+      <pose>3.1830 8.0120 0.0848 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_1</uri>
+      </include>
+    </model>
+    <model name="ArUco_52">
+      <static>true</static>
+      <pose>7.2690 9.4820 0.1802 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_2</uri>
+      </include>
+    </model>
+    <model name="ArUco_53">
+      <static>true</static>
+      <pose>7.8780 17.5830 -0.0338 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_3</uri>
+      </include>
+    </model>
+    <model name="ArUco_54">
+      <static>true</static>
+      <pose>9.2250 22.3890 -0.0094 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_4</uri>
+      </include>
+    </model>
+    <model name="ArUco_55">
+      <static>true</static>
+      <pose>3.5180 23.9900 -0.2141 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_5</uri>
+      </include>
+    </model>
+    <model name="ArUco_56">
+      <static>true</static>
+      <pose>0.8820 16.8700 -0.0291 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_6</uri>
+      </include>
+    </model>
+    <model name="ArUco_57">
+      <static>true</static>
+      <pose>-3.9440 21.4150 -0.4839 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_7</uri>
+      </include>
+    </model>
+    <model name="ArUco_58">
+      <static>true</static>
+      <pose>-5.4910 16.3340 -0.1219 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_8</uri>
+      </include>
+    </model>
+    <model name="ArUco_59">
+      <static>true</static>
+      <pose>-7.6950 13.5280 -0.1686 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_9</uri>
+      </include>
+    </model>
+    <model name="ArUco_60">
+      <static>true</static>
+      <pose>-1.6100 12.6020 -0.0891 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_10</uri>
+      </include>
+    </model>
+    <model name="ArUco_61">
+      <static>true</static>
+      <pose>-7.7150 9.7210 -0.1552 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_11</uri>
+      </include>
+    </model>
+    <model name="ArUco_62">
+      <static>true</static>
+      <pose>-4.3110 4.4420 -0.0941 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_12</uri>
+      </include>
+    </model>
+    <model name="ArUco_63">
+      <static>true</static>
+      <pose>-5.7200 28.1180 -0.5995 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_13</uri>
+      </include>
+    </model>
+    <model name="ArUco_64">
+      <static>true</static>
+      <pose>-11.4380 5.2300 -0.0011 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_14</uri>
+      </include>
+    </model>
+    <model name="ArUco_65">
+      <static>true</static>
+      <pose>6.4830 1.1020 0.2112 0.0000 0.0000 0.0000</pose>
+      <include>
+        <uri>model://aruco_15</uri>
+      </include>
+    </model>
+  </world>
+</sdf>

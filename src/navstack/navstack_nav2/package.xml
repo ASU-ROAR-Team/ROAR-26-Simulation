@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>navstack_nav2</name>
+  <version>0.1.0</version>
+  <description>ROAR Nav2 bringup — D* Lite + MPPI + Sim</description>
+  <maintainer email="todo@todo.com">ROAR</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>nav2_bt_navigator</exec_depend>
+  <exec_depend>nav2_controller</exec_depend>
+  <exec_depend>nav2_planner</exec_depend>
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <exec_depend>nav2_mppi_controller</exec_depend>
+  <exec_depend>dstar_navigation</exec_depend>
+  <exec_depend>roar_simulation</exec_depend>
+  <exec_depend>erc2025_remote_sim</exec_depend>
+  <export><build_type>ament_cmake</build_type></export>
+</package>

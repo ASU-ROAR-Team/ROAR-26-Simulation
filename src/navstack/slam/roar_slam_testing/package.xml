@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>roar_slam_testing</name>
+  <version>0.1.0</version>
+  <description>
+    SLAM module test harness for the ASU ROAR Team marsyard simulation:
+    obstacle detection simulator (feeds the mapping module) and a SLAM
+    evaluator implementing the ERC Marsyard Module-Based Benchmarking
+    Criteria (pose/yaw error, drift, dropouts, ArUco utilization, waypoint
+    stop scoring, map alignment, final SLAM score).
+  </description>
+
+  <maintainer email="mohamed.ashraf.eng2002@example.com">Mohamed Ashraf</maintainer>
+  <license>MIT</license>
+
+  <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>roar_msgs</depend>
+  <depend>active_mapping_msgs</depend>
+
+  <exec_depend>ros2launch</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

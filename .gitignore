@@ -1,0 +1,26 @@
+# ROS 2 build artifacts
+build/
+install/
+log/
+COLCON_IGNORE
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Ignition / Gazebo caches
+/tmp/aruco_tag*
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+Thumbs.db

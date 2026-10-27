@@ -1,0 +1,15 @@
+{
+    "candidate_count": 2500,
+    "min_spacing_cells": 15.0,
+    "max_spacing_cells": 65.0,
+    "boundary_margin_cells": 30.0,
+    "duplicate_distance_threshold": 6.0,
+    "target_wp_count": 10,
+    "max_attempts": 10000,
+    "seed": 99,
+    "boundary_margin_ratio": 0.05,
+    "min_spacing_ratio": 0.04,
+    "max_spacing_ratio": 0.35,
+    "max_turn_angle_deg": 90.0,
+    "min_start_end_dist": 30.0
+}

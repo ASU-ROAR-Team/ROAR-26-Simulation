@@ -1,0 +1,12 @@
+build/
+install/
+log/
+__pycache__/
+*.pyc
+*.o
+*.so
+a.out
+frames_*.gv
+frames_*.pdf
+.vscode
+.claude

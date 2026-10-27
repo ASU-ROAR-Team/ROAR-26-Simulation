@@ -1,0 +1,62 @@
+#!/bin/bash
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKSPACE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+echo "=========================================================="
+echo "    MARS YARD WORLD & ARUCO MARKER GENERATION PIPELINE"
+echo "=========================================================="
+
+MARSYARD_MODELS_DIR="${WORKSPACE_DIR}/marsyards/marsyard/models"
+ROCKS_DIR="${SCRIPT_DIR}/world_setup/rocks_ws"
+export IGN_GAZEBO_RESOURCE_PATH="${MARSYARD_MODELS_DIR}:${ROCKS_DIR}:${IGN_GAZEBO_RESOURCE_PATH}"
+export GZ_SIM_RESOURCE_PATH="${MARSYARD_MODELS_DIR}:${ROCKS_DIR}:${GZ_SIM_RESOURCE_PATH}"
+
+echo -e "\n[1/3] Generating Core Worlds (world_1, world_2, world_3)..."
+cd "${SCRIPT_DIR}"
+rm -rf outputs/world_1 outputs/world_2 outputs/world_3
+python3 generate_worlds.py
+
+echo -e "\n[2/3] Syncing Outputs to Development Environment..."
+SRC_DIR="${SCRIPT_DIR}/outputs"
+DEST_DIR="${WORKSPACE_DIR}/dev_environment/worlds"
+for i in 1 2 3; do
+    SRC="${SRC_DIR}/world_${i}"
+    DEST="${DEST_DIR}/world${i}"
+
+    rm -rf "${DEST}"
+    mkdir -p "${DEST}"
+
+    cp "${SRC}/world/"*.world "${DEST}/world${i}.world"
+    cp "${SRC}/heightmap/"*.npz "${DEST}/heightmap.npz"
+    cp "${SRC}/heightmap/"*.png "${DEST}/heightmap.png"
+    cp "${SRC}/costmap/"*.npz "${DEST}/costmap.npz"
+    cp "${SRC}/costmap/"*.png "${DEST}/costmap.png"
+    cp -r "${SRC}/costmap/csv" "${DEST}/csv" 2>/dev/null || true
+    cp "${SRC}/obstacle_data/obstacle_data_world_${i}.npy" "${DEST}/obstacle_data.npy"
+
+    if [ -f "${SRC}/obstacle_data/obstacle_data_info.txt" ]; then
+        cp "${SRC}/obstacle_data/obstacle_data_info.txt" "${DEST}/obstacle_data_info.txt"
+    fi
+    if [ -f "${SRC}/metadata.txt" ]; then
+        cp "${SRC}/metadata.txt" "${DEST}/metadata.txt"
+    fi
+done
+
+echo -e "\n[3/3] Ensuring ArUco models exist in the gazebo workspace..."
+cd "${WORKSPACE_DIR}"
+# Ensure ArUco models exist in the gazebo workspace
+cp -r "${SCRIPT_DIR}/world_setup/TempArucoGen/models/aruco_"* "${WORKSPACE_DIR}/marsyards/marsyard/models/" 2>/dev/null || true
+
+# The deployed copies above are the canonical three batch worlds.  Remove only
+# this run's staging directories so a future run cannot silently reuse them.
+rm -rf \
+    "${SRC_DIR}/world_1" \
+    "${SRC_DIR}/world_2" \
+    "${SRC_DIR}/world_3"
+
+echo -e "\n=========================================================="
+echo " ✅ SUCCESS! All worlds generated and correctly integrated!"
+echo "    Test with: ./launch_test.sh full world1 rviz"
+echo "=========================================================="

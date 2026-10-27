@@ -1,0 +1,8 @@
+prefix=/home/amrtamer/nav-stack_2026/local_deps
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: xsimd
+Description: xsimd provides a unified means for using SIMD features for library authors..
+Version: 11.0.1
+Cflags: -I${includedir}

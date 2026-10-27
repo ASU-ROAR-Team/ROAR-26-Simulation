@@ -1,0 +1,7 @@
+referee_engine:
+  ros__parameters:
+    timeout_duration_sec: 1200
+    global_acceptance_radius_m: 1.5
+    penalty_weights:
+      time_multiplier: 0.5
+      distance_multiplier: 1.2

@@ -1,0 +1,72 @@
+# ============================================================
+# offline_tools configuration
+# All tunable parameters for the offline path planning pipeline.
+# Edit this file instead of touching any script directly.
+# ============================================================
+
+# -----------------------------------------------------------
+# Shared paths  (relative to offline_tools/)
+# -----------------------------------------------------------
+paths:
+  mesh_stl:       "reference/marsyard2024_collision.stl"        # source terrain mesh
+  heightmap_npz:  "data/heightmap_world.npz"                    # generated heightmap
+  costmap_csv:    "data/costmap.csv"                            # generated costmap
+  waypoints_csv:  "reference/waypoints.csv"                     # waypoint list
+  original_path:  "data/combined_offline_path.csv"              # D* planner output
+  edited_path:    "data/edited_offline_path.csv"                # path editor output
+
+# -----------------------------------------------------------
+# Heightmap rasterizer  (scripts/mapping/generate_heightmap.py)
+# -----------------------------------------------------------
+heightmap:
+  resolution:  0.0501274  # grid cell size in metres
+  swap_xy:     true       # diagonal reflection to match ERC/Gazebo world axes
+  prefer:      "collision" # which mesh to use: "collision" or "visual"
+  yaw:         0.0        # extra yaw rotation applied before rasterising (degrees)
+
+# -----------------------------------------------------------
+# Costmap converter  (scripts/mapping/convert_heightmap_to_costmap.py)
+# -----------------------------------------------------------
+costmap:
+  resolution:  0.0501274  # must match heightmap.resolution
+  max_slope:       25.0   # degrees — cells steeper than this become lethal (cost=100)
+  max_height_diff:  0.40  # metres — max step height between adjacent cells before lethal
+  smooth_sigma:     1.0   # Gaussian sigma applied to heightmap before slope calc (0=off)
+
+# -----------------------------------------------------------
+# Path editor  (scripts/analysis/path_editor.py)
+# -----------------------------------------------------------
+editor:
+  window_width:  900      # pixels — height is computed from the costmap aspect ratio
+  ui_height:     66       # pixels reserved for the top UI bar
+  min_zoom:      0.2
+  max_zoom:     25.0
+  zoom_step:     1.15
+  flip_x:       false     # mirror map left-right
+  flip_y:       true      # mirror map top-bottom (set true to match RViz orientation)
+
+# -----------------------------------------------------------
+# Path cost evaluator  (scripts/analysis/path_cost_evaluator.py)
+# -----------------------------------------------------------
+evaluator:
+  lethal_cost_threshold:  100   # cells with cost >= this are treated as blocked
+  unknown_traversal_cost:  1.0  # multiplier for unknown (-1) cells
+  corridor_penalty_scale:  1.0  # weight on the normalised costmap value in edge cost
+
+# -----------------------------------------------------------
+# Map calibration  (scripts/mapping/map_calibration.py)
+# -----------------------------------------------------------
+calibration:
+  image_path:   "reference/Calibration_map.png"                 # input map image
+  real_coords:  "[[0.0, 0.0], [10.0126, 0.0], [20.127, 0.0]]"  # known real coordinates of red markers
+
+# -----------------------------------------------------------
+# Path attraction costmap layer  (scripts/mapping/generate_path_attraction_costmap.py)
+# Negative cost corridor layer generated along offline paths
+# -----------------------------------------------------------
+attraction_costmap:
+  max_bonus_cost:   30.0   # Maximum negative cost bonus along path centerline (-30)
+  corridor_radius:   1.5   # Maximum radius of attraction corridor in meters
+  sigma:             0.5   # Gaussian decay sigma in meters
+
+

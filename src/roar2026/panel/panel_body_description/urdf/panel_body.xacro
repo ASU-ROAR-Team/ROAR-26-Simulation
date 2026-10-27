@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<robot name="panel_body" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find panel_body_description)/urdf/panel_materials.xacro" />
+<xacro:include filename="$(find panel_body_description)/urdf/panel_body.ros2control" />
+<xacro:include filename="$(find panel_body_description)/urdf/panel_body.gazebo" />
+<link name="panel_base_link">
+  <inertial>
+    <origin xyz="-1.0467293905094265e-05 0.00070968858897686 0.0002490991353988647" rpy="0 0 0"/>
+    <mass value="0.0016245312698889808"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find panel_body_description)/meshes/panel_base_link.stl" scale=".001 .001 .001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find panel_body_description)/meshes/panel_base_link.stl" scale=".001 .001 .001"/>
+    </geometry>
+  </collision>
+</link>
+
+</robot>

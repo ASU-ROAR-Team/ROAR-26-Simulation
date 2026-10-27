@@ -1,0 +1,3 @@
+#!/usr/bin/env python3
+from terrain_mapping.terrain_mapping_node import main
+main()

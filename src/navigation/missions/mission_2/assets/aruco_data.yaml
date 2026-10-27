@@ -1,0 +1,73 @@
+# aruco_map.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+# ArUco marker world positions — world_1 (Official Competition Landmark Data)
+#
+# Position format: [X, Y, Z] in world frame (Z = tag center height).
+# Tag center Z = Ground Pose Z + 0.55m (pole height 0.4m + 0.15m tag center).
+# Includes both competition IDs (51-65) and simulation IDs (1-15).
+# ──────────────────────────────────────────────────────────────────────────────
+
+markers:
+  # --- Competition Marker IDs (51 - 65) ---
+  - id: 51
+    position: [3.183, 8.012, 0.5936]
+  - id: 52
+    position: [7.269, 9.482, 0.7164]
+  - id: 53
+    position: [7.878, 17.583, 0.5308]
+  - id: 54
+    position: [9.225, 22.389, 0.5118]
+  - id: 55
+    position: [3.518, 23.990, 0.3209]
+  - id: 56
+    position: [0.882, 16.870, 0.4618]
+  - id: 57
+    position: [-3.944, 21.415, 0.1093]
+  - id: 58
+    position: [-5.491, 16.334, 0.3748]
+  - id: 59
+    position: [-7.695, 13.528, 0.3422]
+  - id: 60
+    position: [-1.610, 12.602, 0.5031]
+  - id: 61
+    position: [-7.715, 9.721, 0.3750]
+  - id: 62
+    position: [-4.311, 4.442, 0.4943]
+  - id: 63
+    position: [-5.720, 28.118, -0.0785]
+  - id: 64
+    position: [-11.438, 5.230, 0.5327]
+  - id: 65
+    position: [6.483, 1.102, 0.7820]
+
+  # --- Simulation Marker Model Aliases (1 - 15) ---
+  - id: 1
+    position: [3.183, 8.012, 0.5936]
+  - id: 2
+    position: [7.269, 9.482, 0.7164]
+  - id: 3
+    position: [7.878, 17.583, 0.5308]
+  - id: 4
+    position: [9.225, 22.389, 0.5118]
+  - id: 5
+    position: [3.518, 23.990, 0.3209]
+  - id: 6
+    position: [0.882, 16.870, 0.4618]
+  - id: 7
+    position: [-3.944, 21.415, 0.1093]
+  - id: 8
+    position: [-5.491, 16.334, 0.3748]
+  - id: 9
+    position: [-7.695, 13.528, 0.3422]
+  - id: 10
+    position: [-1.610, 12.602, 0.5031]
+  - id: 11
+    position: [-7.715, 9.721, 0.3750]
+  - id: 12
+    position: [-4.311, 4.442, 0.4943]
+  - id: 13
+    position: [-5.720, 28.118, -0.0785]
+  - id: 14
+    position: [-11.438, 5.230, 0.5327]
+  - id: 15
+    position: [6.483, 1.102, 0.7820]

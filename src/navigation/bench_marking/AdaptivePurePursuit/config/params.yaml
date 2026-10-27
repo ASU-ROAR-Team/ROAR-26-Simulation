@@ -1,0 +1,44 @@
+# Adaptive Pure Pursuit Controller Parameters
+# =============================================
+# This is the SINGLE SOURCE OF TRUTH for all controller parameters.
+# Edit values here — the node reads from this file via its launch files.
+#
+# IMPORTANT: Parameter names must use "/" separators to match the code's
+# declare_parameter() calls (ROS2 YAML nesting uses "." which won't match).
+
+/controller:
+  ros__parameters:
+    # --- Topics ---
+    subscribing_topics/pose: "/odometry/filtered"
+    subscribing_topics/path: "/path"
+
+    # --- Self-simulation mode ---
+    # When true, the controller integrates its own cmd_vel to update pose
+    # internally (starts at 0,0,0 — no odom needed).
+    # Set to false when running with a real simulation or robot.
+    simulate_pose: false
+
+    # --- Meta ---
+    meta_parameters/log: true
+    meta_parameters/visualize: true
+
+    # --- Robot ---
+    robot_parameters/width: 0.973
+    robot_parameters/maxVelocity: 1.0
+    robot_parameters/min_speed: 0.10
+    robot_parameters/min_lookahead: 0.2
+    robot_parameters/max_lookahead: 1.2
+    robot_parameters/min_turn_radius: 0.75    # changed from 1 to 0.75
+    robot_parameters/min_turn_speed_ratio: 0.4
+    robot_parameters/wheel_radius: 0.125
+    robot_parameters/publish_wheel_velocities: true
+  
+
+    # --- Publishing ---
+    publishing_topics/cmd_vel: "/cmd_vel"
+    publishing_topics/wheel_velocities: "/wheel_velocities"
+
+    # --- Algorithm ---
+    algorithm_parameters/KL: 0.6
+    algorithm_parameters/KC: 0.4
+    algorithm_parameters/localPath: false

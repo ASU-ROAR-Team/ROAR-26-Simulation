@@ -1,0 +1,73 @@
+Obstacle Data Summary
+World Name      : marsyard.world
+Heightmap       : /home/misara/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/world_setup/initial_inputs/i_heightmap/heightmap.npz
+Rocks Dir       : /home/misara/Simulation_ws/src/ROAR-26-Simulation/navMission_setup/world_setup/rocks_ws
+Total Placed    : 46
+Density         : 0.03 rocks/m²
+Collidable Ratio: 0.5
+Spacing Min     : 1.0 m
+Min Terrain Z   : -1.5 m
+Min Roughness   : 0.02 m (not enforced)
+Deadends        : False
+Min Collidable Height: 0.15 m
+
+Rock ID Map (odd=collidable, even=non-collidable) -- read this for blacklisting:
+  rock_id= 1 [collidable    ] -> mesh=rock_1  L=0.471 m  W=0.289 m  H=0.600 m
+  rock_id= 2 [non-collidable] -> mesh=rock_6  L=0.151 m  W=0.084 m  H=0.081 m
+  rock_id= 3 [collidable    ] -> mesh=rock_2  L=1.029 m  W=0.359 m  H=0.502 m
+  rock_id= 4 [non-collidable] -> mesh=rock_7  L=0.104 m  W=0.057 m  H=0.098 m
+  rock_id= 5 [collidable    ] -> mesh=rock_3  L=0.651 m  W=0.490 m  H=0.645 m
+  rock_id= 6 [non-collidable] -> mesh=rock_8  L=0.115 m  W=0.037 m  H=0.082 m
+  rock_id= 7 [collidable    ] -> mesh=rock_4  L=0.484 m  W=0.171 m  H=0.254 m
+  rock_id= 8 [non-collidable] -> mesh=rock_9  L=0.111 m  W=0.077 m  H=0.112 m
+  rock_id= 9 [collidable    ] -> mesh=rock_5  L=0.311 m  W=0.155 m  H=0.257 m
+  rock_id=10 [non-collidable] -> mesh=rock_6  L=0.151 m  W=0.084 m  H=0.081 m
+
+[  1] Rock_1       | rock_id= 9 (collidable) | Pos: ( -4.107,  26.385, -0.140) | yaw=-1.217
+[  2] Rock_2       | rock_id= 1 (collidable) | Pos: (-13.006,  -0.225,  0.170) | yaw=-1.164
+[  3] Rock_3       | rock_id= 4 (non-collidable) | Pos: (  4.056,  -3.435, -0.047) | yaw=-2.327
+[  4] Rock_4       | rock_id= 9 (collidable) | Pos: ( -2.419,  13.830, -0.123) | yaw= 0.148
+[  5] Rock_5       | rock_id= 6 (non-collidable) | Pos: ( 15.580,  22.165, -0.672) | yaw= 3.043
+[  6] Rock_6       | rock_id=10 (non-collidable) | Pos: ( -0.454,  29.144, -0.760) | yaw=-1.221
+[  7] Rock_7       | rock_id= 8 (non-collidable) | Pos: (-10.222,  16.323, -0.500) | yaw=-0.081
+[  8] Rock_8       | rock_id= 7 (collidable) | Pos: ( 13.572,  30.177,  0.118) | yaw= 1.413
+[  9] Rock_9       | rock_id= 9 (collidable) | Pos: ( 14.514,  15.347, -0.463) | yaw=-1.125
+[ 10] Rock_10      | rock_id= 9 (collidable) | Pos: ( 10.159,  31.865, -0.698) | yaw= 1.580
+[ 11] Rock_11      | rock_id= 2 (non-collidable) | Pos: (-13.123,   5.629, -0.217) | yaw=-2.119
+[ 12] Rock_12      | rock_id= 3 (collidable) | Pos: ( -2.184,  25.320, -0.024) | yaw= 1.527
+[ 13] Rock_13      | rock_id=10 (non-collidable) | Pos: (  4.511,  12.096, -0.202) | yaw=-1.444
+[ 14] Rock_14      | rock_id= 3 (collidable) | Pos: ( -6.412,  -1.558,  0.037) | yaw=-0.612
+[ 15] Rock_15      | rock_id= 3 (collidable) | Pos: (  4.534,  27.322, -0.173) | yaw=-1.502
+[ 16] Rock_16      | rock_id= 7 (collidable) | Pos: (  5.625,   8.776, -0.150) | yaw= 0.090
+[ 17] Rock_17      | rock_id= 5 (collidable) | Pos: (  8.014,  -7.111,  0.213) | yaw= 1.436
+[ 18] Rock_18      | rock_id= 4 (non-collidable) | Pos: (-10.259,  -0.034, -0.069) | yaw=-0.261
+[ 19] Rock_19      | rock_id= 6 (non-collidable) | Pos: (  8.186,  23.981, -0.305) | yaw= 0.028
+[ 20] Rock_20      | rock_id=10 (non-collidable) | Pos: ( -7.949,  34.950, -1.219) | yaw= 0.575
+[ 21] Rock_21      | rock_id=10 (non-collidable) | Pos: (-16.514,   7.190, -0.291) | yaw=-2.173
+[ 22] Rock_22      | rock_id= 9 (collidable) | Pos: ( 10.754,  15.933,  0.056) | yaw= 0.258
+[ 23] Rock_23      | rock_id= 1 (collidable) | Pos: ( 17.087,  31.466, -0.695) | yaw= 2.577
+[ 24] Rock_24      | rock_id= 5 (collidable) | Pos: ( -5.225,   2.046,  0.328) | yaw= 1.671
+[ 25] Rock_25      | rock_id=10 (non-collidable) | Pos: ( -8.771,   1.153, -0.083) | yaw= 2.872
+[ 26] Rock_26      | rock_id= 2 (non-collidable) | Pos: ( -4.228,  -2.293, -0.181) | yaw= 2.135
+[ 27] Rock_27      | rock_id= 1 (collidable) | Pos: ( -0.337,  21.040, -0.132) | yaw= 1.287
+[ 28] Rock_28      | rock_id= 7 (collidable) | Pos: ( 15.160,  17.719, -0.480) | yaw= 1.336
+[ 29] Rock_29      | rock_id=10 (non-collidable) | Pos: (-10.071,   9.669, -0.178) | yaw= 0.859
+[ 30] Rock_30      | rock_id= 2 (non-collidable) | Pos: (-14.357,   8.246, -0.340) | yaw= 2.125
+[ 31] Rock_31      | rock_id= 7 (collidable) | Pos: ( 14.102,  34.840, -0.989) | yaw=-0.522
+[ 32] Rock_32      | rock_id= 5 (collidable) | Pos: ( -8.076,   6.367,  0.055) | yaw=-0.216
+[ 33] Rock_33      | rock_id= 2 (non-collidable) | Pos: (  0.097,  -2.688, -0.095) | yaw=-1.891
+[ 34] Rock_34      | rock_id=10 (non-collidable) | Pos: (-12.894,  20.987, -0.640) | yaw=-0.413
+[ 35] Rock_35      | rock_id= 1 (collidable) | Pos: (  0.639,  28.473, -0.438) | yaw= 2.209
+[ 36] Rock_36      | rock_id=10 (non-collidable) | Pos: (-12.599,  12.941,  0.231) | yaw= 1.087
+[ 37] Rock_37      | rock_id= 3 (collidable) | Pos: (  0.633,   9.836,  0.060) | yaw=-1.994
+[ 38] Rock_38      | rock_id= 1 (collidable) | Pos: ( -8.409,  31.517, -0.995) | yaw= 0.979
+[ 39] Rock_39      | rock_id= 5 (collidable) | Pos: (  1.607,   6.967,  0.661) | yaw= 1.841
+[ 40] Rock_40      | rock_id= 2 (non-collidable) | Pos: (-15.393,   2.943, -0.020) | yaw=-0.880
+[ 41] Rock_41      | rock_id= 5 (collidable) | Pos: ( 16.485,  23.355, -0.552) | yaw=-1.669
+[ 42] Rock_42      | rock_id= 5 (collidable) | Pos: ( -5.831,  -0.406,  0.098) | yaw= 1.712
+[ 43] Rock_43      | rock_id= 5 (collidable) | Pos: (  5.460,   5.548,  0.086) | yaw=-2.251
+[ 44] Rock_44      | rock_id= 7 (collidable) | Pos: ( 17.565,  34.202, -1.074) | yaw= 0.179
+[ 45] Rock_45      | rock_id= 7 (collidable) | Pos: (  5.175,   0.906,  0.591) | yaw= 0.638
+[ 46] Rock_46      | rock_id= 4 (non-collidable) | Pos: (  6.087,   7.254, -0.177) | yaw= 2.086
+
+(mesh + dimensions for each rock_id are in the Rock ID Map above, not repeated per-instance)

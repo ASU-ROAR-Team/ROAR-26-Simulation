@@ -1,0 +1,177 @@
+/**:
+  ros__parameters:
+
+    # ════════════════════════════════════════════════════════════════════════
+    # ROAR 2026 – Perception Parameters (ERC Mars Ground Edition)
+    # ════════════════════════════════════════════════════════════════════════
+    # All pipeline thresholds live here.  Edit this file and re-launch —
+    # no recompile needed.  The node reads params every callback, so changes
+    # made via `ros2 param set` take effect on the NEXT incoming frame.
+    #
+    # ERC context: terrain is coarse, rocky, and has slopes / ramps.
+    # The pipeline MUST detect sharp rocks (true obstacles) and reject:
+    #   • sloped ground / ramps  (handled by slope-aware RANSAC)
+    #   • uneven bumpy ground    (handled by plane_inlier_margin + normal filter)
+    #   • sensor speckle noise   (SOR + ROR)
+    # ════════════════════════════════════════════════════════════════════════
+
+    # ── GPU Acceleration ─────────────────────────────────────────────────
+    # Use open3d.core CUDA tensors for the hot-path distance-mask and the
+    # surface-normal curvature filter.  Automatically falls back to CPU if
+    # CUDA is unavailable (detected at runtime).
+    use_gpu: true
+
+    # ── Input Topic ──────────────────────────────────────────────────────
+    # Change this to switch between real ZED and simulation without code edits.
+    lidar_topic: '/zed2i/points_updated'
+
+    # ── Stage 0: ROI Pass-Through ─────────────────────────────────────────
+    # All points beyond max_distance are discarded immediately.
+    # Tuning: increase for wider maps; decrease to reduce compute.
+    max_distance: 6.0            # [m]  max range to keep (ERC arena ≈5 m radius)
+
+    # ── Stage 1: Voxel-Grid Downsampling ─────────────────────────────────
+    # Reduces point density uniformly.  Smaller → more points, more detail,
+    # more compute.  Must be ≤ smallest rock diameter you care about / 2.
+    # A 0.06 m leaf keeps enough points on a 15 cm rock while halving density.
+    voxel_size: 0.06             # [m]  leaf size
+
+    # ── Stage 2: Statistical Outlier Removal (SOR) ───────────────────────
+    # For each point, compute mean distance to its k nearest neighbours.
+    # If that distance is > mean + std_ratio × σ across all points, remove it.
+    # Effect: kills isolated sensor speckle and flying pixels.
+    # Tuning:
+    #   sor_nb_neighbors ↑  →  stricter (more points removed, safer)
+    #   sor_std_ratio    ↑  →  more lenient (keep more edge points)
+    sor_nb_neighbors: 25         # k nearest neighbours used for mean/std estimate
+    sor_std_ratio: 1.8           # points > 1.8σ from mean are outliers
+    sor_enabled: true
+
+    # ── Stage 3: Radius Outlier Removal (ROR) ────────────────────────────
+    # Remove points that have fewer than ror_min_neighbors within ror_radius.
+    # Effect: removes isolated reflections that survive SOR.
+    # Tuning:
+    #   ror_radius       ↑  →  larger search ball (keeps more lone points)
+    #   ror_min_neighbors ↑  →  stricter (removes more isolated points)
+    ror_radius: 0.12             # [m]  search sphere radius
+    ror_min_neighbors: 6         # min neighbours inside sphere to keep point
+    ror_enabled: true
+
+    # ── Stage 4: Slope-Aware Iterative RANSAC Ground Removal ─────────────
+    # RANSAC fits a plane to the densest planar region each iteration.
+    # We remove it only if it is classified as "traversable ground or ramp"
+    # using its surface normal and point-count.
+    #
+    # ground_distance_threshold: how far a point can be from the fitted plane
+    #   and still count as an inlier.
+    #   ↑ value → more coarse/bumpy ground is stripped (good for ERC)
+    #   ↓ value → only very flat surfaces are removed
+    #
+    # plane_max_iterations: how many dominant planes to strip per frame.
+    #   Set to 4: ground + up to 3 slope/ramp faces.  Raising it too high
+    #   risks removing real boulder faces.
+    #
+    # plane_min_inliers: a plane with fewer inliers is treated as a rock
+    #   surface, not terrain.  ERC rocks can be large, so keep this ≥ 150.
+    #
+    # ground_max_tilt_deg: normal angle from vertical allowed for "ground".
+    #   Any plane whose normal tilts more than this from the gravity vertical
+    #   is NOT removed (it is a vertical wall or a near-vertical rock face).
+    #   Set to 45° so slopes ≤ 45° are removed as traversable terrain, but
+    #   steep faces (true obstacles) are kept.
+    #
+    # ground_min_z_height / ground_max_z_height: the detected plane centroid
+    #   must lie within this Z range (camera frame) to be considered ground.
+    #   Prevents removing a detected rock cluster that happens to be planar.
+    ground_distance_threshold: 0.12  # [m]  RANSAC inlier tolerance
+    plane_max_iterations: 4          # max planes stripped per frame
+    plane_min_inliers: 150           # plane needs ≥ this many points to be removed
+    ground_max_tilt_deg: 45.0        # [°]  max normal tilt from vertical for removal
+    ground_min_z_height: 0.3         # [m]  plane centroid must be at least this far (depth)
+    ground_max_z_height: 8.0         # [m]  plane centroid closer than this (camera depth)
+
+    # ── Stage 4b: Surface Normal / Sharpness Filter ───────────────────────
+    # After ground removal, this filter computes local surface normals for
+    # every surviving point.  Points on a smooth slope have consistent
+    # normals; points on a sharp rock edge have highly variable normals
+    # (high curvature).  A point is kept as a potential obstacle only if it
+    # has neighbours AND its normal variance is high enough (or it is
+    # elevated enough above the local ground plane).
+    #
+    # normal_search_radius: neighbourhood used for PCA normal estimation.
+    #   Smaller → more sensitive to fine rock edges.
+    #   Larger  → smoother (may miss small rocks).
+    #
+    # min_roughness_score: local normal variance threshold.
+    #   Points whose neighbourhood has a curvature / roughness score below
+    #   this are classified as smooth traversable surface and suppressed.
+    #   0.0 disables the filter (keep all points).
+    #   ~0.02–0.05 is a reasonable starting range for ERC rocks.
+    normal_search_radius: 0.15       # [m]  radius for normal estimation
+    min_roughness_score: 0.02        # [dimensionless] below this = smooth ground
+    roughness_filter_enabled: true   # set false to disable (faster, less selective)
+
+    # ── Stage 5: DBSCAN Clustering ────────────────────────────────────────
+    # Groups nearby surviving points into clusters (candidate obstacles).
+    # cluster_tolerance (eps): max distance between two points to be in the
+    #   same cluster.  Must be ≥ voxel_size and account for inter-rock gaps.
+    # min_cluster_size: clusters smaller than this are ignored (noise).
+    # max_cluster_size: clusters larger than this are ignored (residual ground).
+    cluster_tolerance: 0.25      # [m]  DBSCAN epsilon — neighbour search radius
+    min_cluster_size: 15         # min points for a cluster to be an obstacle
+    max_cluster_size: 3000       # max points — larger = residual ground plane
+
+    # ── Stage 6: Bounding-Box Shape Filter ───────────────────────────────
+    # After clustering, reject clusters whose axis-aligned bounding box is
+    # implausible for a rock.
+    # ZED camera frame: X = right (lateral), Y = down (vertical), Z = forward.
+    #
+    # A sharp ERC rock is roughly 0.15–0.8 m across and 0.05–0.5 m tall.
+    # Set limits conservatively: too tight → miss rocks; too loose → false positives.
+    min_bbox_x: 0.08             # [m]  min lateral width
+    max_bbox_x: 2.0              # [m]  max lateral width   (wider → likely residual ground)
+    min_bbox_y: 0.04             # [m]  min vertical height (≥ 4 cm rock sticking up)
+    max_bbox_y: 1.5              # [m]  max vertical height
+    min_bbox_z: 0.08             # [m]  min depth
+    max_bbox_z: 2.0              # [m]  max depth
+
+    # ── Stage 6 (cont.): Distance & Height Centre Filters ────────────────
+    # Cluster centre must be within these 3-D distance and Y-axis bounds.
+    min_cluster_distance: 0.4    # [m]  ignore clusters too close (sensor blind spot)
+    max_cluster_distance: 6.0    # [m]  ignore clusters too far
+
+    # ZED frame: Y=down (positive = below camera), Y=negative = above camera.
+    # Rocks on the ground have centre Y ≈ 0 to +0.5 m.
+    # Reject clusters whose centre is too high above (overhead objects) or
+    # too low (ghost returns below ground, sensor artefacts).
+    min_center_y: -0.5           # [m]  ignore clusters well above camera (not ground rocks)
+    max_center_y:  1.5           # [m]  ignore clusters very far below camera
+
+    # ── Stage 6 (cont.): Aspect-Ratio Filter ────────────────────────────
+    # A flat slab (ramp remnant) will have bbox_z >> bbox_y.
+    # A sharp rock will be more cube-like.  The filter rejects any cluster
+    # whose depth-to-height ratio exceeds max_depth_height_ratio.
+    # 0.0 disables the filter.
+    max_depth_height_ratio: 6.0  # drop clusters that are very flat slabs
+
+    # ── ArUco Detector ────────────────────────────────────────────────────
+    camera_topic: '/zed2i/image_raw_updated'
+    camera_info_topic: '/zed2i/camera_info'
+    aruco_dict_type: 0           # unused — auto-detect mode always active
+    visualize: true
+    marker_size: 0.15            # [m]  physical side length of the printed marker
+
+    # ── Obstacle Publisher ────────────────────────────────────────────────
+    source_frame: 'zed2i_depth_optical_frame'
+    world_frame: 'odom'               # target TF frame for the persistent obstacle map
+    max_obstacle_base_height: 3.0     # [m]  ignore clusters whose base Z > this
+    max_detection_distance: 6.0       # [m]  ignore clusters farther than this
+    min_confidence: 0.0               # accept all LiDAR clusters (no YOLO score)
+    merge_radius: 0.6                 # [m]  detections within this range update same entry
+    forget_timeout: 4.0               # [s]  obstacle removed if not re-seen within this time
+    publish_rate: 5.0                 # [Hz] map republish frequency
+    max_obstacles: 50
+    ema_alpha: 0.35                   # EMA weight for new measurement (0=ignore new, 1=replace)
+
+    # ── BEV Visualizer ───────────────────────────────────────────────────
+    use_rgb: true                     # true = colour point cloud in bird's-eye view image

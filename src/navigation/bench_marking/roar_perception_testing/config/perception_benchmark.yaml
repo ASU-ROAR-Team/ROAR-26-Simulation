@@ -1,0 +1,47 @@
+perception_reader_node:
+  ros__parameters:
+    obstacle_input_topic: /detection/lidar_clusters
+    obstacle_output_topic: /benchmark/perception/raw_objects
+    aruco_input_topic: /detection/aruco_3d
+    aruco_output_topic: /benchmark/perception/raw_aruco
+
+perception_tf_node:
+  ros__parameters:
+    obstacle_input_topic: /benchmark/perception/raw_objects
+    obstacle_output_topic: /benchmark/perception/world_objects
+    aruco_input_topic: /benchmark/perception/raw_aruco
+    aruco_output_topic: /benchmark/perception/world_aruco
+    target_frame: map
+    tf_timeout_sec: 0.25
+
+perception_benchmark_node:
+  ros__parameters:
+    obstacle_input_topic: /benchmark/perception/world_objects
+    aruco_input_topic: /benchmark/perception/world_aruco
+    tf_status_topic: /benchmark/perception/tf_status
+    world_name: worldData_126
+    ground_truth_path: ""
+    aruco_ground_truth_path: ""
+    output_directory: ""
+    target_frame: map
+    base_frame: base_link
+    camera_frame: zed2i_depth_optical_frame
+    match_distance_m: 1.0
+    gt_box_padding_m: 0.45
+    duplicate_same_rock_distance_m: 1.25
+    near_gt_diagnostic_distance_m: 2.0
+    noise_min_dimension_m: 0.12
+    noise_min_volume_m3: 0.004
+    merge_distance_m: 0.85
+    aruco_merge_distance_m: 0.35
+    min_confirmations: 3
+    detection_stale_sec: 8.0
+    collidable_height_m: 0.30
+    collidable_volume_m3: 0.05
+    camera_range_m: 7.0
+    camera_horizontal_fov_deg: 95.0
+    camera_vertical_fov_deg: 65.0
+    min_visible_frames_for_miss: 5
+    update_period_sec: 1.0
+    position_error_limit_m: 1.0
+    aruco_position_error_limit_m: 0.50
