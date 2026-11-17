@@ -25,6 +25,7 @@ install(PROGRAMS
   src/teleop.py
   src/zed_degradation_node.py
   src/encoder_sim_node.py
+  src/cmd_vel_relay.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

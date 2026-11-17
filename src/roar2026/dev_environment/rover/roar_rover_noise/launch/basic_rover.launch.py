@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import (
@@ -10,6 +11,25 @@ from launch_ros.actions import Node
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
 from launch_ros.parameter_descriptions import ParameterValue
+
+
+def _resolve_sim_source():
+    override = os.environ.get('ROAR_SIM_WS')
+    if override:
+        override_path = Path(override).expanduser().resolve()
+        if (override_path / 'dev_environment').is_dir():
+            return override_path
+        sim_source = override_path / 'src' / 'roar2026'
+        if sim_source.is_dir():
+            return sim_source
+
+    current = Path(__file__).resolve()
+    for parent in current.parents:
+        if ((parent / 'marsyards' / 'marsyard' / 'models').is_dir() and
+                (parent / 'navMission_setup' / 'world_setup' / 'rocks_ws').is_dir()):
+            return parent
+
+    return None
 
 def generate_launch_description():
     pkg_roar_rover_noise = get_package_share_directory('roar_rover_noise')
@@ -35,17 +55,32 @@ def generate_launch_description():
     spawn_y_arg = DeclareLaunchArgument(
         'spawn_y', default_value='0.0',
         description='Initial spawn Y coordinate')
+    spawn_z_arg = DeclareLaunchArgument(
+        'spawn_z', default_value='0.5',
+        description='Initial spawn Z coordinate')
     use_sim_time = LaunchConfiguration('use_sim_time')
     start_rviz   = LaunchConfiguration('start_rviz')
     world_file   = LaunchConfiguration('world_file')
     spawn_x      = LaunchConfiguration('spawn_x')
     spawn_y      = LaunchConfiguration('spawn_y')
+    spawn_z      = LaunchConfiguration('spawn_z')
 
     # ── 2. Resource paths ─────────────────────────────────────────────────────
     install_dir      = os.path.abspath(os.path.join(pkg_roar_rover_noise, '..'))
-    gz_resource_path = install_dir
-    if 'IGN_GAZEBO_RESOURCE_PATH' in os.environ:
-        gz_resource_path = os.environ['IGN_GAZEBO_RESOURCE_PATH'] + ':' + install_dir
+    resource_paths   = [install_dir]
+    sim_source       = _resolve_sim_source()
+    if sim_source is not None:
+        resource_paths = [
+            str(sim_source / 'marsyards' / 'marsyard' / 'models'),
+            str(sim_source / 'navMission_setup' / 'world_setup' / 'rocks_ws'),
+            install_dir,
+        ]
+    existing_resource_path = os.environ.get(
+        'IGN_GAZEBO_RESOURCE_PATH',
+        os.environ.get('GZ_SIM_RESOURCE_PATH', ''))
+    if existing_resource_path:
+        resource_paths.insert(0, existing_resource_path)
+    gz_resource_path = os.pathsep.join(resource_paths)
 
     # ── 3. URDF / robot_description ──────────────────────────────────────────
     xacro_file = os.path.join(
@@ -112,7 +147,7 @@ def generate_launch_description():
                    '-name', 'roar_rover',
                    '-x', spawn_x,
                    '-y', spawn_y,
-                   '-z', '0.5',
+                   '-z', spawn_z,
                    '-Y', '1.5707'],
         output='screen',
         parameters=[{'use_sim_time': use_sim_time}]
@@ -141,7 +176,6 @@ def generate_launch_description():
             '/zed2i/image_raw@sensor_msgs/msg/Image[ignition.msgs.Image',
             '/zed2i/depth@sensor_msgs/msg/Image[ignition.msgs.Image',
             '/zed2i/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo',
-            '/cmd_vel@geometry_msgs/msg/Twist]ignition.msgs.Twist',
             '/chassis/contact_sensors@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
             '/world/rover_world/pose/info@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V',
                         '/world/rover_world/model/roar_rover/link/base_footprint/sensor/base_link_contact/contact@ros_gz_interfaces/msg/Contacts[ignition.msgs.Contacts',
@@ -220,12 +254,21 @@ def generate_launch_description():
         parameters=[{'use_sim_time': use_sim_time}]
     )
 
+    node_cmd_vel_relay = Node(
+        package='roar_rover_noise',
+        executable='cmd_vel_relay.py',
+        name='cmd_vel_relay',
+        output='screen',
+        parameters=[{'use_sim_time': use_sim_time}]
+    )
+
     return LaunchDescription([
         use_sim_time_arg,
         start_rviz_arg,
         world_file_arg,
         spawn_x_arg,
         spawn_y_arg,
+        spawn_z_arg,
         headless_arg,
 
         # Gazebo server (headless, software GL for sensors)
@@ -240,6 +283,7 @@ def generate_launch_description():
         node_encoder_sim,
         node_zed_noise,
         node_collision_alarm,
+        node_cmd_vel_relay,
 
         # Wait for spawn → wait 12 s → start joint state broadcaster
         RegisterEventHandler(

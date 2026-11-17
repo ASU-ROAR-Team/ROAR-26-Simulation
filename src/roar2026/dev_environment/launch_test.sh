@@ -1,17 +1,61 @@
 #!/bin/bash
 # ============================================================
 # ROAR Dev Environment - Test Launcher
-# Usage: bash launch_test.sh <rover_config> <world_name> [rviz]
+# Usage:
+#   bash launch_test.sh <rover_config> <world_name> [options]
 #   rover_config: clean | noise | full
 #   world_name:   world1 | world2 | world3 | ...
-#   rviz:         (optional) add "rviz" to launch RViz
+#
+# Options (flags or positional):
+#   --rviz          (or positional arg 3: "rviz") Launch RViz
+#   --headless      (or positional arg 3: "headless") Run Gazebo without GUI
+#   --x <val>       (or positional arg 4) Initial spawn X (default: 0.0)
+#   --y <val>       (or positional arg 5) Initial spawn Y (default: 0.0)
+#   --z <val>       (or positional arg 6) Initial spawn Z (default: 0.5)
 # ============================================================
 
 set -e
 
 ROVER_CONFIG="${1:-clean}"
 WORLD_NAME="${2:-world1}"
-USE_RVIZ="${3:-}"
+shift $(( $# >= 2 ? 2 : $# ))
+
+USE_RVIZ="false"
+HEADLESS="false"
+SPAWN_X="0.0"
+SPAWN_Y="0.0"
+SPAWN_Z="0.5"
+POS_IDX=0
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --rviz)     USE_RVIZ="true"; shift ;;
+        --headless) HEADLESS="true"; shift ;;
+        --x)        SPAWN_X="${2:?--x requires a value}"; shift 2 ;;
+        --y)        SPAWN_Y="${2:?--y requires a value}"; shift 2 ;;
+        --z)        SPAWN_Z="${2:?--z requires a value}"; shift 2 ;;
+        -h|--help)
+            sed -n '2,15p' "$0"
+            exit 0
+            ;;
+        *)
+            POS_IDX=$((POS_IDX + 1))
+            case "$POS_IDX" in
+                1)
+                    if [ "$1" = "rviz" ]; then
+                        USE_RVIZ="true"
+                    elif [ "$1" = "headless" ]; then
+                        HEADLESS="true"
+                    fi
+                    ;;
+                2) SPAWN_X="$1" ;;
+                3) SPAWN_Y="$1" ;;
+                4) SPAWN_Z="$1" ;;
+            esac
+            shift
+            ;;
+    esac
+done
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WORLDS_DIR="${SCRIPT_DIR}/worlds"
@@ -37,25 +81,6 @@ if [ ! -d "$WORLD_DIR" ]; then
     exit 1
 fi
 
-echo "[launch_sim] Killing any stale Ignition/Gazebo/ROS2 processes..."
-pkill -9 -f "ign gazebo"  2>/dev/null || true
-pkill -9 -f "ign_gazebo"  2>/dev/null || true
-pkill -9 -f "ruby.*ignition" 2>/dev/null || true
-pkill -9 -x "rviz2" 2>/dev/null || true
-pkill -9 -x "rviz" 2>/dev/null || true
-pkill -9 -f "robot_state_publisher" 2>/dev/null || true
-pkill -9 -f "spawner" 2>/dev/null || true
-pkill -9 -f "ros2" 2>/dev/null || true
-pkill -9 -f "zed_degradation_node" 2>/dev/null || true
-pkill -9 -f "encoder_sim_node" 2>/dev/null || true
-pkill -9 -f "clean_camera_node" 2>/dev/null || true
-pkill -9 -f "ros_gz_bridge" 2>/dev/null || true
-pkill -9 -f "teleop" 2>/dev/null || true
-pkill -9 -x "gazebo" 2>/dev/null || true
-killall -9 ign rviz2 gzserver gzclient ruby gazebo 2>/dev/null || true
-sleep 1
-
-
 WORLD_FILE="${WORLD_DIR}/${WORLD_NAME}.world"
 if [ ! -f "$WORLD_FILE" ]; then
     echo "[ERROR] World file not found: ${WORLD_FILE}"
@@ -68,16 +93,27 @@ echo "============================================"
 echo "  Rover Config : ${ROVER_CONFIG} (${PKG})"
 echo "  World        : ${WORLD_NAME}"
 echo "  World File   : ${WORLD_FILE}"
-echo "  RViz         : ${USE_RVIZ:-disabled}"
+echo "  Spawn Pose   : (${SPAWN_X}, ${SPAWN_Y}, ${SPAWN_Z})"
+echo "  RViz         : ${USE_RVIZ}"
+echo "  Headless     : ${HEADLESS}"
 echo "============================================"
 
-# Kill stale processes
-echo "[dev_env] Killing stale Gazebo/ROS2 processes..."
-pkill -9 -f "ign gazebo" 2>/dev/null || true
-pkill -9 -f "gz sim" 2>/dev/null || true
-pkill -9 -f "ruby" 2>/dev/null || true
-pkill -9 -f "ros2" 2>/dev/null || true
-pkill -9 -f "rviz2" 2>/dev/null || true
+# Targeted cleanup of stale simulation processes (avoids killing user teleop/CLI terminals)
+echo "[dev_env] Cleaning stale Gazebo/simulation processes..."
+pkill -9 -f "ign gazebo"            2>/dev/null || true
+pkill -9 -f "ign_gazebo"            2>/dev/null || true
+pkill -9 -f "gz sim"                2>/dev/null || true
+pkill -9 -f "ruby.*ignition"        2>/dev/null || true
+pkill -9 -x "rviz2"                 2>/dev/null || true
+pkill -9 -f "robot_state_publisher" 2>/dev/null || true
+pkill -9 -f "controller_manager/spawner" 2>/dev/null || true
+pkill -9 -f "ros_gz_bridge"         2>/dev/null || true
+pkill -9 -f "ros_gz_sim"            2>/dev/null || true
+pkill -9 -f "zed_degradation_node"  2>/dev/null || true
+pkill -9 -f "encoder_sim_node"      2>/dev/null || true
+pkill -9 -f "clean_camera_node"     2>/dev/null || true
+pkill -9 -f "collision_alarm_node"  2>/dev/null || true
+pkill -9 -f "cmd_vel_relay"         2>/dev/null || true
 sleep 1
 
 # Clean FastDDS shared memory
@@ -108,12 +144,10 @@ export IGN_GAZEBO_SYSTEM_PLUGIN_PATH="/opt/ros/humble/lib"
 
 echo "[dev_env] Resource path: ${IGN_GAZEBO_RESOURCE_PATH}"
 
-SPAWN_X="${4:-0.0}"
-SPAWN_Y="${5:-0.0}"
-
-# Launch — pass world file and initial spawn pose to launch file
-if [ "$USE_RVIZ" = "rviz" ]; then
-    ros2 launch "$PKG" basic_rover.launch.py world_file:="$WORLD_FILE" start_rviz:=true spawn_x:="$SPAWN_X" spawn_y:="$SPAWN_Y"
-else
-    ros2 launch "$PKG" basic_rover.launch.py world_file:="$WORLD_FILE" spawn_x:="$SPAWN_X" spawn_y:="$SPAWN_Y"
-fi
+exec ros2 launch "$PKG" basic_rover.launch.py \
+    world_file:="$WORLD_FILE" \
+    start_rviz:="$USE_RVIZ" \
+    headless:="$HEADLESS" \
+    spawn_x:="$SPAWN_X" \
+    spawn_y:="$SPAWN_Y" \
+    spawn_z:="$SPAWN_Z"

@@ -11,6 +11,8 @@ class ControlApp(Tk, object):
         super(ControlApp, self).__init__()
         self.ros_node = ros_node
         self.config_vars()
+        self._held_keys = set()
+        self._release_timers = {}
         self.initKeyboard()
         self.title("Rover Teleop")
         self.geometry("300x100")
@@ -21,24 +23,56 @@ class ControlApp(Tk, object):
     def initKeyboard(self) -> None:
         self.bind("<KeyPress>", self.keydown)
         self.bind("<KeyRelease>", self.keyup)
+        self.bind("<FocusOut>", self._on_focus_out)
         
     def config_vars(self) -> None:
         self.linear_speed = 1.0   # m/s
         self.angular_speed = 1.0  # rad/s
+
+    def _apply_held_keys(self) -> None:
+        lin = 0.0
+        ang = 0.0
+        if "Up" in self._held_keys:
+            lin += self.linear_speed
+        if "Down" in self._held_keys:
+            lin -= self.linear_speed
+        if "Left" in self._held_keys:
+            ang += self.angular_speed
+        if "Right" in self._held_keys:
+            ang -= self.angular_speed
+        self.ros_node.update_velocities(lin, ang)
+
+    def _on_focus_out(self, _event: Event) -> None:
+        self._held_keys.clear()
+        for tid in self._release_timers.values():
+            self.after_cancel(tid)
+        self._release_timers.clear()
+        self._apply_held_keys()
         
     def keydown(self, event: Event) -> None:
-        if event.keysym == "Up":
-            self.ros_node.update_velocities(self.linear_speed, 0.0)
-        elif event.keysym == "Down":
-            self.ros_node.update_velocities(-self.linear_speed, 0.0)
-        elif event.keysym == "Left":
-            self.ros_node.update_velocities(0.0, self.angular_speed)
-        elif event.keysym == "Right":
-            self.ros_node.update_velocities(0.0, -self.angular_speed)
+        key = event.keysym
+        if key not in ("Up", "Down", "Left", "Right"):
+            return
+        if key in self._release_timers:
+            self.after_cancel(self._release_timers.pop(key))
+        if key not in self._held_keys:
+            self._held_keys.add(key)
+            self._apply_held_keys()
     
     def keyup(self, event: Event) -> None:
-        if event.keysym in ["Up", "Down", "Left", "Right"]:
-            self.ros_node.update_velocities(0.0, 0.0)
+        key = event.keysym
+        if key not in ("Up", "Down", "Left", "Right"):
+            return
+        if key in self._release_timers:
+            self.after_cancel(self._release_timers[key])
+        # Debounce synthetic X11/XWayland key-repeat release events (~0-5 ms)
+        self._release_timers[key] = self.after(50, lambda k=key: self._confirm_release(k))
+
+    def _confirm_release(self, key: str) -> None:
+        self._release_timers.pop(key, None)
+        if key in self._held_keys:
+            self._held_keys.discard(key)
+            self._apply_held_keys()
 
 class TeleopNode(Node):
     def __init__(self):

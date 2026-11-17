@@ -38,26 +38,28 @@ Launch any rover configuration across Worlds 1, 2, or 3 using `launch_test.sh`:
 
 ```bash
 cd ${ROAR_WS}/src/roar2026/dev_environment
-# Usage: bash launch_test.sh <rover_config> <world_name> [rviz]
+# Usage: bash launch_test.sh <rover_config> <world_name> [--rviz] [--headless] [--x X] [--y Y] [--z Z]
 
-# 1. Clean simulation (ideal physics, zero noise):
+# 1. Clean simulation (ideal physics, zero noise, base only):
 bash launch_test.sh clean world1
 
-# 2. Noisy simulation (Martian dust, glare, encoder pulses):
+# 2. Noisy simulation (Martian dust, glare, encoder pulses, base only):
 bash launch_test.sh noise world1
 
 # 3. Full simulation (6-DOF robotic arm + noisy sensors):
 bash launch_test.sh full world1
 
-# Append 'rviz' to launch RViz alongside Gazebo:
-bash launch_test.sh full world1 rviz
+# Append --rviz (or rviz) to launch RViz, or --headless for automated runs:
+bash launch_test.sh full world1 --rviz --x 1.0 --y 2.0 --z 0.5
 ```
+
+> **Automated 3×3 Verification Matrix:** Run `python3 verify_all_sim_combos.py` to test `clean`, `noise`, and `full` across `world1`, `world2`, and `world3` (verifying controller activation, `/cmd_vel` base drive, and `/arm_controller/joint_trajectory` arm motion).
 
 ---
 
 ## 🚗 2. Controlling the Rover Base (For Each Module)
 
-The differential drive base is controlled identically across all three configurations (`clean`, `noise`, `full`) via the standard `/cmd_vel` velocity interface.
+The differential drive base is controlled identically across all three configurations (`clean`, `noise`, `full`) via `/cmd_vel` (automatically relayed to `/diff_drive_controller/cmd_vel_unstamped`).
 
 ### Method A: Interactive Tkinter Teleop (Recommended)
 Each module includes a dedicated Tkinter graphical key-capture window. Run the command matching your launched configuration:

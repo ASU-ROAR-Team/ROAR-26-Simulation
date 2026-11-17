@@ -24,6 +24,7 @@ install(PROGRAMS
   src/collision_alarm_node.py
   src/teleop.py
   src/clean_camera_node.py
+  src/cmd_vel_relay.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -35,7 +35,7 @@ planner_server:
       unified_costmap_topic: "/unified_costmap"
       # ── ERC Waypoint Parameters ───────────────────────────────────────
       start_end: [0.0, 0.0]
-      waypoints: [-0.181, -0.187, -9.431, 6.813, -8.181, 16.563, -5.431, 26.313, 1.819, 28.063, -0.181, -0.187]
+      waypoints: [-0.181, -0.187, 5.569, 7.813, 9.569, 20.813, -1.931, 29.063, -8.681, 21.813, -0.181, -0.187]
 
 # ── Unified Costmap Fuser ──────────────────────────────────────────────────
 # Derives lethal obstacles + terrain costs purely from the 2.5D heightmap.
